@@ -1,0 +1,19 @@
+{
+  "name": "quiz",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kmiecikmarcin/Quiz.git"
+  },
+  "author": "Marcin Kmiecik",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/kmiecikmarcin/Quiz/issues"
+  },
+  "homepage": "https://github.com/kmiecikmarcin/Quiz#readme"
+}
