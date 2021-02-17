@@ -4,7 +4,12 @@
   "description": "",
   "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node app.js",
+    "nodemon-start": "nodemon app.js",
+    "test": "newman run",
+    "eslint-start": "eslint ./",
+    "pre-commit": "npm run eslint-start",
+    "pre-push": "npm run eslint-start && npm run test"
   },
   "repository": {
     "type": "git",
