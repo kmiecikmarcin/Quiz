@@ -15,5 +15,8 @@
   "bugs": {
     "url": "https://github.com/kmiecikmarcin/Quiz/issues"
   },
-  "homepage": "https://github.com/kmiecikmarcin/Quiz#readme"
+  "homepage": "https://github.com/kmiecikmarcin/Quiz#readme",
+  "dependencies": {
+    "express": "^4.17.1"
+  }
 }
