@@ -10,7 +10,6 @@ app.use(bodyParser.urlencoded({ extended: false }));
 sequelize
   .sync({ force: false })
   .then(() => {
-    console.log(app);
     console.log("Database created!");
   })
   .catch((error) => {

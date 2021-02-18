@@ -14,6 +14,7 @@ module.exports = {
     "comma-dangle": 0,
     "no-console": "off",
     "no-plusplus": "off",
+    "no-undef": "off",
     "max-len": ["error", 150],
     "operator-linebreak": [
       "error",
