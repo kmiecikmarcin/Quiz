@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node app.js",
     "nodemon-start": "nodemon app.js",
-    "unit-tests": "mocha Tests/UnitTests/TypesOfUsersRoles.spec.js --watch",
+    "unit-tests": "mocha Tests/UnitTests/ --watch",
     "eslint-start": "eslint ./",
     "pre-commit": "npm run eslint-start",
     "pre-push": "npm run eslint-start && npm run test"
