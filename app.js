@@ -1,14 +1,7 @@
 const express = require("express");
 const bodyParser = require("body-parser");
-const { DataTypes } = require("sequelize");
 const sequelize = require("./Functions/Database/database");
-const TypesOfUserRolesModel = require("./Models/TypesOfUsersRoles");
-const UsersModel = require("./Models/Users");
-const GendersModel = require("./Models/Genders");
-
-const TypesOfUsersRoles = TypesOfUserRolesModel(sequelize, DataTypes);
-const Genders = GendersModel(sequelize, DataTypes);
-const Users = UsersModel(sequelize, DataTypes);
+const UsersRoutes = require("./Routes/users");
 
 const app = express();
 
@@ -25,6 +18,8 @@ sequelize
   });
 
 const port = process.env.PORT || 3000;
+
+app.use("/quiz/users", UsersRoutes);
 
 app.listen(port);
 
