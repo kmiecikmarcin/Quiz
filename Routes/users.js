@@ -6,7 +6,7 @@ const router = express.Router();
 router.post(
   "/register",
   [
-    check("userEmail")
+    check("user_email")
       .exists()
       .withMessage("Brak wymaganych danych!")
       .isLength({ min: 1 })
@@ -16,7 +16,7 @@ router.post(
       .isEmail()
       .withMessage("Adres e-mail został wprowadzony niepoprawnie!"),
 
-    check("userPassword")
+    check("user_password")
       .exists()
       .withMessage("Brak wymaganych danych!")
       .isLength({ min: 6 })
@@ -44,7 +44,7 @@ router.post(
         }
       }),
 
-    check("confirmPassword")
+    check("confirm_password")
       .exists()
       .withMessage("Brak wymaganych danych!")
       .custom((value, { req }) => {
@@ -55,7 +55,7 @@ router.post(
         }
       }),
 
-    check("userGender")
+    check("user_gender")
       .exists()
       .withMessage("Brak wymaganych danych!")
       .isLength({ min: 1, max: 20 })
@@ -68,7 +68,7 @@ router.post(
         }
       }),
 
-    check("userVerification")
+    check("user_verification")
       .exists()
       .withMessage("Brak wymaganych danych!")
       .isBoolean()
@@ -76,7 +76,7 @@ router.post(
       .custom((value) => {
         const verification = checkUserVerification(value);
         if (verification === false) {
-          throw new Error("Nie zatwierdzono weryfikacji użytkownika!");
+          throw new Error("Brak weryfikacji użytkownika!");
         } else {
           return value;
         }
