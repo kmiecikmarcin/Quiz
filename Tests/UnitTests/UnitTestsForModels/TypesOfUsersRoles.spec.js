@@ -6,7 +6,7 @@ const {
   checkPropertyExists,
 } = require("sequelize-test-helpers");
 
-const TypesOfUsersRolesModel = require("../../Models/TypesOfUsersRoles");
+const TypesOfUsersRolesModel = require("../../../Models/TypesOfUsersRoles");
 
 describe("../Models/TypesOfUsersRoles", () => {
   const TypesOfUsersRoles = TypesOfUsersRolesModel(sequelize, dataTypes);
