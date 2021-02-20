@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node app.js",
     "nodemon-start": "nodemon app.js",
-    "unit-tests": "mocha Tests/UnitTests/ --watch",
+    "unit-tests": "mocha Tests/UnitTests/**/*.js --watch",
     "eslint-start": "eslint ./",
     "pre-commit": "npm run eslint-start",
     "pre-push": "npm run eslint-start && npm run test"
