@@ -1,5 +1,6 @@
 const express = require("express");
 const { check, validationResult } = require("express-validator");
+const checkPasswordAboutOneSpecialKey = require("../Functions/Others/checkPasswordAboutOneSpecialKey");
 
 const router = express.Router();
 
@@ -24,7 +25,7 @@ router.post(
       .isLength({ max: 32 })
       .withMessage("Hasło jest za długie!")
       .custom((value) => {
-        if (checkInPasswordOneSpecialCharacterKey(value) === false) {
+        if (checkPasswordAboutOneSpecialKey(value) === false) {
           throw new Error(
             "Hasło nie zawiera minimum jednego znaku specjalnego!"
           );
