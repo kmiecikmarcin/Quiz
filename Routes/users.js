@@ -1,6 +1,8 @@
 const express = require("express");
 const { check, validationResult } = require("express-validator");
 const checkPasswordAboutOneSpecialKey = require("../Functions/Others/checkPasswordAboutOneSpecialKey");
+const checkEnteredGender = require("../Functions/Others/checkEnteredGender");
+const checkUserVerification = require("../Functions/Others/checkUserVerification");
 
 const router = express.Router();
 
@@ -62,7 +64,7 @@ router.post(
       .isLength({ min: 1, max: 20 })
       .withMessage("Nie wprowadzono danych!")
       .custom((value) => {
-        if (checkUserGenderInRegister(value) === false) {
+        if (checkEnteredGender(value) === false) {
           throw new Error("Podano błędną wartość!");
         } else {
           return value;
