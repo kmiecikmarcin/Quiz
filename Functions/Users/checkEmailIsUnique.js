@@ -1,4 +1,4 @@
-async function checkIfEmailIsUnique(Users, userEmail) {
+async function checkEmailIsUnique(Users, userEmail) {
   const checkEmail = await Users.findOne({
     where: { user_email: userEmail, accountDeletedStatus: false },
   });
@@ -8,4 +8,4 @@ async function checkIfEmailIsUnique(Users, userEmail) {
   return true;
 }
 
-module.exports = checkIfEmailIsUnique;
+module.exports = checkEmailIsUnique;
