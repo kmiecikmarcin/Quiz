@@ -17,13 +17,13 @@ const model = (sequelize, DataTypes) => {
         field: "id_user",
       },
       email: {
-        type: DataTypes.STRING(100),
+        type: DataTypes.STRING(128),
         unique: true,
         allowNull: false,
         field: "user_email",
       },
       password: {
-        type: DataTypes.STRING,
+        type: DataTypes.STRING(64),
         allowNull: false,
         field: "user_password",
       },

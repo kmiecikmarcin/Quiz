@@ -10,19 +10,19 @@ const model = (sequelize, DataTypes) => {
         primaryKey: true,
         unique: true,
         allowNull: false,
-        field: "idTypeOfUserRole",
+        field: "id_type_of_user_role",
       },
       name: {
         type: DataTypes.STRING(20),
         unique: true,
         allowNull: false,
-        field: "nameOfUserRole",
+        field: "name_of_user_role",
       },
     },
     {
       indexes: [
-        { unique: true, fields: ["idTypeOfUserRole"] },
-        { unique: true, fields: ["nameOfUserRole"] },
+        { unique: true, fields: ["id_type_of_user_role"] },
+        { unique: true, fields: ["name_of_user_role"] },
       ],
     }
   );
