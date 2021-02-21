@@ -1,8 +1,13 @@
 const express = require("express");
 const { check, validationResult } = require("express-validator");
+const Model = require("../Functions/Others/takeAndReturnModelInstance");
 const checkPasswordAboutOneSpecialKey = require("../Functions/Others/checkPasswordAboutOneSpecialKey");
 const checkEnteredGender = require("../Functions/Others/checkEnteredGender");
 const checkUserVerification = require("../Functions/Others/checkUserVerification");
+const checkEmailIsUnique = require("../Functions/Users/checkEmailIsUnique");
+const checkGenderIsCorrectAndFindIt = require("../Functions/Users/checkGenderIsCorrectAndFindIt");
+const createNewUserCommonAccount = require("../Functions/Users/createNewUserCommonAccount");
+const findBasicUserRole = require("../Functions/Users/findBasicUserRole");
 
 const router = express.Router();
 
@@ -51,7 +56,7 @@ router.post(
       .exists()
       .withMessage("Brak wymaganych danych!")
       .custom((value, { req }) => {
-        if (value !== req.body.userPassword) {
+        if (value !== req.body.user_password) {
           throw new Error("Hasła sa różne!");
         } else {
           return value;
@@ -90,6 +95,50 @@ router.post(
 
     if (!error.isEmpty()) {
       res.status(400).json(error.mapped());
+    } else {
+      const checkEnteredEmail = await checkEmailIsUnique(
+        Model.Users,
+        req.body.user_email
+      );
+      if (checkEnteredEmail === true) {
+        const checkEnteredGender = await checkGenderIsCorrectAndFindIt(
+          Model.Genders,
+          req.body.user_gender
+        );
+        if (checkEnteredGender !== null) {
+          const findRoleForUser = await findBasicUserRole(
+            Model.TypesOfUsersRoles
+          );
+          if (findRoleForUser !== false) {
+            const createAccount = await createNewUserCommonAccount(
+              Model.Users,
+              req.body.user_email,
+              req.body.user_password,
+              findRoleForUser,
+              checkEnteredGender
+            );
+            if (createAccount === true) {
+              res
+                .status(201)
+                .json({ Message: "Rejestracja przebiegła pomyślnie!" });
+            } else {
+              res.status(400).json({ Error: "Rejestracja nie powiodła się!" });
+            }
+          } else {
+            res
+              .status(502)
+              .json({ Error: "Błąd systemu! Brak roli dla użytkownika!" });
+          }
+        } else {
+          res
+            .status(400)
+            .json({ Error: "Wprowadzona płeć nie istnieje w systemie!" });
+        }
+      } else {
+        res
+          .status(400)
+          .json({ Error: "Wprowadzony adres e-mail istnieje w systemie!" });
+      }
     }
   }
 );
