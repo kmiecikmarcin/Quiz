@@ -19,7 +19,7 @@ describe("../Models/TypesOfUsersRoles", () => {
   });
 
   context("indexes", () => {
-    ["idTypeOfUserRole", "nameOfUserRole"].forEach(
+    ["id_type_of_user_role", "name_of_user_role"].forEach(
       checkUniqueIndex(typesOfUsersRoles)
     );
   });

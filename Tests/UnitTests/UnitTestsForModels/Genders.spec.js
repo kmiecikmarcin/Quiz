@@ -19,6 +19,6 @@ describe("../Models/Genders", () => {
   });
 
   context("indexes", () => {
-    ["idGender", "nameOfGender"].forEach(checkUniqueIndex(genders));
+    ["id_gender", "name_of_gender"].forEach(checkUniqueIndex(genders));
   });
 });
