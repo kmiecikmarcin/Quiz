@@ -10,7 +10,7 @@
     "tests": "newman run Tests/Postman/Quiz.postman_collection.json",
     "eslint-start": "eslint ./",
     "pre-commit": "npm run eslint-start",
-    "pre-push": "npm run eslint-start && npm run test"
+    "pre-push": "npm run eslint-start && npm run tests && npm run unit-tests"
   },
   "repository": {
     "type": "git",
