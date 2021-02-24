@@ -11,6 +11,44 @@ const findBasicUserRole = require("../Functions/Users/findBasicUserRole");
 
 const router = express.Router();
 
+/**
+ * @swagger
+ * /users/register:
+ *    post:
+ *      tags:
+ *      - name: Users
+ *      summary: Registration in system
+ *      parameters:
+ *        - in: body
+ *          name: Register
+ *          description: The user registration with data wchich his entered.
+ *          schema:
+ *            type: object
+ *            required: true
+ *            properties:
+ *              user_email:
+ *                type: string
+ *                example: exampleEmailAdress@gmail.com
+ *              user_password:
+ *                type: string
+ *                example: password@
+ *              confirm_password:
+ *                type: string
+ *                example: password@
+ *              user_gender:
+ *                type: string
+ *                example: Kobieta
+ *              user_verification:
+ *                type: boolean
+ *                example: false
+ *      responses:
+ *        201:
+ *          description: Successfully registered!
+ *        400:
+ *          description: Error about entered data.
+ *        502:
+ *          description: System error - user role doesn't exist!
+ */
 router.post(
   "/register",
   [
