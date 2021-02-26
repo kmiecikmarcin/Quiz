@@ -4,7 +4,9 @@ const responseData = {
 };
 
 async function checkIfUserEmailExists(Users, userEmail) {
-  const checkUserAdressEmail = await Users.findOne({ email: userEmail });
+  const checkUserAdressEmail = await Users.findOne({
+    where: { email: userEmail },
+  });
   if (checkUserAdressEmail !== null) {
     responseData.userId = checkUserAdressEmail.id;
     responseData.userRoleId = checkUserAdressEmail.TypesOfUsersRoleId;
