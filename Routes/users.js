@@ -8,6 +8,10 @@ const checkEmailIsUnique = require("../Functions/Users/checkEmailIsUnique");
 const checkGenderIsCorrectAndFindIt = require("../Functions/Users/checkGenderIsCorrectAndFindIt");
 const createNewUserCommonAccount = require("../Functions/Users/createNewUserCommonAccount");
 const findBasicUserRole = require("../Functions/Users/findBasicUserRole");
+const checkIfUserEmailExists = require("../Functions/Users/checkIfUserEmailExists");
+const findUserRoleById = require("../Functions/Users/findUserRoleById");
+const userTryToLogin = require("../Functions/Users/userTryToLogin");
+const takeDataAboutUser = require("../Functions/Users/takeDataAboutUser");
 
 const router = express.Router();
 
@@ -176,6 +180,78 @@ router.post(
         res
           .status(400)
           .json({ Error: "Wprowadzony adres e-mail istnieje w systemie!" });
+      }
+    }
+  }
+);
+
+router.post(
+  "/login",
+  [
+    check("user_email")
+      .exists()
+      .withMessage("Brak wymaganych danych!")
+      .isLength({ min: 1 })
+      .withMessage("Wprowadzony adres e-mail jest za krótki!")
+      .isLength({ max: 254 })
+      .withMessage("Wprowadzony adres e-mail jest za długi!")
+      .isEmail()
+      .withMessage("Adres e-mail został wprowadzony niepoprawnie!"),
+
+    check("user_password")
+      .exists()
+      .withMessage("Brak wymaganych danych!")
+      .isLength({ min: 6 })
+      .withMessage("Hasło jest za krótkie!")
+      .isLength({ max: 32 })
+      .withMessage("Hasło jest za długie!"),
+  ],
+  async (req, res) => {
+    const error = validationResult(req);
+    if (!error.isEmpty()) {
+      res.status(400).json(error.mapped());
+    } else {
+      const checkEneteredEmailAdress = await checkIfUserEmailExists(
+        Model.Users,
+        req.body.user_email
+      );
+      if (checkEneteredEmailAdress !== false) {
+        const checkTypeOfUserRole = await findUserRoleById(
+          Model.TypesOfUsersRoles,
+          checkEneteredEmailAdress.userRoleId
+        );
+        if (checkTypeOfUserRole !== false) {
+          const userData = await takeDataAboutUser(
+            Model.Users,
+            checkEneteredEmailAdress.userId
+          );
+          if (userData !== false) {
+            const generatedTokenForUser = await userTryToLogin(
+              req.body.user_password,
+              userData.id,
+              userData.user_email,
+              userData.password,
+              checkTypeOfUserRole
+            );
+            if (generatedTokenForUser !== false) {
+              res.status(200).json({ Token: generatedTokenForUser });
+            } else {
+              res.status(400).json({ Error: "Nie udało się zalogować!" });
+            }
+          } else {
+            res
+              .status(404)
+              .json({ Error: "Coś poszło nie tak. Sprawdź wprowadzone dane!" });
+          }
+        } else {
+          res
+            .status(404)
+            .json({ Error: "Nie odnaleziono uprawnień dla tego użytkownika!" });
+        }
+      } else {
+        res
+          .status(400)
+          .json({ Error: "Wprowadzony adress e-mail nie istnieje!" });
       }
     }
   }
