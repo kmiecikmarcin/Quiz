@@ -5,7 +5,7 @@ const responseData = {
 };
 
 async function takeDataAboutUser(Users, userId) {
-  const takeUserData = await findOne({ where: { id: userId } });
+  const takeUserData = await Users.findOne({ where: { id: userId } });
   if (takeUserData !== null) {
     responseData.id = takeUserData.id;
     responseData.email = takeUserData.email;
