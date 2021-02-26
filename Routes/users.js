@@ -181,6 +181,33 @@ router.post(
   }
 );
 
-router.post("/login", [], async (req, res) => {});
+router.post(
+  "/login",
+  [
+    check("user_email")
+      .exists()
+      .withMessage("Brak wymaganych danych!")
+      .isLength({ min: 1 })
+      .withMessage("Wprowadzony adres e-mail jest za krótki!")
+      .isLength({ max: 254 })
+      .withMessage("Wprowadzony adres e-mail jest za długi!")
+      .isEmail()
+      .withMessage("Adres e-mail został wprowadzony niepoprawnie!"),
+
+    check("user_password")
+      .exists()
+      .withMessage("Brak wymaganych danych!")
+      .isLength({ min: 6 })
+      .withMessage("Hasło jest za krótkie!")
+      .isLength({ max: 32 })
+      .withMessage("Hasło jest za długie!"),
+  ],
+  async (req, res) => {
+    const error = validationResult(req);
+    if (!error.isEmpty()) {
+      res.status(400).json(error.mapped());
+    }
+  }
+);
 
 module.exports = router;
