@@ -7,7 +7,7 @@
     "start": "node app.js",
     "nodemon-start": "nodemon app.js",
     "unit-tests": "mocha Tests/UnitTests/**/*.js --watch",
-    "tests": "newman run Tests/Postman/Quiz.postman_collection.json",
+    "test": "newman run Tests/Postman/Quiz.postman_collection.json",
     "eslint-start": "eslint ./",
     "pre-commit": "npm run eslint-start",
     "pre-push": "npm run eslint-start && npm run tests"
