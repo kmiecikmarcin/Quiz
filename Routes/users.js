@@ -215,13 +215,13 @@ router.post(
         Model.Users,
         req.body.user_email
       );
-      if (checkEneteredEmailAdress === false) {
+      if (checkEneteredEmailAdress !== false) {
         const checkTypeOfUserRole = await findUserRoleById(
           Model.TypesOfUsersRoles,
           checkEneteredEmailAdress.userRoleId
         );
         if (checkTypeOfUserRole !== false) {
-          const userData = takeDataAboutUser(
+          const userData = await takeDataAboutUser(
             Model.Users,
             checkEneteredEmailAdress.userId
           );
@@ -231,9 +231,9 @@ router.post(
               userData.id,
               userData.user_email,
               userData.password,
-              checkTypeOfUserRole.name
+              checkTypeOfUserRole
             );
-            if (tryToLogin !== false) {
+            if (generatedTokenForUser !== false) {
               res.status(200).json({ Token: generatedTokenForUser });
             } else {
               res.status(400).json({ Error: "Nie udało się zalogować!" });
