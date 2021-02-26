@@ -185,6 +185,35 @@ router.post(
   }
 );
 
+/**
+ * @swagger
+ * /users/Login:
+ *    post:
+ *      tags:
+ *      - name: Users
+ *      summary: Login in system
+ *      parameters:
+ *        - in: body
+ *          name: Login
+ *          description: The user login with data wchich his entered.
+ *          schema:
+ *            type: object
+ *            required: true
+ *            properties:
+ *              user_email:
+ *                type: string
+ *                example: exampleEmailAdress@gmail.com
+ *              user_password:
+ *                type: string
+ *                example: password@
+ *      responses:
+ *        200:
+ *          description: System will return token.
+ *        400:
+ *          description: Error about entered data.
+ *        404:
+ *          description: Data not found.
+ */
 router.post(
   "/login",
   [
