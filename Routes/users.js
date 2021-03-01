@@ -370,7 +370,31 @@ router.put(
               authData.email
             );
             if (checkUser !== false) {
-              res.status(200);
+              const takeUserData = await takeDataAboutUser(
+                Model.Users,
+                checkUser.id
+              );
+              if (takeUserData !== false) {
+                const deleteAccount = await userDeleteHisAccount(
+                  Model.Users,
+                  req.body.user_password,
+                  takeUserData.id,
+                  takeUserData.password
+                );
+                if (deleteAccount !== false) {
+                  res
+                    .status(200)
+                    .json({ Message: "Pomyślnie usunięto konto!" });
+                } else {
+                  res
+                    .status(400)
+                    .json({
+                      Error: "Coś poszło nie tak. Sprawdź wprowadzone dane!",
+                    });
+                }
+              } else {
+                res.status(404).json({ Error: "Nie odnaleziono danych!" });
+              }
             } else {
               res.status(400).json({ Error: "Użytkownik nie istnieje!" });
             }
