@@ -14,6 +14,7 @@ const findUserRoleById = require("../Functions/Users/findUserRoleById");
 const userTryToLogin = require("../Functions/Users/userTryToLogin");
 const takeDataAboutUser = require("../Functions/Users/takeDataAboutUser");
 const verifyJWTToken = require("../Functions/Others/verifyJWTToken");
+const userDeleteHisAccount = require("../Functions/Users/userDeleteHisAccount");
 
 const router = express.Router();
 
