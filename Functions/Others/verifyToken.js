@@ -1,4 +1,4 @@
-function verifyJWTToken(req, res, next) {
+module.exports = function (req, res, next) {
   const bearerHeader = req.headers.authorization;
 
   if (typeof bearerHeader !== "undefined") {
@@ -7,8 +7,6 @@ function verifyJWTToken(req, res, next) {
     req.token = bearerToken;
     next();
   } else {
-    res.status(403);
+    res.sendStatus(403);
   }
-}
-
-module.exports = verifyJWTToken;
+};
