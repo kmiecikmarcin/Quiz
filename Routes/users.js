@@ -286,4 +286,6 @@ router.post(
   }
 );
 
+router.put("/delete", [], async () => {});
+
 module.exports = router;
