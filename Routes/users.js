@@ -1,5 +1,6 @@
 const express = require("express");
 const { check, validationResult } = require("express-validator");
+const jwt = require("jsonwebtoken");
 const Model = require("../Functions/Others/takeAndReturnModelInstance");
 const checkPasswordAboutOneSpecialKey = require("../Functions/Others/checkPasswordAboutOneSpecialKey");
 const checkEnteredGender = require("../Functions/Others/checkEnteredGender");
@@ -12,6 +13,7 @@ const checkIfUserEmailExists = require("../Functions/Users/checkIfUserEmailExist
 const findUserRoleById = require("../Functions/Users/findUserRoleById");
 const userTryToLogin = require("../Functions/Users/userTryToLogin");
 const takeDataAboutUser = require("../Functions/Users/takeDataAboutUser");
+const verifyJWTToken = require("../Functions/Others/verifyJWTToken");
 
 const router = express.Router();
 
@@ -350,7 +352,33 @@ router.put(
         }
       }),
   ],
-  async () => {}
+  verifyJWTToken,
+  (req, res) => {
+    const error = validationResult(req);
+    if (!error.isEmpty()) {
+      res.status(400).json(error.mapped());
+    } else {
+      jwt.verify(
+        req.token,
+        process.env.S3_SECRETKEY,
+        async (jwtError, authData) => {
+          if (jwtError) {
+            res.status(403).json({ Error: "Błąd uwierzytelniania!" });
+          } else {
+            const checkUser = await checkIfUserEmailExists(
+              Model.Users,
+              authData.email
+            );
+            if (checkUser !== false) {
+              res.status(200);
+            } else {
+              res.status(400).json({ Error: "Użytkownik nie istnieje!" });
+            }
+          }
+        }
+      );
+    }
+  }
 );
 
 module.exports = router;
