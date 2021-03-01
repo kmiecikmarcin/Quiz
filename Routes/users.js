@@ -286,6 +286,28 @@ router.post(
   }
 );
 
-router.put("/delete", [], async () => {});
+router.put(
+  "/delete",
+  [
+    check("user_email")
+      .exists()
+      .withMessage("Brak wymaganych danych!")
+      .isLength({ min: 1 })
+      .withMessage("Wprowadzony adres e-mail jest za krótki!")
+      .isLength({ max: 254 })
+      .withMessage("Wprowadzony adres e-mail jest za długi!")
+      .isEmail()
+      .withMessage("Adres e-mail został wprowadzony niepoprawnie!"),
+
+    check("user_password")
+      .exists()
+      .withMessage("Brak wymaganych danych!")
+      .isLength({ min: 6 })
+      .withMessage("Hasło jest za krótkie!")
+      .isLength({ max: 32 })
+      .withMessage("Hasło jest za długie!"),
+  ],
+  async () => {}
+);
 
 module.exports = router;
