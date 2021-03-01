@@ -9,7 +9,7 @@ async function userDeleteHisAccount(
   const checkPassword = await bcrypt.compare(enteredUserPassword, userPassword);
   if (checkPassword) {
     const tryToDeleteUserAccount = await Users.update(
-      { accountDeletedStatus: true },
+      { accountToBeDeleted: true },
       { where: { id: userId, password: userPassword } }
     );
     if (tryToDeleteUserAccount.includes(1)) {
