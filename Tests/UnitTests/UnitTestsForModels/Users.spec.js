@@ -19,7 +19,7 @@ describe("../Models/Genders", () => {
   checkModelName(Users)("Users");
 
   context("properties", () => {
-    ["id", "email", "password", "accountDeletedStatus"].forEach(
+    ["id", "email", "password", "accountToBeDeleted"].forEach(
       checkPropertyExists(users)
     );
   });

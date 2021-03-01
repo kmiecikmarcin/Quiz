@@ -1,5 +1,6 @@
 const express = require("express");
 const { check, validationResult } = require("express-validator");
+const jwt = require("jsonwebtoken");
 const Model = require("../Functions/Others/takeAndReturnModelInstance");
 const checkPasswordAboutOneSpecialKey = require("../Functions/Others/checkPasswordAboutOneSpecialKey");
 const checkEnteredGender = require("../Functions/Others/checkEnteredGender");
@@ -12,6 +13,8 @@ const checkIfUserEmailExists = require("../Functions/Users/checkIfUserEmailExist
 const findUserRoleById = require("../Functions/Users/findUserRoleById");
 const userTryToLogin = require("../Functions/Users/userTryToLogin");
 const takeDataAboutUser = require("../Functions/Users/takeDataAboutUser");
+const verifyToken = require("../Functions/Others/verifyToken");
+const userDeleteHisAccount = require("../Functions/Users/userDeleteHisAccount");
 
 const router = express.Router();
 
@@ -258,7 +261,7 @@ router.post(
             const generatedTokenForUser = await userTryToLogin(
               req.body.user_password,
               userData.id,
-              userData.user_email,
+              userData.email,
               userData.password,
               checkTypeOfUserRole
             );
@@ -301,9 +304,6 @@ router.post(
  *            type: object
  *            required: true
  *            properties:
- *              user_email:
- *                type: string
- *                example: exampleEmailAdress@gmail.com
  *              user_password:
  *                type: string
  *                example: password@
@@ -321,16 +321,6 @@ router.post(
 router.put(
   "/delete",
   [
-    check("user_email")
-      .exists()
-      .withMessage("Brak wymaganych danych!")
-      .isLength({ min: 1 })
-      .withMessage("Wprowadzony adres e-mail jest za krótki!")
-      .isLength({ max: 254 })
-      .withMessage("Wprowadzony adres e-mail jest za długi!")
-      .isEmail()
-      .withMessage("Adres e-mail został wprowadzony niepoprawnie!"),
-
     check("user_password")
       .exists()
       .withMessage("Brak wymaganych danych!")
@@ -350,7 +340,56 @@ router.put(
         }
       }),
   ],
-  async () => {}
+  verifyToken,
+  (req, res) => {
+    const error = validationResult(req);
+    if (!error.isEmpty()) {
+      res.status(400).json(error.mapped());
+    } else {
+      jwt.verify(
+        req.token,
+        process.env.S3_SECRETKEY,
+        async (jwtError, authData) => {
+          if (jwtError) {
+            res.status(403).json({ Error: "Błąd uwierzytelniania!" });
+          } else {
+            console.log(authData);
+            const checkUser = await checkIfUserEmailExists(
+              Model.Users,
+              authData.email
+            );
+            if (checkUser !== false) {
+              const takeUserData = await takeDataAboutUser(
+                Model.Users,
+                checkUser.userId
+              );
+              if (takeUserData !== false) {
+                const deleteAccount = await userDeleteHisAccount(
+                  Model.Users,
+                  req.body.user_password,
+                  takeUserData.id,
+                  takeUserData.password
+                );
+                if (deleteAccount !== false) {
+                  res
+                    .status(200)
+                    .json({ Message: "Pomyślnie usunięto konto!" });
+                } else {
+                  res.status(400).json({
+                    Error: "Coś poszło nie tak. Sprawdź wprowadzone dane!",
+                  });
+                }
+              } else {
+                res.status(404).json({ Error: "Nie odnaleziono danych!" });
+              }
+            } else {
+              res.status(400).json({ Error: "Użytkownik nie istnieje!" });
+            }
+          }
+        }
+      );
+    }
+  }
 );
 
 module.exports = router;
