@@ -13,7 +13,7 @@ const checkIfUserEmailExists = require("../Functions/Users/checkIfUserEmailExist
 const findUserRoleById = require("../Functions/Users/findUserRoleById");
 const userTryToLogin = require("../Functions/Users/userTryToLogin");
 const takeDataAboutUser = require("../Functions/Users/takeDataAboutUser");
-const verifyJWTToken = require("../Functions/Others/verifyJWTToken");
+const verifyToken = require("../Functions/Others/verifyToken");
 const userDeleteHisAccount = require("../Functions/Users/userDeleteHisAccount");
 
 const router = express.Router();
@@ -261,7 +261,7 @@ router.post(
             const generatedTokenForUser = await userTryToLogin(
               req.body.user_password,
               userData.id,
-              userData.user_email,
+              userData.email,
               userData.password,
               checkTypeOfUserRole
             );
@@ -340,7 +340,7 @@ router.put(
         }
       }),
   ],
-  verifyJWTToken,
+  verifyToken,
   (req, res) => {
     const error = validationResult(req);
     if (!error.isEmpty()) {
@@ -353,6 +353,7 @@ router.put(
           if (jwtError) {
             res.status(403).json({ Error: "Błąd uwierzytelniania!" });
           } else {
+            console.log(authData);
             const checkUser = await checkIfUserEmailExists(
               Model.Users,
               authData.email
@@ -360,7 +361,7 @@ router.put(
             if (checkUser !== false) {
               const takeUserData = await takeDataAboutUser(
                 Model.Users,
-                checkUser.id
+                checkUser.userId
               );
               if (takeUserData !== false) {
                 const deleteAccount = await userDeleteHisAccount(
