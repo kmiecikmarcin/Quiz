@@ -12,7 +12,7 @@ async function createNewUserCommonAccount(
   const createUserAccount = await Users.create({
     email: userEmail,
     password: hash,
-    accountDeletedStatus: false,
+    accountToBeDeleted: false,
     TypesOfUsersRoleId: idUserRole,
     GenderId: genderId,
   });
