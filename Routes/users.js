@@ -286,6 +286,38 @@ router.post(
   }
 );
 
+/**
+ * @swagger
+ * /users/delete:
+ *    post:
+ *      tags:
+ *      - name: Users
+ *      summary: Delete account
+ *      parameters:
+ *        - in: body
+ *          name: Delete
+ *          description: The user delete his account.
+ *          schema:
+ *            type: object
+ *            required: true
+ *            properties:
+ *              user_email:
+ *                type: string
+ *                example: exampleEmailAdress@gmail.com
+ *              user_password:
+ *                type: string
+ *                example: password@
+ *              confirm_password:
+ *                type: string
+ *                example: password@
+ *      responses:
+ *        200:
+ *          description: System will return token.
+ *        400:
+ *          description: Error about entered data.
+ *        404:
+ *          description: Data not found.
+ */
 router.put(
   "/delete",
   [
