@@ -83,17 +83,17 @@
 							"listen": "test",
 							"script": {
 								"exec": [
-									"let bodyData = JSON.parse(responseBody);\r",
-									"const token = bodyData.Token;\r",
-									"pm.collectionVariables.set(\"token\", token);\r",
-									"\r",
 									"pm.test(\"Response is correct\", function () {\r",
 									"    var jsonData = pm.response.json();\r",
 									"    pm.expect(jsonData.Message).not.eql(null);\r",
 									"});\r",
 									"pm.test(\"Successful POST request\", function () {\r",
 									"    pm.expect(pm.response.code).to.be.oneOf([200]);\r",
-									"});"
+									"});\r",
+									"\r",
+									"let bodyData = JSON.parse(responseBody);\r",
+									"const token = bodyData.Token;\r",
+									"pm.environment.set(\"token\", token);"
 								],
 								"type": "text/javascript"
 							}
@@ -144,6 +144,15 @@
 								],
 								"type": "text/javascript"
 							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
 						}
 					],
 					"request": {
@@ -161,7 +170,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"user_password\": {{user_password}},\r\n    \"confirm_password\": {{user_password}}\r\n}",
+							"raw": "{\r\n    \"user_password\": \"{{user_password}}\",\r\n    \"confirm_password\": \"{{user_password}}\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -186,10 +195,24 @@
 			]
 		}
 	],
-	"variable": [
+	"event": [
 		{
-			"key": "token",
-			"value": ""
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
 		}
 	]
 }
