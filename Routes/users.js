@@ -306,6 +306,17 @@ router.put(
       .withMessage("Hasło jest za krótkie!")
       .isLength({ max: 32 })
       .withMessage("Hasło jest za długie!"),
+
+    check("confirm_password")
+      .exists()
+      .withMessage("Brak wymaganych danych!")
+      .custom((value, { req }) => {
+        if (value !== req.body.user_password) {
+          throw new Error("Hasła sa różne!");
+        } else {
+          return value;
+        }
+      }),
   ],
   async () => {}
 );
