@@ -31,7 +31,7 @@ const model = (sequelize, DataTypes) => {
         type: DataTypes.BOOLEAN,
         defaultValue: false,
         allowNull: false,
-        field: "account_deleted_status",
+        field: "account_to_be_deleted",
       },
     },
     {
