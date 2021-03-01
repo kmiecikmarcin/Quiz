@@ -303,9 +303,6 @@ router.post(
  *            type: object
  *            required: true
  *            properties:
- *              user_email:
- *                type: string
- *                example: exampleEmailAdress@gmail.com
  *              user_password:
  *                type: string
  *                example: password@
@@ -323,16 +320,6 @@ router.post(
 router.put(
   "/delete",
   [
-    check("user_email")
-      .exists()
-      .withMessage("Brak wymaganych danych!")
-      .isLength({ min: 1 })
-      .withMessage("Wprowadzony adres e-mail jest za krótki!")
-      .isLength({ max: 254 })
-      .withMessage("Wprowadzony adres e-mail jest za długi!")
-      .isEmail()
-      .withMessage("Adres e-mail został wprowadzony niepoprawnie!"),
-
     check("user_password")
       .exists()
       .withMessage("Brak wymaganych danych!")
@@ -386,11 +373,9 @@ router.put(
                     .status(200)
                     .json({ Message: "Pomyślnie usunięto konto!" });
                 } else {
-                  res
-                    .status(400)
-                    .json({
-                      Error: "Coś poszło nie tak. Sprawdź wprowadzone dane!",
-                    });
+                  res.status(400).json({
+                    Error: "Coś poszło nie tak. Sprawdź wprowadzone dane!",
+                  });
                 }
               } else {
                 res.status(404).json({ Error: "Nie odnaleziono danych!" });
