@@ -1,5 +1,6 @@
 const express = require("express");
 const { check, validationResult } = require("express-validator");
+const jwt = require("jsonwebtoken");
 const Model = require("../Functions/Others/takeAndReturnModelInstance");
 const checkPasswordAboutOneSpecialKey = require("../Functions/Others/checkPasswordAboutOneSpecialKey");
 const checkEnteredGender = require("../Functions/Others/checkEnteredGender");
@@ -12,6 +13,8 @@ const checkIfUserEmailExists = require("../Functions/Users/checkIfUserEmailExist
 const findUserRoleById = require("../Functions/Users/findUserRoleById");
 const userTryToLogin = require("../Functions/Users/userTryToLogin");
 const takeDataAboutUser = require("../Functions/Users/takeDataAboutUser");
+const verifyToken = require("../Functions/Others/verifyToken");
+const userDeleteHisAccount = require("../Functions/Users/userDeleteHisAccount");
 
 const router = express.Router();
 
@@ -258,7 +261,7 @@ router.post(
             const generatedTokenForUser = await userTryToLogin(
               req.body.user_password,
               userData.id,
-              userData.user_email,
+              userData.email,
               userData.password,
               checkTypeOfUserRole
             );
@@ -282,6 +285,109 @@ router.post(
           .status(400)
           .json({ Error: "Wprowadzony adress e-mail nie istnieje!" });
       }
+    }
+  }
+);
+
+/**
+ * @swagger
+ * /users/delete:
+ *    post:
+ *      tags:
+ *      - name: Users
+ *      summary: Delete account
+ *      parameters:
+ *        - in: body
+ *          name: Delete
+ *          description: The user delete his account.
+ *          schema:
+ *            type: object
+ *            required: true
+ *            properties:
+ *              user_password:
+ *                type: string
+ *                example: password@
+ *              confirm_password:
+ *                type: string
+ *                example: password@
+ *      responses:
+ *        200:
+ *          description: System will return token.
+ *        400:
+ *          description: Error about entered data.
+ *        404:
+ *          description: Data not found.
+ */
+router.put(
+  "/delete",
+  [
+    check("user_password")
+      .exists()
+      .withMessage("Brak wymaganych danych!")
+      .isLength({ min: 6 })
+      .withMessage("Hasło jest za krótkie!")
+      .isLength({ max: 32 })
+      .withMessage("Hasło jest za długie!"),
+
+    check("confirm_password")
+      .exists()
+      .withMessage("Brak wymaganych danych!")
+      .custom((value, { req }) => {
+        if (value !== req.body.user_password) {
+          throw new Error("Hasła sa różne!");
+        } else {
+          return value;
+        }
+      }),
+  ],
+  verifyToken,
+  (req, res) => {
+    const error = validationResult(req);
+    if (!error.isEmpty()) {
+      res.status(400).json(error.mapped());
+    } else {
+      jwt.verify(
+        req.token,
+        process.env.S3_SECRETKEY,
+        async (jwtError, authData) => {
+          if (jwtError) {
+            res.status(403).json({ Error: "Błąd uwierzytelniania!" });
+          } else {
+            console.log(authData);
+            const checkUser = await checkIfUserEmailExists(
+              Model.Users,
+              authData.email
+            );
+            if (checkUser !== false) {
+              const takeUserData = await takeDataAboutUser(
+                Model.Users,
+                checkUser.userId
+              );
+              if (takeUserData !== false) {
+                const deleteAccount = await userDeleteHisAccount(
+                  Model.Users,
+                  req.body.user_password,
+                  takeUserData.id,
+                  takeUserData.password
+                );
+                if (deleteAccount !== false) {
+                  res
+                    .status(200)
+                    .json({ Message: "Pomyślnie usunięto konto!" });
+                } else {
+                  res.status(400).json({
+                    Error: "Coś poszło nie tak. Sprawdź wprowadzone dane!",
+                  });
+                }
+              } else {
+                res.status(404).json({ Error: "Nie odnaleziono danych!" });
+              }
+            } else {
+              res.status(400).json({ Error: "Użytkownik nie istnieje!" });
+            }
+          }
+        }
+      );
     }
   }
 );

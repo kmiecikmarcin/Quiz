@@ -1,6 +1,6 @@
 async function checkEmailIsUnique(Users, userEmail) {
   const checkEmail = await Users.findOne({
-    where: { user_email: userEmail, accountDeletedStatus: false },
+    where: { user_email: userEmail, accountToBeDeleted: false },
   });
   if (checkEmail !== null) {
     return false;

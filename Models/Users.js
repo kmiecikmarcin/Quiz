@@ -27,11 +27,11 @@ const model = (sequelize, DataTypes) => {
         allowNull: false,
         field: "user_password",
       },
-      accountDeletedStatus: {
+      accountToBeDeleted: {
         type: DataTypes.BOOLEAN,
         defaultValue: false,
         allowNull: false,
-        field: "account_deleted_status",
+        field: "account_to_be_deleted",
       },
     },
     {
