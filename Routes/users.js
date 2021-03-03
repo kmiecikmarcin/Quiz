@@ -190,7 +190,7 @@ router.post(
 
 /**
  * @swagger
- * /users/Login:
+ * /users/login:
  *    post:
  *      tags:
  *      - name: Users
