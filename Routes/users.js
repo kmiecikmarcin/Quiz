@@ -353,7 +353,6 @@ router.put(
           if (jwtError) {
             res.status(403).json({ Error: "Błąd uwierzytelniania!" });
           } else {
-            console.log(authData);
             const checkUser = await checkIfUserEmailExists(
               Model.Users,
               authData.email
