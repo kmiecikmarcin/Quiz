@@ -14,7 +14,7 @@ const incorrectUserDataForLogin = {
 };
 
 const loginResponse = {
-  token: null,
+  token: "",
 };
 
 describe("POST /login", () => {
