@@ -20,7 +20,7 @@ const router = express.Router();
 
 /**
  * @swagger
- * /quiz/users/register:
+ *  /users/register:
  *    post:
  *      tags:
  *      - name: Users
@@ -190,7 +190,7 @@ router.post(
 
 /**
  * @swagger
- * /quiz/users/login:
+ *  /users/login:
  *    post:
  *      tags:
  *      - name: Users
@@ -291,7 +291,7 @@ router.post(
 
 /**
  * @swagger
- * /quiz/users/delete:
+ *  /users/delete:
  *    put:
  *      tags:
  *      - name: Users
