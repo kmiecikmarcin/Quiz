@@ -7,7 +7,7 @@ const swaggerOptions = {
       version: "0.1.3",
     },
     host: "learnandquiz.herokuapp.com",
-    basePath: "/quiz/",
+    basePath: "/quiz",
     securityDefinitions: {
       bearerAuth: {
         type: "apiKey",
