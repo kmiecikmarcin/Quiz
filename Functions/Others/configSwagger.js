@@ -6,7 +6,7 @@ const swaggerOptions = {
       description: "API for easy study new things from school",
       version: "0.1.3",
     },
-    host: "localhost:3000",
+    host: "learnandquiz.herokuapp.com",
     basePath: "/quiz/",
     securityDefinitions: {
       bearerAuth: {
