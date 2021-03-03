@@ -292,7 +292,7 @@ router.post(
 /**
  * @swagger
  * /users/delete:
- *    post:
+ *    put:
  *      tags:
  *      - name: Users
  *      summary: Delete account
