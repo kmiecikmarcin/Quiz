@@ -291,6 +291,39 @@ router.post(
 
 /**
  * @swagger
+ *  /users/email:
+ *    put:
+ *      tags:
+ *      - name: Users
+ *      summary: Change user e-mail
+ *      parameters:
+ *        - in: body
+ *          name: Update
+ *          description: User can change his e-mail adress.
+ *          schema:
+ *            type: object
+ *            required: true
+ *            properties:
+ *              new_user_email:
+ *                type: string
+ *                example: newExampleEmailAdress@gmail.com
+ *              user_password:
+ *                type: string
+ *                example: password@
+ *      responses:
+ *        200:
+ *          description: System will return token.
+ *        400:
+ *          description: Error about entered data.
+ *        403:
+ *          description: Forbidden.
+ *        404:
+ *          description: Data not found.
+ */
+router.put("/email", [], () => {});
+
+/**
+ * @swagger
  *  /users/delete:
  *    put:
  *      tags:
