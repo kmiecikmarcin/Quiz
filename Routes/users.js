@@ -312,7 +312,7 @@ router.post(
  *                example: password@
  *      responses:
  *        200:
- *          description: System will return token.
+ *          description: Data changed successfully!
  *        400:
  *          description: Error about entered data.
  *        403:
@@ -345,9 +345,11 @@ router.put("/email", [], () => {});
  *                example: password@
  *      responses:
  *        200:
- *          description: System will return token.
+ *          description: Data changed successfully!
  *        400:
  *          description: Error about entered data.
+ *        403:
+ *          description: Forbidden.
  *        404:
  *          description: Data not found.
  */
