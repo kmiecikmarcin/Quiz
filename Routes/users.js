@@ -15,6 +15,7 @@ const userTryToLogin = require("../Functions/Users/userTryToLogin");
 const takeDataAboutUser = require("../Functions/Users/takeDataAboutUser");
 const verifyToken = require("../Functions/Others/verifyToken");
 const userDeleteHisAccount = require("../Functions/Users/userDeleteHisAccount");
+const changeUserEmailAdress = require("../Functions/Users/changeUserEmailAdress");
 
 const router = express.Router();
 
@@ -341,7 +342,59 @@ router.put(
       .isLength({ max: 32 })
       .withMessage("Hasło jest za długie!"),
   ],
-  () => {}
+  verifyToken,
+  (req, res) => {
+    const error = validationResult(req);
+    if (!error.isEmpty()) {
+      res.status(400).json(error.mapped());
+    } else {
+      jwt.verify(
+        req.token,
+        process.env.S3_SECRETKEY,
+        async (jwtError, authData) => {
+          if (jwtError) {
+            res.status(403).json({ Error: "Błąd uwierzytelniania!" });
+          } else {
+            const checkUser = await checkIfUserEmailExists(
+              Model.Users,
+              authData.email
+            );
+            if (checkUser !== false) {
+              const takeUserData = await takeDataAboutUser(
+                Model.Users,
+                checkUser.userId
+              );
+              if (takeUserData !== false) {
+                const updateUserEmail = await changeUserEmailAdress(
+                  Model.Users,
+                  takeUserData.id,
+                  takeUserData.email,
+                  takeUserData.password,
+                  req.body.user_password,
+                  req.body.new_user_email
+                );
+                if (updateUserEmail !== false) {
+                  res
+                    .status(200)
+                    .json({ Message: "Pomyślnie zmieniono adres e-mail!" });
+                } else {
+                  res.status(400).json({
+                    Error: "Coś poszło nie tak. Sprawdź wprowadzone dane!",
+                  });
+                }
+              } else {
+                res.status(404).json({
+                  Error: "Nie odnaleziono danych dotyczących użytkownika!",
+                });
+              }
+            } else {
+              res.status(400).json({ Error: "Użytkownik nie istnieje!" });
+            }
+          }
+        }
+      );
+    }
+  }
 );
 
 /**
@@ -436,7 +489,9 @@ router.put(
                   });
                 }
               } else {
-                res.status(404).json({ Error: "Nie odnaleziono danych!" });
+                res.status(404).json({
+                  Error: "Nie odnaleziono danych dotyczących użytkownika!",
+                });
               }
             } else {
               res.status(400).json({ Error: "Użytkownik nie istnieje!" });
