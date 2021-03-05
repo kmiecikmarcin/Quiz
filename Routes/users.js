@@ -374,9 +374,21 @@ router.put(
                   req.body.new_user_email
                 );
                 if (updateUserEmail !== false) {
-                  res
-                    .status(200)
-                    .json({ Message: "Pomyślnie zmieniono adres e-mail!" });
+                  const newTokenForUser = await userTryToLogin(
+                    req.body.user_password,
+                    takeUserData.id,
+                    req.body.new_user_email,
+                    takeUserData.password,
+                    checkUser.userRoleId
+                  );
+                  if (newTokenForUser !== false) {
+                    res.status(200).json({ Token: newTokenForUser });
+                  } else {
+                    res.status(403).json({
+                      Error:
+                        "Nie udało się przeprowadzić operacji uwierzytelnienia!",
+                    });
+                  }
                 } else {
                   res.status(400).json({
                     Error: "Coś poszło nie tak. Sprawdź wprowadzone dane!",
