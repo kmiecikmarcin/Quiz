@@ -152,7 +152,7 @@
 									"const random_number = _.random(1000, 9000);\r",
 									"const new_user_email = \"newUser\" + random_number + \"@example.com\";\r",
 									"\r",
-									"pm.environment(\"new_user_email\", new_user_email);"
+									"pm.environment.set(\"new_user_email\", new_user_email);"
 								],
 								"type": "text/javascript"
 							}
