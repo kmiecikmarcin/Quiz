@@ -212,7 +212,7 @@
 									"\r",
 									"pm.test(\"Response is correct\", function () {\r",
 									"    var jsonData = pm.response.json();\r",
-									"    pm.expect(jsonData.Error).to.eql(\"Pomyślnie usunięto konto!\");\r",
+									"    pm.expect(jsonData.Message).to.eql(\"Pomyślnie usunięto konto!\");\r",
 									"});"
 								],
 								"type": "text/javascript"
