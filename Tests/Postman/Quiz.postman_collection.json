@@ -140,7 +140,11 @@
 									"pm.test(\"Response is correct\", function () {\r",
 									"    var jsonData = pm.response.json();\r",
 									"    pm.expect(jsonData.Message).to.eql(\"Pomyślnie zmieniono adres e-mail!\");\r",
-									"});"
+									"});\r",
+									"\r",
+									"let bodyData = JSON.parse(responseBody);\r",
+									"const token = bodyData.Token;\r",
+									"pm.environment.set(\"token\", token);"
 								],
 								"type": "text/javascript"
 							}
