@@ -207,12 +207,12 @@
 							"script": {
 								"exec": [
 									"pm.test(\"Successful PUT request\", function () {\r",
-									"    pm.expect(pm.response.code).to.be.oneOf([400]);\r",
+									"    pm.expect(pm.response.code).to.be.oneOf([200]);\r",
 									"});\r",
 									"\r",
 									"pm.test(\"Response is correct\", function () {\r",
 									"    var jsonData = pm.response.json();\r",
-									"    pm.expect(jsonData.Error).to.eql(\"Użytkownik nie istnieje!\");\r",
+									"    pm.expect(jsonData.Error).to.eql(\"Pomyślnie usunięto konto!\");\r",
 									"});"
 								],
 								"type": "text/javascript"
