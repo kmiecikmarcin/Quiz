@@ -139,7 +139,7 @@
 									"\r",
 									"pm.test(\"Response is correct\", function () {\r",
 									"    var jsonData = pm.response.json();\r",
-									"    pm.expect(jsonData.Message).to.eql(\"Pomyślnie zmieniono adres e-mail!\");\r",
+									"    pm.expect(jsonData.Message).not.eql(null);\r",
 									"});\r",
 									"\r",
 									"let bodyData = JSON.parse(responseBody);\r",
