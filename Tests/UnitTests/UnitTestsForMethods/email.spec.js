@@ -27,4 +27,32 @@ describe("PUT /email", () => {
         done();
       });
   });
+
+  it("Try to change e-mail without created account", (done) => {
+    request(app)
+      .put("/quiz/users/email")
+      .set("Content-Type", "application/json")
+      .set("Authorization", `Bearer ${userToken.token}`)
+      .send(correctUserData)
+      .then((res) => {
+        expect(res.statusCode).equal(400);
+        expect(res.body).to.have.property("Error");
+        expect(res.body.Error).equal("Użytkownik nie istnieje!");
+        done();
+      });
+  });
+
+  it("Try to change data without authorization", (done) => {
+    request(app)
+      .put("/quiz/users/email")
+      .set("Content-Type", "application/json")
+      .set("Authorization", "")
+      .send(correctUserData)
+      .then((res) => {
+        expect(res.statusCode).equal(403);
+        expect(res.body).to.have.property("Error");
+        expect(res.body.Error).equal("Błąd uwierzytelniania!");
+        done();
+      });
+  });
 });
