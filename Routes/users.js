@@ -15,6 +15,7 @@ const userTryToLogin = require("../Functions/Users/userTryToLogin");
 const takeDataAboutUser = require("../Functions/Users/takeDataAboutUser");
 const verifyToken = require("../Functions/Others/verifyToken");
 const userDeleteHisAccount = require("../Functions/Users/userDeleteHisAccount");
+const changeUserEmailAdress = require("../Functions/Users/changeUserEmailAdress");
 
 const router = express.Router();
 
@@ -291,6 +292,125 @@ router.post(
 
 /**
  * @swagger
+ *  /users/email:
+ *    put:
+ *      tags:
+ *      - name: Users
+ *      summary: Change user e-mail
+ *      parameters:
+ *        - in: body
+ *          name: Update
+ *          description: User can change his e-mail adress.
+ *          schema:
+ *            type: object
+ *            required: true
+ *            properties:
+ *              new_user_email:
+ *                type: string
+ *                example: newExampleEmailAdress@gmail.com
+ *              user_password:
+ *                type: string
+ *                example: password@
+ *      responses:
+ *        200:
+ *          description: Data changed successfully!
+ *        400:
+ *          description: Error about entered data.
+ *        403:
+ *          description: Forbidden.
+ *        404:
+ *          description: Data not found.
+ */
+router.put(
+  "/email",
+  [
+    check("new_user_email")
+      .exists()
+      .withMessage("Brak wymaganych danych!")
+      .isLength({ min: 1 })
+      .withMessage("Wprowadzony adres e-mail jest za krótki!")
+      .isLength({ max: 254 })
+      .withMessage("Wprowadzony adres e-mail jest za długi!")
+      .isEmail()
+      .withMessage("Adres e-mail został wprowadzony niepoprawnie!"),
+
+    check("user_password")
+      .exists()
+      .withMessage("Brak wymaganych danych!")
+      .isLength({ min: 6 })
+      .withMessage("Hasło jest za krótkie!")
+      .isLength({ max: 32 })
+      .withMessage("Hasło jest za długie!"),
+  ],
+  verifyToken,
+  (req, res) => {
+    const error = validationResult(req);
+    if (!error.isEmpty()) {
+      res.status(400).json(error.mapped());
+    } else {
+      jwt.verify(
+        req.token,
+        process.env.S3_SECRETKEY,
+        async (jwtError, authData) => {
+          if (jwtError) {
+            res.status(403).json({ Error: "Błąd uwierzytelniania!" });
+          } else {
+            const checkUser = await checkIfUserEmailExists(
+              Model.Users,
+              authData.email
+            );
+            if (checkUser !== false) {
+              const takeUserData = await takeDataAboutUser(
+                Model.Users,
+                checkUser.userId
+              );
+              if (takeUserData !== false) {
+                const updateUserEmail = await changeUserEmailAdress(
+                  Model.Users,
+                  takeUserData.id,
+                  takeUserData.email,
+                  takeUserData.password,
+                  req.body.user_password,
+                  req.body.new_user_email
+                );
+                if (updateUserEmail !== false) {
+                  const newTokenForUser = await userTryToLogin(
+                    req.body.user_password,
+                    takeUserData.id,
+                    req.body.new_user_email,
+                    takeUserData.password,
+                    checkUser.userRoleId
+                  );
+                  if (newTokenForUser !== false) {
+                    res.status(200).json({ Token: newTokenForUser });
+                  } else {
+                    res.status(403).json({
+                      Error:
+                        "Nie udało się przeprowadzić operacji uwierzytelnienia!",
+                    });
+                  }
+                } else {
+                  res.status(400).json({
+                    Error: "Coś poszło nie tak. Sprawdź wprowadzone dane!",
+                  });
+                }
+              } else {
+                res.status(404).json({
+                  Error: "Nie odnaleziono danych dotyczących użytkownika!",
+                });
+              }
+            } else {
+              res.status(400).json({ Error: "Użytkownik nie istnieje!" });
+            }
+          }
+        }
+      );
+    }
+  }
+);
+
+/**
+ * @swagger
  *  /users/delete:
  *    put:
  *      tags:
@@ -312,9 +432,11 @@ router.post(
  *                example: password@
  *      responses:
  *        200:
- *          description: System will return token.
+ *          description: Data changed successfully!
  *        400:
  *          description: Error about entered data.
+ *        403:
+ *          description: Forbidden.
  *        404:
  *          description: Data not found.
  */
@@ -379,7 +501,9 @@ router.put(
                   });
                 }
               } else {
-                res.status(404).json({ Error: "Nie odnaleziono danych!" });
+                res.status(404).json({
+                  Error: "Nie odnaleziono danych dotyczących użytkownika!",
+                });
               }
             } else {
               res.status(400).json({ Error: "Użytkownik nie istnieje!" });
