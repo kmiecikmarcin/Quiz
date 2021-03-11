@@ -409,6 +409,40 @@ router.put(
   }
 );
 
+/**
+ * @swagger
+ *  /users/password:
+ *    put:
+ *      tags:
+ *      - name: Users
+ *      summary: Change user password
+ *      parameters:
+ *        - in: body
+ *          name: Update
+ *          description: User can change his password.
+ *          schema:
+ *            type: object
+ *            required: true
+ *            properties:
+ *              new_user_password:
+ *                type: string
+ *                example: newUserPassword@
+ *              confirm_new_user_password:
+ *                type: string
+ *                example: newUserPassword@
+ *              user_password:
+ *                type: string
+ *                example: newUserPassword@
+ *      responses:
+ *        200:
+ *          description: Data changed successfully!
+ *        400:
+ *          description: Error about entered data.
+ *        403:
+ *          description: Forbidden.
+ *        404:
+ *          description: Data not found.
+ */
 router.put(
   "/password",
   [
