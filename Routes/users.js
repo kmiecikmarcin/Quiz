@@ -409,6 +409,38 @@ router.put(
   }
 );
 
+router.put(
+  "/password",
+  [
+    check("new_user_password")
+      .exists()
+      .withMessage("Brak wymaganych danych!")
+      .isLength({ min: 6 })
+      .withMessage("Hasło jest za krótkie!")
+      .isLength({ max: 32 })
+      .withMessage("Hasło jest za długie!"),
+    check("confirm_new_user_password")
+      .exists()
+      .withMessage("Brak wymaganych danych!")
+      .custom((value, { req }) => {
+        if (value !== req.body.new_user_password) {
+          throw new Error("Hasła sa różne!");
+        } else {
+          return value;
+        }
+      }),
+    check("user_password")
+      .exists()
+      .withMessage("Brak wymaganych danych!")
+      .isLength({ min: 6 })
+      .withMessage("Hasło jest za krótkie!")
+      .isLength({ max: 32 })
+      .withMessage("Hasło jest za długie!"),
+  ],
+  verifyToken,
+  () => {}
+);
+
 /**
  * @swagger
  *  /users/delete:
