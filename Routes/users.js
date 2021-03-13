@@ -522,7 +522,7 @@ router.put(
                 } else {
                   res.status(400).json({
                     Error:
-                      "Nie udało się zmienić hasła. Sprawdź wprowadzone dane!",
+                      "Wprowadzone aktualne hasło jest nieprawidłowe. Sprawdź wprowadzone dane!",
                   });
                 }
               } else {
