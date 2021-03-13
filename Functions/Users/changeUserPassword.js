@@ -1,3 +1,5 @@
+const bcrypt = require("bcrypt");
+
 async function changeUserPassword(
   Users,
   userId,
@@ -18,7 +20,7 @@ async function changeUserPassword(
         { where: { id: userId, email: userEmail } }
       );
       if (changeUserPassword.includes(1)) {
-        return changeUserPassword;
+        return hash;
       }
       return false;
     }

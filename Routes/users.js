@@ -16,6 +16,7 @@ const takeDataAboutUser = require("../Functions/Users/takeDataAboutUser");
 const verifyToken = require("../Functions/Others/verifyToken");
 const userDeleteHisAccount = require("../Functions/Users/userDeleteHisAccount");
 const changeUserEmailAdress = require("../Functions/Users/changeUserEmailAdress");
+const changeUserPassword = require("../Functions/Users/changeUserPassword");
 
 const router = express.Router();
 
@@ -507,7 +508,7 @@ router.put(
                     req.body.new_user_password,
                     takeUserData.id,
                     takeUserData.email,
-                    takeUserData.password,
+                    updateUserPassword,
                     checkUser.userRoleId
                   );
                   if (newTokenForUser !== false) {
@@ -521,7 +522,7 @@ router.put(
                 } else {
                   res.status(400).json({
                     Error:
-                      "Nie udało się zmienić hasła. Sprawdź wprowadzone dane!",
+                      "Wprowadzone aktualne hasło jest nieprawidłowe. Sprawdź wprowadzone dane!",
                   });
                 }
               } else {
