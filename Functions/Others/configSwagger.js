@@ -4,7 +4,7 @@ const swaggerOptions = {
     info: {
       title: "Learn and test knowledge - API",
       description: "API for easy study new things from school",
-      version: "0.1.3",
+      version: "0.1.5",
     },
     host: "localhost:3000",
     basePath: "/quiz",
