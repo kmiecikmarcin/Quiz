@@ -1,7 +1,7 @@
 const express = require("express");
 const { check, validationResult } = require("express-validator");
 const jwt = require("jsonwebtoken");
-const Model = require("../Functions/Others/takeAndReturnModelInstance");
+const Model = require("../Functions/Others/takeModels");
 const checkPasswordAboutOneSpecialKey = require("../Functions/Others/checkPasswordAboutOneSpecialKey");
 const checkEnteredGender = require("../Functions/Others/checkEnteredGender");
 const checkUserVerification = require("../Functions/Others/checkUserVerification");
