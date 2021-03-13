@@ -13,6 +13,10 @@ const correctUserData = {
   user_password: userData.user_password,
 };
 
+const response = {
+  token: "",
+};
+
 describe("PUT /email", () => {
   it("Correct change of e-mail", (done) => {
     request(app)
@@ -24,6 +28,7 @@ describe("PUT /email", () => {
         expect(res.statusCode).equal(200);
         expect(res.body).to.have.property("Token");
         expect(res.body.Token).to.not.equal(null);
+        response.token = res.body.Token;
         done();
       });
   });
@@ -56,3 +61,5 @@ describe("PUT /email", () => {
       });
   });
 });
+
+module.exports = response;
