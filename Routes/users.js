@@ -16,6 +16,7 @@ const takeDataAboutUser = require("../Functions/Users/takeDataAboutUser");
 const verifyToken = require("../Functions/Others/verifyToken");
 const userDeleteHisAccount = require("../Functions/Users/userDeleteHisAccount");
 const changeUserEmailAdress = require("../Functions/Users/changeUserEmailAdress");
+const changeUserPassword = require("../Functions/Users/changeUserPassword");
 
 const router = express.Router();
 
@@ -392,6 +393,136 @@ router.put(
                 } else {
                   res.status(400).json({
                     Error: "Coś poszło nie tak. Sprawdź wprowadzone dane!",
+                  });
+                }
+              } else {
+                res.status(404).json({
+                  Error: "Nie odnaleziono danych dotyczących użytkownika!",
+                });
+              }
+            } else {
+              res.status(400).json({ Error: "Użytkownik nie istnieje!" });
+            }
+          }
+        }
+      );
+    }
+  }
+);
+
+/**
+ * @swagger
+ *  /users/password:
+ *    put:
+ *      tags:
+ *      - name: Users
+ *      summary: Change user password
+ *      parameters:
+ *        - in: body
+ *          name: Update
+ *          description: User can change his password.
+ *          schema:
+ *            type: object
+ *            required: true
+ *            properties:
+ *              new_user_password:
+ *                type: string
+ *                example: newUserPassword@
+ *              confirm_new_user_password:
+ *                type: string
+ *                example: newUserPassword@
+ *              user_password:
+ *                type: string
+ *                example: newUserPassword@
+ *      responses:
+ *        200:
+ *          description: Data changed successfully!
+ *        400:
+ *          description: Error about entered data.
+ *        403:
+ *          description: Forbidden.
+ *        404:
+ *          description: Data not found.
+ */
+router.put(
+  "/password",
+  [
+    check("new_user_password")
+      .exists()
+      .withMessage("Brak wymaganych danych!")
+      .isLength({ min: 6 })
+      .withMessage("Hasło jest za krótkie!")
+      .isLength({ max: 32 })
+      .withMessage("Hasło jest za długie!"),
+    check("confirm_new_user_password")
+      .exists()
+      .withMessage("Brak wymaganych danych!")
+      .custom((value, { req }) => {
+        if (value !== req.body.new_user_password) {
+          throw new Error("Hasła sa różne!");
+        } else {
+          return value;
+        }
+      }),
+    check("user_password")
+      .exists()
+      .withMessage("Brak wymaganych danych!")
+      .isLength({ min: 6 })
+      .withMessage("Hasło jest za krótkie!")
+      .isLength({ max: 32 })
+      .withMessage("Hasło jest za długie!"),
+  ],
+  verifyToken,
+  (req, res) => {
+    const error = validationResult(req);
+    if (!error.isEmpty()) {
+      res.status(400).json(error.mapped());
+    } else {
+      jwt.verify(
+        req.token,
+        process.env.S3_SECRETKEY,
+        async (jwtError, authData) => {
+          if (jwtError) {
+            res.status(403).json({ Error: "Błąd uwierzytelniania!" });
+          } else {
+            const checkUser = await checkIfUserEmailExists(
+              Model.Users,
+              authData.email
+            );
+            if (checkUser !== false) {
+              const takeUserData = await takeDataAboutUser(
+                Model.Users,
+                checkUser.userId
+              );
+              if (takeUserData !== false) {
+                const updateUserPassword = await changeUserPassword(
+                  Model.Users,
+                  takeUserData.id,
+                  takeUserData.email,
+                  takeUserData.password,
+                  req.body.user_password,
+                  req.body.new_user_password
+                );
+                if (updateUserPassword !== false) {
+                  const newTokenForUser = await userTryToLogin(
+                    req.body.new_user_password,
+                    takeUserData.id,
+                    takeUserData.email,
+                    updateUserPassword,
+                    checkUser.userRoleId
+                  );
+                  if (newTokenForUser !== false) {
+                    res.status(200).json({ Token: newTokenForUser });
+                  } else {
+                    res.status(403).json({
+                      Error:
+                        "Nie udało się przeprowadzić operacji uwierzytelnienia!",
+                    });
+                  }
+                } else {
+                  res.status(400).json({
+                    Error:
+                      "Wprowadzone aktualne hasło jest nieprawidłowe. Sprawdź wprowadzone dane!",
                   });
                 }
               } else {
