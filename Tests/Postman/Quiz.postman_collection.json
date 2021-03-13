@@ -200,6 +200,79 @@
 					"response": []
 				},
 				{
+					"name": "Password",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"const random_number = _.random(100000,9000000);\r",
+									"const new_user_password = \"password\" + random_number + \"@\";\r",
+									"\r",
+									"pm.environment.set(\"new_user_password\", new_user_password);"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Successful PUT request\", function () {\r",
+									"    pm.expect(pm.response.code).to.be.oneOf([200]);\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Response is correct\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData.Message).not.eql(null);\r",
+									"});\r",
+									"\r",
+									"let bodyData = JSON.parse(responseBody);\r",
+									"const token = bodyData.Token;\r",
+									"pm.environment.set(\"token\", token);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"new_user_password\": \"{{new_user_password}}\",\r\n    \"confirm_new_user_password\": \"{{new_user_password}}\",\r\n    \"user_password\": \"{{user_password}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:3000/quiz/users/password",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"quiz",
+								"users",
+								"password"
+							]
+						}
+					},
+					"response": []
+				},
+				{
 					"name": "Delete account",
 					"event": [
 						{
@@ -243,7 +316,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"user_password\": \"{{user_password}}\",\r\n    \"confirm_password\": \"{{user_password}}\"\r\n}",
+							"raw": "{\r\n    \"user_password\": \"{{new_user_password}}\",\r\n    \"confirm_password\": \"{{new_user_password}}\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
