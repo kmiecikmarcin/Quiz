@@ -6,6 +6,7 @@ const swaggerJsDoc = require("swagger-jsdoc");
 const sequelize = require("./Functions/Database/database");
 const swaggerOptions = require("./Functions/Others/configSwagger");
 const UsersRoutes = require("./Routes/users");
+const SchoolSubjectsRoutes = require("./Routes/schoolSubjects");
 
 const app = express();
 
@@ -28,6 +29,7 @@ sequelize
 const port = process.env.PORT || 3000;
 
 app.use("/quiz/users", UsersRoutes);
+app.use("/quiz/schoolSubcjects", SchoolSubjectsRoutes);
 
 app.listen(port);
 
