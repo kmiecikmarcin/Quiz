@@ -5,12 +5,14 @@ const GendersModel = require("../../Models/Genders");
 const UsersModel = require("../../Models/Users");
 const SchoolSubjectsModel = require("../../Models/Users");
 const ChaptersModel = require("../../Models/Chapters");
+const TopicsModel = require("../../Models/Topics");
 
 const TypesOfUsersRoles = TypesOfUsersRolesModel(sequelize, DataTypes);
 const Genders = GendersModel(sequelize, DataTypes);
 const Users = UsersModel(sequelize, DataTypes);
 const SchoolSubjects = SchoolSubjectsModel(sequelize, DataTypes);
 const Chapters = ChaptersModel(sequelize, DataTypes);
+const Topics = TopicsModel(sequelize, DataTypes);
 
 module.exports = {
   TypesOfUsersRoles,
@@ -18,4 +20,5 @@ module.exports = {
   Users,
   SchoolSubjects,
   Chapters,
+  Topics,
 };
