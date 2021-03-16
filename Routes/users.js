@@ -55,7 +55,7 @@ const router = express.Router();
  *          description: Successfully registered!
  *        400:
  *          description: Error about entered data.
- *        502:
+ *        501:
  *          description: System error - user role doesn't exist!
  */
 router.post(
@@ -173,7 +173,7 @@ router.post(
             }
           } else {
             res
-              .status(502)
+              .status(501)
               .json({ Error: "Błąd systemu! Brak roli dla użytkownika!" });
           }
         } else {

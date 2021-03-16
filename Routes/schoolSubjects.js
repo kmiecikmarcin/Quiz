@@ -7,6 +7,23 @@ const takeAllSchoolSubjects = require("../Functions/SchoolSubjects/takeAllSchool
 
 const router = express.Router();
 
+/**
+ * @swagger
+ *  /schoolSubjects/subjects:
+ *    get:
+ *      tags:
+ *      - name: School subjects
+ *      summary: You can take all subjects
+ *      responses:
+ *        201:
+ *          description: List of school subjects.
+ *        400:
+ *          description: Error about entered data.
+ *        403:
+ *          description: Forbidden.
+ *        501:
+ *          description: System error - subjects doesn't exist!
+ */
 router.get("/subjects", verifyToken, (req, res) => {
   jwt.verify(
     req.token,
