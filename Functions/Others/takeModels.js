@@ -3,7 +3,7 @@ const sequelize = require("../Database/database");
 const TypesOfUsersRolesModel = require("../../Models/TypesOfUsersRoles");
 const GendersModel = require("../../Models/Genders");
 const UsersModel = require("../../Models/Users");
-const SchoolSubjectsModel = require("../../Models/Users");
+const SchoolSubjectsModel = require("../../Models/SchoolSubjects");
 const ChaptersModel = require("../../Models/Chapters");
 const TopicsModel = require("../../Models/Topics");
 

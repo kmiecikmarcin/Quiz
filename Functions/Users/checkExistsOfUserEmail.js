@@ -3,7 +3,7 @@ const responseData = {
   userRoleId: null,
 };
 
-async function checkIfUserEmailExists(Users, userEmail) {
+async function checkExistsOfUserEmail(Users, userEmail) {
   const checkUserAdressEmail = await Users.findOne({
     where: { email: userEmail },
   });
@@ -15,4 +15,4 @@ async function checkIfUserEmailExists(Users, userEmail) {
   return false;
 }
 
-module.exports = checkIfUserEmailExists;
+module.exports = checkExistsOfUserEmail;
