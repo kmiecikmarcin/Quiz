@@ -14,6 +14,10 @@ const correctUserData = {
   user_password: userData.user_password,
 };
 
+const response = {
+  token: "",
+};
+
 describe("PUT /password", () => {
   it("Correct change of user password", (done) => {
     request(app)
@@ -25,6 +29,7 @@ describe("PUT /password", () => {
         expect(res.statusCode).equal(200);
         expect(res.body).to.have.property("Token");
         expect(res.body.Token).to.not.equal(null);
+        response.token = res.body.Token;
         done();
       });
   });
@@ -59,3 +64,5 @@ describe("PUT /password", () => {
       });
   });
 });
+
+module.exports = response;
