@@ -3,9 +3,7 @@ const jwt = require("jsonwebtoken");
 const verifyToken = require("../Functions/Others/verifyToken");
 const checkExistsOfUserEmail = require("../Functions/Users/checkExistsOfUserEmail");
 const Model = require("../Functions/Others/takeModels");
-const takeAllSchoolSubjects = require("../Functions/SchoolSubjects/takeAllSchoolSubjects");
-const takeAllChapters = require("../Functions/SchoolSubjects/takeAllChapters");
-const takeAllTopics = require("../Functions/SchoolSubjects/takeAllTopics");
+const takeDataAboutSchoolSubjects = require("../Functions/SchoolSubjects/takeDataAboutSchoolSubjects");
 
 const router = express.Router();
 
@@ -39,7 +37,7 @@ router.get("/subjects", verifyToken, (req, res) => {
           authData.email
         );
         if (checkUser !== false) {
-          const takeSchoolSubjects = await takeAllSchoolSubjects(
+          const takeSchoolSubjects = await takeDataAboutSchoolSubjects(
             Model.SchoolSubjects
           );
           if (takeSchoolSubjects !== false) {
@@ -85,7 +83,9 @@ router.get("/chapters", verifyToken, (req, res) => {
           authData.email
         );
         if (checkUser !== false) {
-          const takeChapters = await takeAllChapters(Model.Chapters);
+          const takeChapters = await takeDataAboutSchoolSubjects(
+            Model.Chapters
+          );
           if (takeChapters !== false) {
             res.status(200).json(takeChapters);
           } else {
@@ -129,7 +129,7 @@ router.get("/topics", verifyToken, (req, res) => {
           authData.email
         );
         if (checkUser !== false) {
-          const takeTopics = await takeAllTopics(Model.Topics);
+          const takeTopics = await takeDataAboutSchoolSubjects(Model.Topics);
           if (takeTopics !== false) {
             res.status(200).json(takeTopics);
           } else {
