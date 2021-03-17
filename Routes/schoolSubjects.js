@@ -1,5 +1,6 @@
 const express = require("express");
 const jwt = require("jsonwebtoken");
+const { check, validationResult } = require("express-validator");
 const verifyToken = require("../Functions/Others/verifyToken");
 const checkExistsOfUserEmail = require("../Functions/Users/checkExistsOfUserEmail");
 const Model = require("../Functions/Others/takeModels");
@@ -142,5 +143,37 @@ router.get("/topics", verifyToken, (req, res) => {
     }
   );
 });
+
+router.post(
+  "/chapters",
+  [
+    check("name_of_chapter")
+      .exists()
+      .withMessage("Brak wymaganych danych!")
+      .isLength({ min: 3 })
+      .withMessage("Wprowadzony nazwa jest za krótka!")
+      .isLength({ max: 64 })
+      .withMessage("Wprowadzony nazwa jest za długa!")
+      .custom((value) => {
+        // eslint-disable-next-line no-useless-escape
+        const badSpecialKeys = /[\,\+\=\.\<\>\{\}\[\]\:\;\'\"\|\~\`\_\-\@\#\!\$\%\^\&\*]/.test(
+          value
+        );
+        if (badSpecialKeys === true) {
+          throw new Error("Nazwa zawiera nieprawidłowy znak!");
+        } else {
+          return value;
+        }
+      }),
+  ],
+  verifyToken,
+  (req, res) => {
+    const error = validationResult(req);
+
+    if (!error.isEmpty()) {
+      res.status(400).json(error.mapped());
+    }
+  }
+);
 
 module.exports = router;
