@@ -147,6 +147,35 @@ router.get("/topics", verifyToken, (req, res) => {
   );
 });
 
+/**
+ * @swagger
+ *  /schoolSubjects/chapters:
+ *    post:
+ *      tags:
+ *      - name: School subjects
+ *      summary: Create new chapter
+ *      parameters:
+ *        - in: body
+ *          name: Chapter
+ *          description: The user can create new chapter.
+ *          schema:
+ *            type: object
+ *            required: true
+ *            properties:
+ *              name_of_subject:
+ *                type: string
+ *                example: Geografia
+ *              name_of_chapter:
+ *                type: string
+ *                example: Lądy
+ *      responses:
+ *        201:
+ *          description: Added new chapter!
+ *        400:
+ *          description: Error about entered data.
+ *        403:
+ *          description: Forbidden.
+ */
 router.post(
   "/chapters",
   [
