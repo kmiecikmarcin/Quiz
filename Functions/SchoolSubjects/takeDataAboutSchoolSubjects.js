@@ -3,7 +3,7 @@ async function takeDataAboutSchoolSubjects(Model) {
     raw: true,
     attributes: { exclude: ["createdAt", "updatedAt"] },
   });
-  if (takeAll !== null) {
+  if (takeAll.length !== 0) {
     return takeAll;
   }
   return false;
