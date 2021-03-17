@@ -54,6 +54,23 @@ router.get("/subjects", verifyToken, (req, res) => {
   );
 });
 
+/**
+ * @swagger
+ *  /schoolSubjects/chapters:
+ *    get:
+ *      tags:
+ *      - name: School subjects
+ *      summary: You can take all chapters
+ *      responses:
+ *        201:
+ *          description: List of chapters.
+ *        400:
+ *          description: Error about entered data.
+ *        403:
+ *          description: Forbidden.
+ *        404:
+ *          description: Not Found.
+ */
 router.get("/chapters", verifyToken, (req, res) => {
   jwt.verify(
     req.token,
