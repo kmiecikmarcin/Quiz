@@ -379,14 +379,14 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "localhost:3000/quiz/schoolSubcjects/subjects",
+									"raw": "localhost:3000/quiz/schoolSubjects/subjects",
 									"host": [
 										"localhost"
 									],
 									"port": "3000",
 									"path": [
 										"quiz",
-										"schoolSubcjects",
+										"schoolSubjects",
 										"subjects"
 									]
 								}
@@ -426,14 +426,14 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "localhost:3000/quiz/schoolSubcjects/chapters",
+									"raw": "localhost:3000/quiz/schoolSubjects/chapters",
 									"host": [
 										"localhost"
 									],
 									"port": "3000",
 									"path": [
 										"quiz",
-										"schoolSubcjects",
+										"schoolSubjects",
 										"chapters"
 									]
 								}
@@ -473,14 +473,14 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "localhost:3000/quiz/schoolSubcjects/topics",
+									"raw": "localhost:3000/quiz/schoolSubjects/topics",
 									"host": [
 										"localhost"
 									],
 									"port": "3000",
 									"path": [
 										"quiz",
-										"schoolSubcjects",
+										"schoolSubjects",
 										"topics"
 									]
 								}
@@ -529,14 +529,14 @@
 									}
 								},
 								"url": {
-									"raw": "localhost:3000/quiz/schoolSubcjects/chapters",
+									"raw": "localhost:3000/quiz/schoolSubjects/chapters",
 									"host": [
 										"localhost"
 									],
 									"port": "3000",
 									"path": [
 										"quiz",
-										"schoolSubcjects",
+										"schoolSubjects",
 										"chapters"
 									]
 								}
@@ -654,14 +654,14 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "localhost:3000/quiz/schoolSubcjects/subjects",
+									"raw": "localhost:3000/quiz/schoolSubjects/subjects",
 									"host": [
 										"localhost"
 									],
 									"port": "3000",
 									"path": [
 										"quiz",
-										"schoolSubcjects",
+										"schoolSubjects",
 										"subjects"
 									]
 								}
@@ -701,14 +701,14 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "localhost:3000/quiz/schoolSubcjects/chapters",
+									"raw": "localhost:3000/quiz/schoolSubjects/chapters",
 									"host": [
 										"localhost"
 									],
 									"port": "3000",
 									"path": [
 										"quiz",
-										"schoolSubcjects",
+										"schoolSubjects",
 										"chapters"
 									]
 								}
@@ -748,14 +748,14 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "localhost:3000/quiz/schoolSubcjects/topics",
+									"raw": "localhost:3000/quiz/schoolSubjects/topics",
 									"host": [
 										"localhost"
 									],
 									"port": "3000",
 									"path": [
 										"quiz",
-										"schoolSubcjects",
+										"schoolSubjects",
 										"topics"
 									]
 								}
@@ -779,6 +779,19 @@
 										],
 										"type": "text/javascript"
 									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"const name_of_subject = \"Geografia\";\r",
+											"const name_of_chapter = \"newChapter\" + _.random(0,10000);\r",
+											"\r",
+											"pm.environment.set(\"name_of_subject\", name_of_subject);\r",
+											"pm.environment.set(\"name_of_chapter\", name_of_chapter);"
+										],
+										"type": "text/javascript"
+									}
 								}
 							],
 							"request": {
@@ -787,7 +800,7 @@
 									"bearer": [
 										{
 											"key": "token",
-											"value": "{{teacher}}",
+											"value": "{{teacherToken}}",
 											"type": "string"
 										}
 									]
@@ -796,7 +809,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n    \"name_of_subject\": \"Geografia\",\r\n    \"name_of_chapter\": \"Lądy\"\r\n}",
+									"raw": "{\r\n    \"name_of_subject\": \"{{name_of_subject}}\",\r\n    \"name_of_chapter\": \"{{name_of_chapter}}\"\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -804,14 +817,14 @@
 									}
 								},
 								"url": {
-									"raw": "localhost:3000/quiz/schoolSubcjects/chapters",
+									"raw": "localhost:3000/quiz/schoolSubjects/chapters",
 									"host": [
 										"localhost"
 									],
 									"port": "3000",
 									"path": [
 										"quiz",
-										"schoolSubcjects",
+										"schoolSubjects",
 										"chapters"
 									]
 								}
