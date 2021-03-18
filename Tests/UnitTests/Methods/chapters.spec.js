@@ -61,4 +61,17 @@ describe("POST /chapters", () => {
         done();
       });
   });
+
+  it("Create new chapter with common user permissions", (done) => {
+    request(app)
+      .post("/quiz/schoolSubjects/chapters")
+      .set("Content-Type", "application/json")
+      .set("Authorization", `Bearer ${userToken.token}`)
+      .send(dataAboutChapter)
+      .then((res) => {
+        expect(res.statusCode).equal(400);
+        expect(res.body.Token).to.not.equal(null);
+        done();
+      });
+  });
 });
