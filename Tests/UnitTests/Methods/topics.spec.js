@@ -6,7 +6,7 @@ const userToken = require("./password.spec");
 describe("GET /topics", () => {
   it("Take all topics", (done) => {
     request(app)
-      .get("/quiz/schoolSubcjects/topics")
+      .get("/quiz/schoolSubjects/topics")
       .set("Content-Type", "application/json")
       .set("Authorization", `Bearer ${userToken.token}`)
       .then((res) => {
@@ -18,7 +18,7 @@ describe("GET /topics", () => {
 
   it("Try to take topics without authorization", (done) => {
     request(app)
-      .get("/quiz/schoolSubcjects/topics")
+      .get("/quiz/schoolSubjects/topics")
       .set("Content-Type", "application/json")
       .set("Authorization", "")
       .then((res) => {
