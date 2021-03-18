@@ -4,6 +4,11 @@ const app = require("../../../app");
 const userToken = require("./login.spec");
 const teacherToken = require("./loginAsTeacher.spec");
 
+const dataAboutChapter = {
+  name_of_subject: "Geografia",
+  name_of_chapter: `newChapters ${Math.floor(Math.random() * (10000 - 1) + 1)}`,
+};
+
 describe("GET /chapters", () => {
   it("Take all chapters", (done) => {
     request(app)
@@ -38,6 +43,21 @@ describe("GET /chapters", () => {
         expect(res.statusCode).equal(403);
         expect(res.body).to.have.property("Error");
         expect(res.body.Error).equal("Błąd uwierzytelniania!");
+        done();
+      });
+  });
+});
+
+describe("POST /chapters", () => {
+  it("Create new chapter with teacher permissions", (done) => {
+    request(app)
+      .post("/quiz/schoolSubjects/chapters")
+      .set("Content-Type", "application/json")
+      .set("Authorization", `Bearer ${teacherToken.teacherToken}`)
+      .send(dataAboutChapter)
+      .then((res) => {
+        expect(res.statusCode).equal(201);
+        expect(res.body.Token).to.not.equal(null);
         done();
       });
   });
