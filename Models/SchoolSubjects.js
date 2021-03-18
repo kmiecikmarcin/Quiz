@@ -13,7 +13,7 @@ const model = (sequelize, DataTypes) => {
         field: "id_school_subject",
       },
       name: {
-        type: DataTypes.STRING(20),
+        type: DataTypes.STRING(64),
         unique: true,
         allowNull: false,
         field: "name_of_school_subject",
