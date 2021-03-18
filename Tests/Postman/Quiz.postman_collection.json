@@ -774,7 +774,7 @@
 											"    pm.expect(jsonData.Message).not.eql(null);\r",
 											"});\r",
 											"pm.test(\"Successful POST request\", function () {\r",
-											"    pm.expect(pm.response.code).to.be.oneOf([200]);\r",
+											"    pm.expect(pm.response.code).to.be.oneOf([201]);\r",
 											"});"
 										],
 										"type": "text/javascript"
