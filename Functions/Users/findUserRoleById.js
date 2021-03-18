@@ -1,5 +1,7 @@
 async function findUserRoleById(TypesOfUsersRoles, userRoleId) {
-  const findUserRole = TypesOfUsersRoles.findOne({ where: { id: userRoleId } });
+  const findUserRole = await TypesOfUsersRoles.findOne({
+    where: { id: userRoleId },
+  });
   if (findUserRole !== null) {
     return findUserRole.name;
   }

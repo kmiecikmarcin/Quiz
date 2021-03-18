@@ -29,7 +29,7 @@ sequelize
 const port = process.env.PORT || 3000;
 
 app.use("/quiz/users", UsersRoutes);
-app.use("/quiz/schoolSubcjects", SchoolSubjectsRoutes);
+app.use("/quiz/schoolSubjects", SchoolSubjectsRoutes);
 
 app.listen(port);
 
