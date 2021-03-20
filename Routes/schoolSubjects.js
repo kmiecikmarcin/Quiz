@@ -461,6 +461,8 @@ router.post(
  *          description: Error about entered data.
  *        403:
  *          description: Forbidden.
+ *        404:
+ *          description: Not Found.
  */
 router.put(
   "/chapters",
