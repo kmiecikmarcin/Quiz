@@ -1,8 +1,11 @@
 async function takeDataAboutSchoolSubjects(Model) {
-  const takeAll = await Model.findAll({
-    raw: true,
-    attributes: { exclude: ["createdAt", "updatedAt"] },
-  });
+  const takeAll = await Model.findAll(
+    { where: { toRemove: false } },
+    {
+      raw: true,
+      attributes: { exclude: ["createdAt", "updatedAt"] },
+    }
+  );
   if (takeAll.length !== 0) {
     return takeAll;
   }
