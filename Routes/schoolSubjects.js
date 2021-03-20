@@ -436,6 +436,32 @@ router.post(
   }
 );
 
+/**
+ * @swagger
+ *  /schoolSubjects/chapters:
+ *    put:
+ *      tags:
+ *      - name: School subjects
+ *      summary: Chapter to be deleted
+ *      parameters:
+ *        - in: body
+ *          name: Chapter
+ *          description: The user can delete chapter.
+ *          schema:
+ *            type: object
+ *            required: true
+ *            properties:
+ *              name_of_chapter:
+ *                type: string
+ *                example: Lądy
+ *      responses:
+ *        201:
+ *          description: Chapter deleted!
+ *        400:
+ *          description: Error about entered data.
+ *        403:
+ *          description: Forbidden.
+ */
 router.put(
   "/chapters",
   [
