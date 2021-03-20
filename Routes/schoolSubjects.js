@@ -11,6 +11,8 @@ const createNewChapter = require("../Functions/SchoolSubjects/createNewChapter")
 const checkTheChapterExists = require("../Functions/SchoolSubjects/checkTheChapterExists");
 const checkTheTopicIsUnique = require("../Functions/SchoolSubjects/checkTheTopicIsUnique");
 const createNewTopic = require("../Functions/SchoolSubjects/createNewTopic");
+const chapterToBeDeleted = require("../Functions/SchoolSubjects/chapterToBeDeleted");
+const checkChapterAssignedToTopics = require("../Functions/SchoolSubjects/checkChapterAssignedToTopics");
 
 const router = express.Router();
 
@@ -457,7 +459,74 @@ router.put(
       }),
   ],
   verifyToken,
-  () => {}
+  (req, res) => {
+    const error = validationResult(req);
+
+    if (!error.isEmpty()) {
+      res.status(400).json(error.mapped());
+    } else {
+      jwt.verify(
+        req.token,
+        process.env.S3_SECRETKEY,
+        async (jwtError, authData) => {
+          if (jwtError) {
+            res.status(403).json({ Error: "Błąd uwierzytelniania!" });
+          } else {
+            const checkUser = await checkExistsOfUserEmail(
+              Model.Users,
+              authData.email
+            );
+            if (checkUser !== false) {
+              if (
+                authData.name === process.env.S3_TEACHER_PERMISSIONS ||
+                authData.name === process.env.S3_ADMIN_PERMISSIONS
+              ) {
+                const resposneAboutSubjectExists = await checkTheSubjectExists(
+                  Model.SchoolSubjects,
+                  req.body.name_of_subject
+                );
+                if (resposneAboutSubjectExists !== false) {
+                  const checkChapter = await checkChapterAssignedToTopics(
+                    Model.Topics,
+                    resposneAboutSubjectExists
+                  );
+                  if (checkChapter !== false) {
+                    const deleteChapter = await chapterToBeDeleted(
+                      Model.Chapters,
+                      resposneAboutSubjectExists
+                    );
+                    if (deleteChapter !== false) {
+                      res
+                        .status(200)
+                        .json({ Message: "Pomyślnie usunięto rozdział!" });
+                    } else {
+                      res.status(400).json({
+                        Error: "Nie udało się usunąć wybranego rozdziału!",
+                      });
+                    }
+                  } else {
+                    res.status(400).json({
+                      Error: "Rozdział posiada przypisane do siebie tematy.",
+                    });
+                  }
+                } else {
+                  res
+                    .status(404)
+                    .json({ Error: "Wybrany rozdział nie istnieje!" });
+                }
+              } else {
+                res.status(400).json({
+                  Error: "Nie posiadasz uprawnień, by móc dodać nowy temat!",
+                });
+              }
+            } else {
+              res.status(400).json({ Error: "Użytkownik nie istnieje!" });
+            }
+          }
+        }
+      );
+    }
+  }
 );
 
 module.exports = router;
