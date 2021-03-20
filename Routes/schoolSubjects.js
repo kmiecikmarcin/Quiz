@@ -8,6 +8,9 @@ const takeDataAboutSchoolSubjects = require("../Functions/SchoolSubjects/takeDat
 const checkTheChapterIsUnique = require("../Functions/SchoolSubjects/checkTheChapterIsUnique");
 const checkTheSubjectExists = require("../Functions/SchoolSubjects/checkTheSubjectExists");
 const createNewChapter = require("../Functions/SchoolSubjects/createNewChapter");
+const checkTheChapterExists = require("../Functions/SchoolSubjects/checkTheChapterExists");
+const checkTheTopicIsUnique = require("../Functions/SchoolSubjects/checkTheTopicIsUnique");
+const createNewTopic = require("../Functions/SchoolSubjects/createNewTopic");
 
 const router = express.Router();
 
@@ -330,7 +333,76 @@ router.post(
       }),
   ],
   verifyToken,
-  () => {}
+  (req, res) => {
+    const error = validationResult(req);
+
+    if (!error.isEmpty()) {
+      res.status(400).json(error.mapped());
+    } else {
+      jwt.verify(
+        req.token,
+        process.env.S3_SECRETKEY,
+        async (jwtError, authData) => {
+          if (jwtError) {
+            res.status(403).json({ Error: "Błąd uwierzytelniania!" });
+          } else {
+            const checkUser = await checkExistsOfUserEmail(
+              Model.Users,
+              authData.email
+            );
+            if (checkUser !== false) {
+              if (
+                authData.name === process.env.S3_TEACHER_PERMISSIONS ||
+                authData.name === process.env.S3_ADMIN_PERMISSIONS
+              ) {
+                const resposneAboutChapterExists = await checkTheChapterExists(
+                  Model.Chapters,
+                  req.body.name_of_chapter
+                );
+                if (resposneAboutChapterExists !== false) {
+                  const responseAboutUniquenessOfTopic = await checkTheTopicIsUnique(
+                    Model.Topics,
+                    req.body.name_of_topic
+                  );
+                  if (responseAboutUniquenessOfTopic === true) {
+                    const addNewChapter = await createNewTopic(
+                      Model.Chapters,
+                      resposneAboutChapterExists,
+                      req.body.name_of_topic
+                    );
+                    if (addNewChapter !== false) {
+                      res
+                        .status(201)
+                        .json({ Message: "Pomyślnie dodano nowy temat!" });
+                    } else {
+                      res.status(400).json({
+                        Error:
+                          "Nie udało się dodać nowego tematu! Sprawdź wprowadzone dane.",
+                      });
+                    }
+                  } else {
+                    res.status(400).json({
+                      Error: "Temat o wprowadzonej nazwie już istnieje!",
+                    });
+                  }
+                } else {
+                  res
+                    .status(400)
+                    .json({ Error: "Wybrany rozdział nie istnieje!" });
+                }
+              } else {
+                res.status(400).json({
+                  Error: "Nie posiadasz uprawnień, by móc dodać nowy temat!",
+                });
+              }
+            } else {
+              res.status(400).json({ Error: "Użytkownik nie istnieje!" });
+            }
+          }
+        }
+      );
+    }
+  }
 );
 
 module.exports = router;
