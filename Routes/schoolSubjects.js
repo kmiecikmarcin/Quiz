@@ -292,6 +292,35 @@ router.post(
   }
 );
 
+/**
+ * @swagger
+ *  /schoolSubjects/topics:
+ *    post:
+ *      tags:
+ *      - name: School subjects
+ *      summary: Create new topic
+ *      parameters:
+ *        - in: body
+ *          name: Chapter
+ *          description: The user can create new topic.
+ *          schema:
+ *            type: object
+ *            required: true
+ *            properties:
+ *              name_of_chapter:
+ *                type: string
+ *                example: Lądy
+ *              name_of_topic:
+ *                type: string
+ *                example: Gleby
+ *      responses:
+ *        201:
+ *          description: Added new topic!
+ *        400:
+ *          description: Error about entered data.
+ *        403:
+ *          description: Forbidden.
+ */
 router.post(
   "/topics",
   [
