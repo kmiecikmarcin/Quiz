@@ -899,7 +899,7 @@
 							"response": []
 						},
 						{
-							"name": "New Request",
+							"name": "Chapter",
 							"event": [
 								{
 									"listen": "test",
@@ -909,7 +909,7 @@
 											"    var jsonData = pm.response.json();\r",
 											"    pm.expect(jsonData.Message).not.eql(null);\r",
 											"});\r",
-											"pm.test(\"Successful POST request\", function () {\r",
+											"pm.test(\"Successful PUT request\", function () {\r",
 											"    pm.expect(pm.response.code).to.be.oneOf([400]);\r",
 											"});"
 										],
@@ -1170,7 +1170,7 @@
 							"response": []
 						},
 						{
-							"name": "New Request",
+							"name": "Chapter",
 							"event": [
 								{
 									"listen": "test",
@@ -1180,7 +1180,7 @@
 											"    var jsonData = pm.response.json();\r",
 											"    pm.expect(jsonData.Message).not.eql(null);\r",
 											"});\r",
-											"pm.test(\"Successful POST request\", function () {\r",
+											"pm.test(\"Successful PUT request\", function () {\r",
 											"    pm.expect(pm.response.code).to.be.oneOf([200]);\r",
 											"});"
 										],
