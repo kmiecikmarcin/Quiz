@@ -395,7 +395,7 @@ router.post(
                   );
                   if (responseAboutUniquenessOfTopic === true) {
                     const addNewChapter = await createNewTopic(
-                      Model.Chapters,
+                      Model.Topics,
                       resposneAboutChapterExists,
                       req.body.name_of_topic
                     );
