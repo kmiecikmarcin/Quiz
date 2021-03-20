@@ -289,4 +289,48 @@ router.post(
   }
 );
 
+router.post(
+  "/topics",
+  [
+    check("name_of_chapter")
+      .exists()
+      .withMessage("Brak wymaganych danych!")
+      .isLength({ min: 3 })
+      .withMessage("Wprowadzony nazwa jest za krótka!")
+      .isLength({ max: 64 })
+      .withMessage("Wprowadzony nazwa jest za długa!")
+      .custom((value) => {
+        // eslint-disable-next-line no-useless-escape
+        const badSpecialKeys = /[\,\+\=\.\<\>\{\}\[\]\:\;\'\"\|\~\`\_\-\@\#\!\$\%\^\&\*]/.test(
+          value
+        );
+        if (badSpecialKeys === true) {
+          throw new Error("Nazwa zawiera nieprawidłowy znak!");
+        } else {
+          return value;
+        }
+      }),
+    check("name_of_topic")
+      .exists()
+      .withMessage("Brak wymaganych danych!")
+      .isLength({ min: 3 })
+      .withMessage("Wprowadzony nazwa jest za krótka!")
+      .isLength({ max: 64 })
+      .withMessage("Wprowadzony nazwa jest za długa!")
+      .custom((value) => {
+        // eslint-disable-next-line no-useless-escape
+        const badSpecialKeys = /[\,\+\=\.\<\>\{\}\[\]\:\;\'\"\|\~\`\_\-\@\#\!\$\%\^\&\*]/.test(
+          value
+        );
+        if (badSpecialKeys === true) {
+          throw new Error("Nazwa zawiera nieprawidłowy znak!");
+        } else {
+          return value;
+        }
+      }),
+  ],
+  verifyToken,
+  () => {}
+);
+
 module.exports = router;
