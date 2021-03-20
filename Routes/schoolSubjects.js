@@ -4,7 +4,7 @@ const { check, validationResult } = require("express-validator");
 const verifyToken = require("../Functions/Others/verifyToken");
 const checkExistsOfUserEmail = require("../Functions/Users/checkExistsOfUserEmail");
 const Model = require("../Functions/Others/takeModels");
-const takeDataAboutSchoolSubjects = require("../Functions/SchoolSubjects/takeDataAboutSchoolSubjects");
+const takeDataAboutChaptersAndTopics = require("../Functions/SchoolSubjects/takeDataAboutChaptersAndTopics");
 const checkTheChapterIsUnique = require("../Functions/SchoolSubjects/checkTheChapterIsUnique");
 const checkTheSubjectExists = require("../Functions/SchoolSubjects/checkTheSubjectExists");
 const createNewChapter = require("../Functions/SchoolSubjects/createNewChapter");
@@ -13,6 +13,7 @@ const checkTheTopicIsUnique = require("../Functions/SchoolSubjects/checkTheTopic
 const createNewTopic = require("../Functions/SchoolSubjects/createNewTopic");
 const chapterToBeDeleted = require("../Functions/SchoolSubjects/chapterToBeDeleted");
 const checkChapterAssignedToTopics = require("../Functions/SchoolSubjects/checkChapterAssignedToTopics");
+const takeDataAboutSchoolSubjects = require("../Functions/SchoolSubjects/takeDataAboutSchoolSubjects");
 
 const router = express.Router();
 
@@ -92,7 +93,7 @@ router.get("/chapters", verifyToken, (req, res) => {
           authData.email
         );
         if (checkUser !== false) {
-          const takeChapters = await takeDataAboutSchoolSubjects(
+          const takeChapters = await takeDataAboutChaptersAndTopics(
             Model.Chapters
           );
           if (takeChapters !== false) {
@@ -138,7 +139,7 @@ router.get("/topics", verifyToken, (req, res) => {
           authData.email
         );
         if (checkUser !== false) {
-          const takeTopics = await takeDataAboutSchoolSubjects(Model.Topics);
+          const takeTopics = await takeDataAboutChaptersAndTopics(Model.Topics);
           if (takeTopics !== false) {
             res.status(200).json(takeTopics);
           } else {
@@ -509,16 +510,16 @@ router.put(
                 authData.name === process.env.S3_TEACHER_PERMISSIONS ||
                 authData.name === process.env.S3_ADMIN_PERMISSIONS
               ) {
-                const resposneAboutSubjectExists = await checkTheSubjectExists(
-                  Model.SchoolSubjects,
-                  req.body.name_of_subject
+                const resposneAboutSubjectExists = await checkTheChapterExists(
+                  Model.Chapters,
+                  req.body.name_of_chapter
                 );
                 if (resposneAboutSubjectExists !== false) {
                   const checkChapter = await checkChapterAssignedToTopics(
                     Model.Topics,
                     resposneAboutSubjectExists
                   );
-                  if (checkChapter !== false) {
+                  if (checkChapter !== true) {
                     const deleteChapter = await chapterToBeDeleted(
                       Model.Chapters,
                       resposneAboutSubjectExists
