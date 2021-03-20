@@ -75,3 +75,5 @@ describe("POST /chapters", () => {
       });
   });
 });
+
+module.exports = dataAboutChapter;

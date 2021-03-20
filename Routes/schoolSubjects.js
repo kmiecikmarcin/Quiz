@@ -8,6 +8,9 @@ const takeDataAboutSchoolSubjects = require("../Functions/SchoolSubjects/takeDat
 const checkTheChapterIsUnique = require("../Functions/SchoolSubjects/checkTheChapterIsUnique");
 const checkTheSubjectExists = require("../Functions/SchoolSubjects/checkTheSubjectExists");
 const createNewChapter = require("../Functions/SchoolSubjects/createNewChapter");
+const checkTheChapterExists = require("../Functions/SchoolSubjects/checkTheChapterExists");
+const checkTheTopicIsUnique = require("../Functions/SchoolSubjects/checkTheTopicIsUnique");
+const createNewTopic = require("../Functions/SchoolSubjects/createNewTopic");
 
 const router = express.Router();
 
@@ -277,6 +280,148 @@ router.post(
               } else {
                 res.status(400).json({
                   Error: "Nie posiadasz uprawnień, by móc dodać nowy rodział!",
+                });
+              }
+            } else {
+              res.status(400).json({ Error: "Użytkownik nie istnieje!" });
+            }
+          }
+        }
+      );
+    }
+  }
+);
+
+/**
+ * @swagger
+ *  /schoolSubjects/topics:
+ *    post:
+ *      tags:
+ *      - name: School subjects
+ *      summary: Create new topic
+ *      parameters:
+ *        - in: body
+ *          name: Chapter
+ *          description: The user can create new topic.
+ *          schema:
+ *            type: object
+ *            required: true
+ *            properties:
+ *              name_of_chapter:
+ *                type: string
+ *                example: Lądy
+ *              name_of_topic:
+ *                type: string
+ *                example: Gleby
+ *      responses:
+ *        201:
+ *          description: Added new topic!
+ *        400:
+ *          description: Error about entered data.
+ *        403:
+ *          description: Forbidden.
+ */
+router.post(
+  "/topics",
+  [
+    check("name_of_chapter")
+      .exists()
+      .withMessage("Brak wymaganych danych!")
+      .isLength({ min: 3 })
+      .withMessage("Wprowadzony nazwa jest za krótka!")
+      .isLength({ max: 64 })
+      .withMessage("Wprowadzony nazwa jest za długa!")
+      .custom((value) => {
+        // eslint-disable-next-line no-useless-escape
+        const badSpecialKeys = /[\,\+\=\.\<\>\{\}\[\]\:\;\'\"\|\~\`\_\-\@\#\!\$\%\^\&\*]/.test(
+          value
+        );
+        if (badSpecialKeys === true) {
+          throw new Error("Nazwa zawiera nieprawidłowy znak!");
+        } else {
+          return value;
+        }
+      }),
+    check("name_of_topic")
+      .exists()
+      .withMessage("Brak wymaganych danych!")
+      .isLength({ min: 3 })
+      .withMessage("Wprowadzony nazwa jest za krótka!")
+      .isLength({ max: 64 })
+      .withMessage("Wprowadzony nazwa jest za długa!")
+      .custom((value) => {
+        // eslint-disable-next-line no-useless-escape
+        const badSpecialKeys = /[\,\+\=\.\<\>\{\}\[\]\:\;\'\"\|\~\`\_\-\@\#\!\$\%\^\&\*]/.test(
+          value
+        );
+        if (badSpecialKeys === true) {
+          throw new Error("Nazwa zawiera nieprawidłowy znak!");
+        } else {
+          return value;
+        }
+      }),
+  ],
+  verifyToken,
+  (req, res) => {
+    const error = validationResult(req);
+
+    if (!error.isEmpty()) {
+      res.status(400).json(error.mapped());
+    } else {
+      jwt.verify(
+        req.token,
+        process.env.S3_SECRETKEY,
+        async (jwtError, authData) => {
+          if (jwtError) {
+            res.status(403).json({ Error: "Błąd uwierzytelniania!" });
+          } else {
+            const checkUser = await checkExistsOfUserEmail(
+              Model.Users,
+              authData.email
+            );
+            if (checkUser !== false) {
+              if (
+                authData.name === process.env.S3_TEACHER_PERMISSIONS ||
+                authData.name === process.env.S3_ADMIN_PERMISSIONS
+              ) {
+                const resposneAboutChapterExists = await checkTheChapterExists(
+                  Model.Chapters,
+                  req.body.name_of_chapter
+                );
+                if (resposneAboutChapterExists !== false) {
+                  const responseAboutUniquenessOfTopic = await checkTheTopicIsUnique(
+                    Model.Topics,
+                    req.body.name_of_topic
+                  );
+                  if (responseAboutUniquenessOfTopic === true) {
+                    const addNewChapter = await createNewTopic(
+                      Model.Topics,
+                      resposneAboutChapterExists,
+                      req.body.name_of_topic
+                    );
+                    if (addNewChapter !== false) {
+                      res
+                        .status(201)
+                        .json({ Message: "Pomyślnie dodano nowy temat!" });
+                    } else {
+                      res.status(400).json({
+                        Error:
+                          "Nie udało się dodać nowego tematu! Sprawdź wprowadzone dane.",
+                      });
+                    }
+                  } else {
+                    res.status(400).json({
+                      Error: "Temat o wprowadzonej nazwie już istnieje!",
+                    });
+                  }
+                } else {
+                  res
+                    .status(400)
+                    .json({ Error: "Wybrany rozdział nie istnieje!" });
+                }
+              } else {
+                res.status(400).json({
+                  Error: "Nie posiadasz uprawnień, by móc dodać nowy temat!",
                 });
               }
             } else {
