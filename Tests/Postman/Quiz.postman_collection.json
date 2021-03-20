@@ -830,6 +830,73 @@
 								}
 							},
 							"response": []
+						},
+						{
+							"name": "New topic",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Response is correct\", function () {\r",
+											"    var jsonData = pm.response.json();\r",
+											"    pm.expect(jsonData.Message).not.eql(null);\r",
+											"});\r",
+											"pm.test(\"Successful POST request\", function () {\r",
+											"    pm.expect(pm.response.code).to.be.oneOf([201]);\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"const name_of_topic = \"newTopic\" + _.random(0,10000);\r",
+											"\r",
+											"pm.environment.set(\"name_of_topic\", name_of_topic);"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{teacherToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name_of_chapter\": \"{{name_of_chapter}}\",\r\n    \"name_of_topic\": \"{{name_of_topic}}\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "localhost:3000/quiz/schoolSubjects/topics",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"quiz",
+										"schoolSubjects",
+										"topics"
+									]
+								}
+							},
+							"response": []
 						}
 					]
 				}
