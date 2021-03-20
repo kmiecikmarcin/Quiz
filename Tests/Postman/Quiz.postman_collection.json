@@ -619,7 +619,7 @@
 					]
 				},
 				{
-					"name": "School subjects scenario",
+					"name": "School subjects scenario - 1",
 					"item": [
 						{
 							"name": "All school subjects",
@@ -893,6 +893,333 @@
 										"quiz",
 										"schoolSubjects",
 										"topics"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Chapter",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Response is correct\", function () {\r",
+											"    var jsonData = pm.response.json();\r",
+											"    pm.expect(jsonData.Message).not.eql(null);\r",
+											"});\r",
+											"pm.test(\"Successful PUT request\", function () {\r",
+											"    pm.expect(pm.response.code).to.be.oneOf([400]);\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{teacherToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name_of_chapter\": \"{{name_of_chapter}}\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "localhost:3000/quiz/schoolSubjects/chapters",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"quiz",
+										"schoolSubjects",
+										"chapters"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "School subjects scenario - 2",
+					"item": [
+						{
+							"name": "All school subjects",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Response is correct\", function () {\r",
+											"    var jsonData = pm.response.json();\r",
+											"    pm.expect(jsonData.Message).not.eql(null);\r",
+											"});\r",
+											"pm.test(\"Successful GET request\", function () {\r",
+											"    pm.expect(pm.response.code).to.be.oneOf([200]);\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{teacherToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "localhost:3000/quiz/schoolSubjects/subjects",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"quiz",
+										"schoolSubjects",
+										"subjects"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "All chapters",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Response is correct\", function () {\r",
+											"    var jsonData = pm.response.json();\r",
+											"    pm.expect(jsonData.Message).not.eql(null);\r",
+											"});\r",
+											"pm.test(\"Successful GET request\", function () {\r",
+											"    pm.expect(pm.response.code).to.be.oneOf([200]);\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{teacherToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "localhost:3000/quiz/schoolSubjects/chapters",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"quiz",
+										"schoolSubjects",
+										"chapters"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "All topics",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Response is correct\", function () {\r",
+											"    var jsonData = pm.response.json();\r",
+											"    pm.expect(jsonData.Message).not.eql(null);\r",
+											"});\r",
+											"pm.test(\"Successful GET request\", function () {\r",
+											"    pm.expect(pm.response.code).to.be.oneOf([200]);\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{teacherToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "localhost:3000/quiz/schoolSubjects/topics",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"quiz",
+										"schoolSubjects",
+										"topics"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "New chapter",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Response is correct\", function () {\r",
+											"    var jsonData = pm.response.json();\r",
+											"    pm.expect(jsonData.Message).not.eql(null);\r",
+											"});\r",
+											"pm.test(\"Successful POST request\", function () {\r",
+											"    pm.expect(pm.response.code).to.be.oneOf([201]);\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"const name_of_subject = \"Geografia\";\r",
+											"const name_of_chapter = \"newChapter\" + _.random(0,10000);\r",
+											"\r",
+											"pm.environment.set(\"name_of_subject\", name_of_subject);\r",
+											"pm.environment.set(\"name_of_chapter\", name_of_chapter);"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{teacherToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name_of_subject\": \"{{name_of_subject}}\",\r\n    \"name_of_chapter\": \"{{name_of_chapter}}\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "localhost:3000/quiz/schoolSubjects/chapters",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"quiz",
+										"schoolSubjects",
+										"chapters"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Chapter",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Response is correct\", function () {\r",
+											"    var jsonData = pm.response.json();\r",
+											"    pm.expect(jsonData.Message).not.eql(null);\r",
+											"});\r",
+											"pm.test(\"Successful PUT request\", function () {\r",
+											"    pm.expect(pm.response.code).to.be.oneOf([200]);\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{teacherToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name_of_chapter\": \"{{name_of_chapter}}\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "localhost:3000/quiz/schoolSubjects/chapters",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"quiz",
+										"schoolSubjects",
+										"chapters"
 									]
 								}
 							},

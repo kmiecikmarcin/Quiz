@@ -4,13 +4,16 @@ const { check, validationResult } = require("express-validator");
 const verifyToken = require("../Functions/Others/verifyToken");
 const checkExistsOfUserEmail = require("../Functions/Users/checkExistsOfUserEmail");
 const Model = require("../Functions/Others/takeModels");
-const takeDataAboutSchoolSubjects = require("../Functions/SchoolSubjects/takeDataAboutSchoolSubjects");
+const takeDataAboutChaptersAndTopics = require("../Functions/SchoolSubjects/takeDataAboutChaptersAndTopics");
 const checkTheChapterIsUnique = require("../Functions/SchoolSubjects/checkTheChapterIsUnique");
 const checkTheSubjectExists = require("../Functions/SchoolSubjects/checkTheSubjectExists");
 const createNewChapter = require("../Functions/SchoolSubjects/createNewChapter");
 const checkTheChapterExists = require("../Functions/SchoolSubjects/checkTheChapterExists");
 const checkTheTopicIsUnique = require("../Functions/SchoolSubjects/checkTheTopicIsUnique");
 const createNewTopic = require("../Functions/SchoolSubjects/createNewTopic");
+const chapterToBeDeleted = require("../Functions/SchoolSubjects/chapterToBeDeleted");
+const checkChapterAssignedToTopics = require("../Functions/SchoolSubjects/checkChapterAssignedToTopics");
+const takeDataAboutSchoolSubjects = require("../Functions/SchoolSubjects/takeDataAboutSchoolSubjects");
 
 const router = express.Router();
 
@@ -90,7 +93,7 @@ router.get("/chapters", verifyToken, (req, res) => {
           authData.email
         );
         if (checkUser !== false) {
-          const takeChapters = await takeDataAboutSchoolSubjects(
+          const takeChapters = await takeDataAboutChaptersAndTopics(
             Model.Chapters
           );
           if (takeChapters !== false) {
@@ -136,7 +139,7 @@ router.get("/topics", verifyToken, (req, res) => {
           authData.email
         );
         if (checkUser !== false) {
-          const takeTopics = await takeDataAboutSchoolSubjects(Model.Topics);
+          const takeTopics = await takeDataAboutChaptersAndTopics(Model.Topics);
           if (takeTopics !== false) {
             res.status(200).json(takeTopics);
           } else {
@@ -417,6 +420,127 @@ router.post(
                 } else {
                   res
                     .status(400)
+                    .json({ Error: "Wybrany rozdział nie istnieje!" });
+                }
+              } else {
+                res.status(400).json({
+                  Error: "Nie posiadasz uprawnień, by móc dodać nowy temat!",
+                });
+              }
+            } else {
+              res.status(400).json({ Error: "Użytkownik nie istnieje!" });
+            }
+          }
+        }
+      );
+    }
+  }
+);
+
+/**
+ * @swagger
+ *  /schoolSubjects/chapters:
+ *    put:
+ *      tags:
+ *      - name: School subjects
+ *      summary: Chapter to be deleted
+ *      parameters:
+ *        - in: body
+ *          name: Chapter
+ *          description: The user can delete chapter.
+ *          schema:
+ *            type: object
+ *            required: true
+ *            properties:
+ *              name_of_chapter:
+ *                type: string
+ *                example: Lądy
+ *      responses:
+ *        201:
+ *          description: Chapter deleted!
+ *        400:
+ *          description: Error about entered data.
+ *        403:
+ *          description: Forbidden.
+ *        404:
+ *          description: Not Found.
+ */
+router.put(
+  "/chapters",
+  [
+    check("name_of_chapter")
+      .exists()
+      .withMessage("Brak wymaganych danych!")
+      .isLength({ min: 3 })
+      .withMessage("Wprowadzony nazwa jest za krótka!")
+      .isLength({ max: 64 })
+      .withMessage("Wprowadzony nazwa jest za długa!")
+      .custom((value) => {
+        // eslint-disable-next-line no-useless-escape
+        const badSpecialKeys = /[\,\+\=\.\<\>\{\}\[\]\:\;\'\"\|\~\`\_\-\@\#\!\$\%\^\&\*]/.test(
+          value
+        );
+        if (badSpecialKeys === true) {
+          throw new Error("Nazwa zawiera nieprawidłowy znak!");
+        } else {
+          return value;
+        }
+      }),
+  ],
+  verifyToken,
+  (req, res) => {
+    const error = validationResult(req);
+
+    if (!error.isEmpty()) {
+      res.status(400).json(error.mapped());
+    } else {
+      jwt.verify(
+        req.token,
+        process.env.S3_SECRETKEY,
+        async (jwtError, authData) => {
+          if (jwtError) {
+            res.status(403).json({ Error: "Błąd uwierzytelniania!" });
+          } else {
+            const checkUser = await checkExistsOfUserEmail(
+              Model.Users,
+              authData.email
+            );
+            if (checkUser !== false) {
+              if (
+                authData.name === process.env.S3_TEACHER_PERMISSIONS ||
+                authData.name === process.env.S3_ADMIN_PERMISSIONS
+              ) {
+                const resposneAboutSubjectExists = await checkTheChapterExists(
+                  Model.Chapters,
+                  req.body.name_of_chapter
+                );
+                if (resposneAboutSubjectExists !== false) {
+                  const checkChapter = await checkChapterAssignedToTopics(
+                    Model.Topics,
+                    resposneAboutSubjectExists
+                  );
+                  if (checkChapter !== true) {
+                    const deleteChapter = await chapterToBeDeleted(
+                      Model.Chapters,
+                      resposneAboutSubjectExists
+                    );
+                    if (deleteChapter !== false) {
+                      res
+                        .status(200)
+                        .json({ Message: "Pomyślnie usunięto rozdział!" });
+                    } else {
+                      res.status(400).json({
+                        Error: "Nie udało się usunąć wybranego rozdziału!",
+                      });
+                    }
+                  } else {
+                    res.status(400).json({
+                      Error: "Rozdział posiada przypisane do siebie tematy.",
+                    });
+                  }
+                } else {
+                  res
+                    .status(404)
                     .json({ Error: "Wybrany rozdział nie istnieje!" });
                 }
               } else {
