@@ -23,7 +23,6 @@ describe("GET /subjects", () => {
       .set("Content-Type", "application/json")
       .set("Authorization", `Bearer ${teacherToken.teacherToken}`)
       .then((res) => {
-        console.log(res.status);
         expect(res.statusCode).equal(200);
         expect(res.body.Token).to.not.equal(null);
         done();
