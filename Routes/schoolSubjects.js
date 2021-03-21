@@ -560,6 +560,34 @@ router.put(
   }
 );
 
+/**
+ * @swagger
+ *  /schoolSubjects/topics:
+ *    put:
+ *      tags:
+ *      - name: School subjects
+ *      summary: Topic to be deleted
+ *      parameters:
+ *        - in: body
+ *          name: Topic
+ *          description: The user can delete topic.
+ *          schema:
+ *            type: object
+ *            required: true
+ *            properties:
+ *              name_of_topic:
+ *                type: string
+ *                example: Gleby
+ *      responses:
+ *        201:
+ *          description: Topic deleted!
+ *        400:
+ *          description: Error about entered data.
+ *        403:
+ *          description: Forbidden.
+ *        404:
+ *          description: Not Found.
+ */
 router.put(
   "/topics",
   [
