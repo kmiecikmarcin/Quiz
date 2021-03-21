@@ -5,7 +5,7 @@ const responseData = {
 
 async function checkExistsOfUserEmail(Users, userEmail) {
   const checkUserAdressEmail = await Users.findOne({
-    where: { email: userEmail },
+    where: { email: userEmail, accountToBeDeleted: false },
   });
   if (checkUserAdressEmail !== null) {
     responseData.userId = checkUserAdressEmail.id;
