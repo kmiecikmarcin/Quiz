@@ -3,7 +3,7 @@ async function chapterToBeDeleted(Chapters, chapterId) {
     { toRemove: true },
     { where: { id: chapterId } }
   );
-  if (deleteChapter !== null) {
+  if (deleteChapter.includes(1)) {
     return true;
   }
   return false;
