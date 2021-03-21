@@ -1,7 +1,7 @@
 const express = require("express");
 const { check, validationResult } = require("express-validator");
 const jwt = require("jsonwebtoken");
-const Model = require("../Functions/Others/takeAndReturnModelInstance");
+const Model = require("../Functions/Others/takeModels");
 const checkPasswordAboutOneSpecialKey = require("../Functions/Others/checkPasswordAboutOneSpecialKey");
 const checkEnteredGender = require("../Functions/Others/checkEnteredGender");
 const checkUserVerification = require("../Functions/Others/checkUserVerification");
@@ -9,7 +9,7 @@ const checkEmailIsUnique = require("../Functions/Users/checkEmailIsUnique");
 const checkGenderIsCorrectAndFindIt = require("../Functions/Users/checkGenderIsCorrectAndFindIt");
 const createNewUserCommonAccount = require("../Functions/Users/createNewUserCommonAccount");
 const findBasicUserRole = require("../Functions/Users/findBasicUserRole");
-const checkIfUserEmailExists = require("../Functions/Users/checkIfUserEmailExists");
+const checkExistsOfUserEmail = require("../Functions/Users/checkExistsOfUserEmail");
 const findUserRoleById = require("../Functions/Users/findUserRoleById");
 const userTryToLogin = require("../Functions/Users/userTryToLogin");
 const takeDataAboutUser = require("../Functions/Users/takeDataAboutUser");
@@ -55,7 +55,7 @@ const router = express.Router();
  *          description: Successfully registered!
  *        400:
  *          description: Error about entered data.
- *        502:
+ *        501:
  *          description: System error - user role doesn't exist!
  */
 router.post(
@@ -173,7 +173,7 @@ router.post(
             }
           } else {
             res
-              .status(502)
+              .status(501)
               .json({ Error: "Błąd systemu! Brak roli dla użytkownika!" });
           }
         } else {
@@ -245,7 +245,7 @@ router.post(
     if (!error.isEmpty()) {
       res.status(400).json(error.mapped());
     } else {
-      const checkEneteredEmailAdress = await checkIfUserEmailExists(
+      const checkEneteredEmailAdress = await checkExistsOfUserEmail(
         Model.Users,
         req.body.user_email
       );
@@ -356,7 +356,7 @@ router.put(
           if (jwtError) {
             res.status(403).json({ Error: "Błąd uwierzytelniania!" });
           } else {
-            const checkUser = await checkIfUserEmailExists(
+            const checkUser = await checkExistsOfUserEmail(
               Model.Users,
               authData.email
             );
@@ -485,7 +485,7 @@ router.put(
           if (jwtError) {
             res.status(403).json({ Error: "Błąd uwierzytelniania!" });
           } else {
-            const checkUser = await checkIfUserEmailExists(
+            const checkUser = await checkExistsOfUserEmail(
               Model.Users,
               authData.email
             );
@@ -606,7 +606,7 @@ router.put(
           if (jwtError) {
             res.status(403).json({ Error: "Błąd uwierzytelniania!" });
           } else {
-            const checkUser = await checkIfUserEmailExists(
+            const checkUser = await checkExistsOfUserEmail(
               Model.Users,
               authData.email
             );
