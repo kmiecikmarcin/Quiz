@@ -37,3 +37,5 @@ describe("POST /topics", () => {
       });
   });
 });
+
+module.exports = dataAboutTopic;
