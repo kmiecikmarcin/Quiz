@@ -14,6 +14,8 @@ const createNewTopic = require("../Functions/SchoolSubjects/createNewTopic");
 const chapterToBeDeleted = require("../Functions/SchoolSubjects/chapterToBeDeleted");
 const checkChapterAssignedToTopics = require("../Functions/SchoolSubjects/checkChapterAssignedToTopics");
 const takeDataAboutSchoolSubjects = require("../Functions/SchoolSubjects/takeDataAboutSchoolSubjects");
+const checkTheTopicExists = require("../Functions/SchoolSubjects/checkTheTopicExists");
+const topicToBeDeleted = require("../Functions/SchoolSubjects/topicToBeDeleted");
 
 const router = express.Router();
 
@@ -510,19 +512,19 @@ router.put(
                 authData.name === process.env.S3_TEACHER_PERMISSIONS ||
                 authData.name === process.env.S3_ADMIN_PERMISSIONS
               ) {
-                const resposneAboutSubjectExists = await checkTheChapterExists(
+                const resposneAboutChapterExists = await checkTheChapterExists(
                   Model.Chapters,
                   req.body.name_of_chapter
                 );
-                if (resposneAboutSubjectExists !== false) {
+                if (resposneAboutChapterExists !== false) {
                   const checkChapter = await checkChapterAssignedToTopics(
                     Model.Topics,
-                    resposneAboutSubjectExists
+                    resposneAboutChapterExists
                   );
                   if (checkChapter !== true) {
                     const deleteChapter = await chapterToBeDeleted(
                       Model.Chapters,
-                      resposneAboutSubjectExists
+                      resposneAboutChapterExists
                     );
                     if (deleteChapter !== false) {
                       res
@@ -542,6 +544,117 @@ router.put(
                   res
                     .status(404)
                     .json({ Error: "Wybrany rozdział nie istnieje!" });
+                }
+              } else {
+                res.status(400).json({
+                  Error: "Nie posiadasz uprawnień, by móc dodać nowy temat!",
+                });
+              }
+            } else {
+              res.status(400).json({ Error: "Użytkownik nie istnieje!" });
+            }
+          }
+        }
+      );
+    }
+  }
+);
+
+/**
+ * @swagger
+ *  /schoolSubjects/topics:
+ *    put:
+ *      tags:
+ *      - name: School subjects
+ *      summary: Topic to be deleted
+ *      parameters:
+ *        - in: body
+ *          name: Topic
+ *          description: The user can delete topic.
+ *          schema:
+ *            type: object
+ *            required: true
+ *            properties:
+ *              name_of_topic:
+ *                type: string
+ *                example: Gleby
+ *      responses:
+ *        201:
+ *          description: Topic deleted!
+ *        400:
+ *          description: Error about entered data.
+ *        403:
+ *          description: Forbidden.
+ *        404:
+ *          description: Not Found.
+ */
+router.put(
+  "/topics",
+  [
+    check("name_of_topic")
+      .exists()
+      .withMessage("Brak wymaganych danych!")
+      .isLength({ min: 3 })
+      .withMessage("Wprowadzony nazwa jest za krótka!")
+      .isLength({ max: 64 })
+      .withMessage("Wprowadzony nazwa jest za długa!")
+      .custom((value) => {
+        // eslint-disable-next-line no-useless-escape
+        const badSpecialKeys = /[\,\+\=\.\<\>\{\}\[\]\:\;\'\"\|\~\`\_\-\@\#\!\$\%\^\&\*]/.test(
+          value
+        );
+        if (badSpecialKeys === true) {
+          throw new Error("Nazwa zawiera nieprawidłowy znak!");
+        } else {
+          return value;
+        }
+      }),
+  ],
+  verifyToken,
+  (req, res) => {
+    const error = validationResult(req);
+
+    if (!error.isEmpty()) {
+      res.status(400).json(error.mapped());
+    } else {
+      jwt.verify(
+        req.token,
+        process.env.S3_SECRETKEY,
+        async (jwtError, authData) => {
+          if (jwtError) {
+            res.status(403).json({ Error: "Błąd uwierzytelniania!" });
+          } else {
+            const checkUser = await checkExistsOfUserEmail(
+              Model.Users,
+              authData.email
+            );
+            if (checkUser !== false) {
+              if (
+                authData.name === process.env.S3_TEACHER_PERMISSIONS ||
+                authData.name === process.env.S3_ADMIN_PERMISSIONS
+              ) {
+                const resposneAboutTopicExists = await checkTheTopicExists(
+                  Model.Topics,
+                  req.body.name_of_topic
+                );
+                if (resposneAboutTopicExists !== false) {
+                  const deleteTopic = await topicToBeDeleted(
+                    Model.Topics,
+                    resposneAboutTopicExists
+                  );
+                  if (deleteTopic !== false) {
+                    res
+                      .status(200)
+                      .json({ Message: "Pomyślnie usunięto temat!" });
+                  } else {
+                    res.status(400).json({
+                      Error: "Nie udało się usunąć wybranego tematu!",
+                    });
+                  }
+                } else {
+                  res
+                    .status(404)
+                    .json({ Error: "Wybrany temat nie istnieje!" });
                 }
               } else {
                 res.status(400).json({

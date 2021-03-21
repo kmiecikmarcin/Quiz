@@ -283,12 +283,12 @@
 									"script": {
 										"exec": [
 											"pm.test(\"Successful PUT request\", function () {\r",
-											"    pm.expect(pm.response.code).to.be.oneOf([200]);\r",
+											"    pm.expect(pm.response.code).to.be.oneOf([400]);\r",
 											"});\r",
 											"\r",
 											"pm.test(\"Response is correct\", function () {\r",
 											"    var jsonData = pm.response.json();\r",
-											"    pm.expect(jsonData.Message).to.eql(\"Pomyślnie usunięto konto!\");\r",
+											"    pm.expect(jsonData.Error).to.eql(\"Coś poszło nie tak. Sprawdź wprowadzone dane!\");\r",
 											"});"
 										],
 										"type": "text/javascript"
@@ -319,7 +319,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n    \"user_password\": \"{{new_user_password}}\",\r\n    \"confirm_password\": \"{{new_user_password}}\"\r\n}",
+									"raw": "{\r\n    \"user_password\": \"{{user_password}}\",\r\n    \"confirm_password\": \"{{user_password}}\"\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -949,6 +949,62 @@
 										"quiz",
 										"schoolSubjects",
 										"chapters"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Topics",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Response is correct\", function () {\r",
+											"    var jsonData = pm.response.json();\r",
+											"    pm.expect(jsonData.Message).to.eql(\"Pomyślnie usunięto temat!\");\r",
+											"});\r",
+											"pm.test(\"Successful PUT request\", function () {\r",
+											"    pm.expect(pm.response.code).to.be.oneOf([200]);\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{teacherToken}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"name_of_topic\": \"{{name_of_topic}}\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "localhost:3000/quiz/schoolSubjects/topics",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"quiz",
+										"schoolSubjects",
+										"topics"
 									]
 								}
 							},
