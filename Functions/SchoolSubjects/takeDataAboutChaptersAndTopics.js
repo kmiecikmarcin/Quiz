@@ -1,11 +1,8 @@
 async function takeDataAboutChaptersAndTopics(Model) {
-  const takeAll = await Model.findAll(
-    { where: { toRemove: false } },
-    {
-      raw: true,
-      attributes: { exclude: ["createdAt", "updatedAt"] },
-    }
-  );
+  const takeAll = await Model.findAll({
+    attributes: ["name"],
+    where: { toRemove: false },
+  });
   if (takeAll.length !== 0) {
     return takeAll;
   }
