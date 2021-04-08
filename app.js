@@ -7,6 +7,7 @@ const sequelize = require("./Functions/Database/database");
 const swaggerOptions = require("./Functions/Others/configSwagger");
 const UsersRoutes = require("./Routes/users");
 const SchoolSubjectsRoutes = require("./Routes/schoolSubjects");
+const AdministrationRoutes = require("./Routes/administration");
 
 const app = express();
 
@@ -30,6 +31,7 @@ const port = process.env.PORT || 3000;
 
 app.use("/quiz/users", UsersRoutes);
 app.use("/quiz/schoolSubjects", SchoolSubjectsRoutes);
+app.use("/quiz/administration", AdministrationRoutes);
 
 app.listen(port);
 
