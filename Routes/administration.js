@@ -8,6 +8,32 @@ const createNewSchoolSubject = require("../Functions/SchoolSubjects/createNewSch
 
 const router = express.Router();
 
+/**
+ * @swagger
+ *  /administration/schoolSubjects:
+ *    post:
+ *      tags:
+ *      - name: Administration
+ *      summary: Create new school subject
+ *      parameters:
+ *        - in: body
+ *          name: School subject
+ *          description: The user can create new school subject.
+ *          schema:
+ *            type: object
+ *            required: true
+ *            properties:
+ *              new_name_of_school_subject:
+ *                type: string
+ *                example: Etyka
+ *      responses:
+ *        201:
+ *          description: Added new school subject!
+ *        400:
+ *          description: Error about entered data.
+ *        403:
+ *          description: Forbidden.
+ */
 router.post(
   "/schoolSubjects",
   [
