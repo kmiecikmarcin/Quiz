@@ -1,6 +1,6 @@
 const { expect } = require("chai");
 const request = require("supertest");
-const app = require("../../../app");
+const app = require("../../../../app");
 
 const randomUserEmail = `user${Math.floor(
   Math.random() * (10000 - 1) + 1

@@ -1,6 +1,6 @@
 const { expect } = require("chai");
 const request = require("supertest");
-const app = require("../../../app");
+const app = require("../../../../app");
 
 const correctAdminDataForLogin = {
   user_email: "admin@example.com",

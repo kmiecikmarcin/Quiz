@@ -1,8 +1,8 @@
 const { expect } = require("chai");
 const request = require("supertest");
-const app = require("../../../app");
-const userToken = require("./password.spec");
-const teacherToken = require("./loginAsTeacher.spec");
+const app = require("../../../../app");
+const userToken = require("./2_login.spec");
+const teacherToken = require("./12_loginAsTeacher.spec");
 
 describe("GET /subjects", () => {
   it("Take all subjects as common user", (done) => {
@@ -17,7 +17,7 @@ describe("GET /subjects", () => {
       });
   });
 
-  it("Take all subjects as techear permissions", (done) => {
+  it("Take all subjects as teacher permissions", (done) => {
     request(app)
       .get("/quiz/schoolSubjects/subjects")
       .set("Content-Type", "application/json")

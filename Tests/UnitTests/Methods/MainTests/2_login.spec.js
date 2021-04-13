@@ -1,7 +1,7 @@
 const { expect } = require("chai");
 const request = require("supertest");
-const app = require("../../../app");
-const userData = require("./register.spec");
+const app = require("../../../../app");
+const userData = require("./1_register.spec");
 
 const correctUserDataForLogin = {
   user_email: userData.user_email,

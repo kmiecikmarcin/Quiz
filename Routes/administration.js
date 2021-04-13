@@ -5,6 +5,7 @@ const verifyToken = require("../Functions/Others/verifyToken");
 const checkTheSchoolSubjectExists = require("../Functions/SchoolSubjects/checkTheSchoolSubjectExists");
 const Model = require("../Functions/Others/takeModels");
 const createNewSchoolSubject = require("../Functions/SchoolSubjects/createNewSchoolSubject");
+const checkExistsOfUserEmail = require("../Functions/Users/checkExistsOfUserEmail");
 
 const router = express.Router();
 
@@ -42,7 +43,7 @@ router.post(
       .withMessage("Brak wymaganych danych!")
       .isLength({ min: 3 })
       .withMessage("Wprowadzony nazwa jest za krótka!")
-      .isLength({ max: 64 })
+      .isLength({ max: 24 })
       .withMessage("Wprowadzony nazwa jest za długa!")
       .custom((value) => {
         // eslint-disable-next-line no-useless-escape
@@ -75,29 +76,35 @@ router.post(
               authData.email
             );
             if (checkUser !== false) {
-              const checkSchoolSubjectExist = await checkTheSchoolSubjectExists(
-                Model.SchoolSubjects,
-                req.body.new_name_of_school_subject
-              );
-              if (checkSchoolSubjectExist === false) {
-                const newSchoolSubject = await createNewSchoolSubject(
+              if (authData.name === process.env.S3_ADMIN_PERMISSIONS) {
+                const checkSchoolSubjectExist = await checkTheSchoolSubjectExists(
                   Model.SchoolSubjects,
                   req.body.new_name_of_school_subject
                 );
-                if (newSchoolSubject !== false) {
-                  res.status(201).json({
-                    Message: "Pomyślnie dodano nowy przedmiot szkolny!",
-                  });
+                if (checkSchoolSubjectExist === false) {
+                  const newSchoolSubject = await createNewSchoolSubject(
+                    Model.SchoolSubjects,
+                    req.body.new_name_of_school_subject
+                  );
+                  if (newSchoolSubject !== false) {
+                    res.status(201).json({
+                      Message: "Pomyślnie dodano nowy przedmiot szkolny!",
+                    });
+                  } else {
+                    res.status(400).json({
+                      Error:
+                        "Nie udało się utworzyć nowego przedmiotu szkolnego!",
+                    });
+                  }
                 } else {
-                  res.status(400).json({
-                    Error:
-                      "Nie udało się utworzyć nowego przedmiotu szkolnego!",
-                  });
+                  res
+                    .status(400)
+                    .json({ Error: "Przedmiot szkolny już istnieje!" });
                 }
               } else {
-                res
-                  .status(400)
-                  .json({ Error: "Przedmiot szkolny już istnieje!" });
+                res.status(400).json({
+                  Error: "Nie posiadasz uprawnień, by móc dodać nowy rodział!",
+                });
               }
             } else {
               res.status(400).json({ Error: "Użytkownik nie istnieje!" });

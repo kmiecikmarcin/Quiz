@@ -1,26 +1,28 @@
 const { expect } = require("chai");
 const request = require("supertest");
-const app = require("../../../app");
-const userToken = require("./login.spec");
-const userData = require("./register.spec");
+const app = require("../../../../app");
+const userToken = require("./13_PUTemail.spec");
+const userData = require("../MainTests/1_register.spec");
 
-const newRandomUserEmail = `user${Math.floor(
+const newRandomUserPassword = `newPassword${Math.floor(
   Math.random() * (10000 - 1) + 1
-)}@exampleEmail.com`;
+)}@`;
 
 const correctUserData = {
-  new_user_email: newRandomUserEmail,
+  new_user_password: newRandomUserPassword,
+  confirm_new_user_password: newRandomUserPassword,
   user_password: userData.user_password,
 };
 
 const response = {
   token: "",
+  user_password: newRandomUserPassword,
 };
 
-describe("PUT /email", () => {
-  it("Correct change of e-mail", (done) => {
+describe("PUT /password", () => {
+  it("Correct change of user password", (done) => {
     request(app)
-      .put("/quiz/users/email")
+      .put("/quiz/users/password")
       .set("Content-Type", "application/json")
       .set("Authorization", `Bearer ${userToken.token}`)
       .send(correctUserData)
@@ -33,23 +35,25 @@ describe("PUT /email", () => {
       });
   });
 
-  it("Try to change e-mail without created account", (done) => {
+  it("Try to change password without created account", (done) => {
     request(app)
-      .put("/quiz/users/email")
+      .put("/quiz/users/password")
       .set("Content-Type", "application/json")
       .set("Authorization", `Bearer ${userToken.token}`)
       .send(correctUserData)
       .then((res) => {
         expect(res.statusCode).equal(400);
         expect(res.body).to.have.property("Error");
-        expect(res.body.Error).equal("Użytkownik nie istnieje!");
+        expect(res.body.Error).equal(
+          "Wprowadzone aktualne hasło jest nieprawidłowe. Sprawdź wprowadzone dane!"
+        );
         done();
       });
   });
 
   it("Try to change data without authorization", (done) => {
     request(app)
-      .put("/quiz/users/email")
+      .put("/quiz/users/password")
       .set("Content-Type", "application/json")
       .set("Authorization", "")
       .send(correctUserData)

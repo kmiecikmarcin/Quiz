@@ -1,26 +1,32 @@
 const { expect } = require("chai");
 const request = require("supertest");
-const app = require("../../../app");
-const teacherToken = require("./loginAsTeacher.spec");
+const app = require("../../../../app");
+const teacherToken = require("./12_loginAsTeacher.spec");
+const dataAboutTopic = require("./7_POSTtopics.spec");
 
-describe("GET /chapters", () => {
-  it("Take all chapter with teacher permissions teacher", (done) => {
+const topicName = { name_of_topic: dataAboutTopic.name_of_topic };
+
+describe("PUT /topics", () => {
+  it("Topic to be deleted", (done) => {
     request(app)
-      .get("/quiz/schoolSubjects/chapters")
+      .put("/quiz/schoolSubjects/topics")
       .set("Content-Type", "application/json")
       .set("Authorization", `Bearer ${teacherToken.teacherToken}`)
+      .send(topicName)
       .then((res) => {
         expect(res.statusCode).equal(200);
-        expect(res.body.Token).to.not.equal(null);
+        expect(res.body).to.have.property("Message");
+        expect(res.body.Message).equal("Pomyślnie usunięto temat!");
         done();
       });
   });
 
-  it("Try to take chapters without authorization", (done) => {
+  it("Try to PUT topic without authorization", (done) => {
     request(app)
-      .get("/quiz/schoolSubjects/chapters")
+      .put("/quiz/schoolSubjects/topics")
       .set("Content-Type", "application/json")
       .set("Authorization", "")
+      .send(topicName)
       .then((res) => {
         expect(res.statusCode).equal(403);
         expect(res.body).to.have.property("Error");

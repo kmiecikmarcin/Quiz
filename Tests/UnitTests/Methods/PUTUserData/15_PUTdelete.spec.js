@@ -1,8 +1,7 @@
 const { expect } = require("chai");
 const request = require("supertest");
-const app = require("../../../app");
-const userToken = require("./login.spec");
-const userData = require("./register.spec");
+const app = require("../../../../app");
+const userData = require("./14_PUTpassword.spec");
 
 const correctUserData = {
   user_password: userData.user_password,
@@ -28,7 +27,7 @@ describe("PUT /delete", () => {
     request(app)
       .put("/quiz/users/delete")
       .set("Content-Type", "application/json")
-      .set("Authorization", `Bearer ${userToken.token}`)
+      .set("Authorization", `Bearer ${userData.token}`)
       .send(correctUserData)
       .then((res) => {
         expect(res.statusCode).equal(200);

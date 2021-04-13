@@ -1,8 +1,8 @@
 const { expect } = require("chai");
 const request = require("supertest");
-const app = require("../../../app");
-const userToken = require("./password.spec");
-const teacherToken = require("./loginAsTeacher.spec");
+const app = require("../../../../app");
+const userToken = require("./2_login.spec");
+const teacherToken = require("./12_loginAsTeacher.spec");
 
 describe("GET /topics", () => {
   it("Take all topics", (done) => {

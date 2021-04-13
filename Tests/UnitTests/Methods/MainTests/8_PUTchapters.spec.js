@@ -1,9 +1,9 @@
 const { expect } = require("chai");
 const request = require("supertest");
-const app = require("../../../app");
-const userToken = require("./login.spec");
-const teacherToken = require("./loginAsTeacher.spec");
-const dataAboutChapter = require("./POSTchapters.spec");
+const app = require("../../../../app");
+const userToken = require("./2_login.spec");
+const teacherToken = require("./12_loginAsTeacher.spec");
+const dataAboutChapter = require("./6_POSTchapters.spec");
 
 const chapterName = { name_of_chapter: dataAboutChapter.name_of_chapter };
 
