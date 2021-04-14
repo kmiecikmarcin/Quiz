@@ -9,7 +9,7 @@ const dataAboutChapter = {
   name_of_chapter: `newChapters ${Math.floor(Math.random() * (10000 - 1) + 1)}`,
 };
 
-describe("POST /chapters", () => {
+describe("POST /chapter", () => {
   it("Create new chapter with teacher permissions", (done) => {
     request(app)
       .post("/quiz/schoolSubjects/chapters")
@@ -25,7 +25,7 @@ describe("POST /chapters", () => {
 
   it("Create new chapter with common user permissions", (done) => {
     request(app)
-      .post("/quiz/schoolSubjects/chapters")
+      .post("/quiz/schoolSubjects/chapter")
       .set("Content-Type", "application/json")
       .set("Authorization", `Bearer ${userToken.token}`)
       .send(dataAboutChapter)
