@@ -1,0 +1,447 @@
+{
+    "openapi": "3.0.3",
+    "info":{
+        "description": "API for easy study new things from school",
+        "version": "0.3.1",
+        "title": "Learn and test knowledge - API"
+    },
+    "components": {
+        "securitySchemes" : {
+            "bearerAuth": {
+                "type": "http",
+                "scheme": "bearer",
+                "bearerFormat": "JWT"
+            }
+        }
+    },
+    "basePath": "/quiz",
+    "paths": {
+        "/users/register": {
+            "post": {
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Registration in system",
+                "produces": "application/json",
+                "responses": {
+                    "201": {
+                        "description": "Successfully registered"
+                    },
+                    "400": {
+                        "description": "Error about entered data"
+                    },
+                    "500": {
+                        "description": "System error - user role doesn't exist"
+                    }
+                },
+                "parameters": [{
+                    "in": "body",
+                    "name": "body",
+                    "description": "User data",
+                    "required": "true",
+                    "properties": {
+                        "user_email": { 
+                            "type": "string" 
+                        },
+                        "user_password": {
+                            "type": "string"
+                        },
+                        "confirm_password": {
+                            "type": "string"
+                        },
+                        "user_gender": {
+                            "type": "string"
+                        },
+                        "user_verification": {
+                            "type": "boolean"
+                        }
+                    }   
+                }]
+            }
+        },
+        "/users/login": {
+            "post": {
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Sign In",
+                "produces": "application/json",
+                "responses": {
+                    "200": {
+                        "description": "System will return token"
+                    },
+                    "400": {
+                        "description": "Error about entered data"
+                    },
+                    "404": {
+                        "description": "Data not found"
+                    }
+                },
+                "parameters": [{
+                    "in": "body",
+                    "name": "body",
+                    "description": "User data",
+                    "required": "true",
+                    "properties": {
+                        "user_email": { 
+                            "type": "string" 
+                        },
+                        "user_password": {
+                            "type": "string"
+                        }
+                    }   
+                }]
+            }
+        },
+        "/users/email": {
+            "put": {
+                "tags": [
+                    "Users"
+                ],
+                "summary": "User can change e-mail",
+                "produces": "application/json",
+                "responses": {
+                    "200": {
+                        "description": "Data changed successfully"
+                    },
+                    "400": {
+                        "description": "Error about entered data"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "404": {
+                        "description": "Data not found"
+                    }
+                },
+                "parameters": [{
+                    "in": "body",
+                    "name": "body",
+                    "description": "User data",
+                    "required": "true",
+                    "properties": {
+                        "new_user_email": { 
+                            "type": "string" 
+                        },
+                        "user_password": {
+                            "type": "string"
+                        }
+                    }   
+                }]
+            }
+        },
+        "/users/password": {
+            "put": {
+                "tags": [
+                    "Users"
+                ],
+                "summary": "User can change password",
+                "produces": "application/json",
+                "responses": {
+                    "200": {
+                        "description": "Data changed successfully"
+                    },
+                    "400": {
+                        "description": "Error about entered data"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "404": {
+                        "description": "Data not found"
+                    }
+                },
+                "parameters": [{
+                    "in": "body",
+                    "name": "body",
+                    "description": "User data",
+                    "required": "true",
+                    "properties": {
+                        "new_user_password": { 
+                            "type": "string" 
+                        },
+                        "confirm_new_user_password": { 
+                            "type": "string" 
+                        },
+                        "user_password": {
+                            "type": "string"
+                        }
+                    }   
+                }]
+            }
+        },
+        "/users/delete": {
+            "put": {
+                "tags": [
+                    "Users"
+                ],
+                "summary": "User can delete account",
+                "produces": "application/json",
+                "responses": {
+                    "200": {
+                        "description": "Successful"
+                    },
+                    "400": {
+                        "description": "Error about entered data"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "404": {
+                        "description": "Data not found"
+                    }
+                },
+                "parameters": [{
+                    "in": "body",
+                    "name": "body",
+                    "description": "User data",
+                    "required": "true",
+                    "properties": {
+                        "user_password": { 
+                            "type": "string" 
+                        },
+                        "confirm_password": { 
+                            "type": "string" 
+                        }
+                    }   
+                }]
+            }
+        },
+        "/schoolSubjects/subjects": {
+            "get": {
+                "tags": [
+                    "School subjects"
+                ],
+                "summary": "Interface can take all subjects",
+                "produces": "application/json",
+                "responses": {
+                    "200": {
+                        "description": "List of school subjects"
+                    },
+                    "400": {
+                        "description": "Error about entered data"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "501": {
+                        "description": "System error - subjects doesn't exist"
+                    }
+                }
+            }
+        },
+        "/schoolSubjects/chapters": {
+            "get": {
+                "tags": [
+                    "School subjects"
+                ],
+                "summary": "Interface can take all chapters",
+                "produces": "application/json",
+                "responses": {
+                    "200": {
+                        "description": "List of chapters"
+                    },
+                    "400": {
+                        "description": "Error about entered data"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    }
+                }
+            }
+        },
+        "/schoolSubjects/topics": {
+            "get": {
+                "tags": [
+                    "School subjects"
+                ],
+                "summary": "Interface can take all topics",
+                "produces": "application/json",
+                "responses": {
+                    "200": {
+                        "description": "List of topics"
+                    },
+                    "400": {
+                        "description": "Error about entered data"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    }
+                }
+            }
+        },
+        "/schoolSubjects/chapter": {
+            "post": {
+                "tags": [
+                    "School subjects"
+                ],
+                "summary": "Teacher can add new chapter",
+                "produces": "application/json",
+                "responses": {
+                    "201": {
+                        "description": "New chapter added successfully"
+                    },
+                    "400": {
+                        "description": "Error about entered data"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    }
+                },
+                "parameters": [{
+                    "in": "body",
+                    "name": "body",
+                    "description": "Chapter data",
+                    "required": "true",
+                    "properties": {
+                        "name_of_subject": { 
+                            "type": "string" 
+                        },
+                        "name_of_chapter": { 
+                            "type": "string" 
+                        }
+                    }  
+                }]
+            }
+        },
+        "/schoolSubjects/topic": {
+            "post": {
+                "tags": [
+                    "School subjects"
+                ],
+                "summary": "TEacher can add new topic",
+                "produces": "application/json",
+                "responses": {
+                    "201": {
+                        "description": "New topic added successfully"
+                    },
+                    "400": {
+                        "description": "Error about entered data"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    }
+                },
+                "parameters": [{
+                    "in": "body",
+                    "name": "body",
+                    "description": "Topic data",
+                    "required": "true",
+                    "properties": {
+                        "name_of_chapter": { 
+                            "type": "string" 
+                        },
+                        "name_of_topic": { 
+                            "type": "string" 
+                        }
+                    }  
+                }]
+            }
+        },
+        "/schoolSubjects/update-chapter": {
+            "put": {
+                "tags": [
+                    "School subjects"
+                ],
+                "summary": "Teacher can delete chapter",
+                "produces": "application/json",
+                "responses": {
+                    "201": {
+                        "description": "Successfully completed"
+                    },
+                    "400": {
+                        "description": "Error about entered data"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    }
+                },
+                "parameters": [{
+                    "in": "body",
+                    "name": "body",
+                    "description": "Chapter data",
+                    "required": "true",
+                    "properties": {
+                        "name_of_chapter": { 
+                            "type": "string" 
+                        }
+                    } 
+                }]
+            }
+        },
+        "/schoolSubjects/update-topic": {
+            "put": {
+                "tags": [
+                    "School subjects"
+                ],
+                "summary": "Teacher can delete topic",
+                "produces": "application/json",
+                "responses": {
+                    "201": {
+                        "description": "Successfully completed"
+                    },
+                    "400": {
+                        "description": "Error about entered data"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "404": {
+                        "description": "Not Found"
+                    }
+                },
+                "parameters": [{
+                    "in": "body",
+                    "name": "body",
+                    "description": "Topic data",
+                    "required": "true",
+                    "properties": {
+                        "name_of_topic": { 
+                            "type": "string" 
+                        }
+                    } 
+                }]
+            }
+        },
+        "/administration/schoolSubject": {
+            "post": {
+                "tags": [
+                    "Administration"
+                ],
+                "summary": "Admin can create new school subject",
+                "produces": "application/json",
+                "responses": {
+                    "201": {
+                        "description": "Successfully completed"
+                    },
+                    "400": {
+                        "description": "Error about entered data"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    }
+                },
+                "parameters": [{
+                    "in": "body",
+                    "name": "body",
+                    "description": "School subject data",
+                    "required": "true",
+                    "properties": {
+                        "name_of_school_subject": { 
+                            "type": "string" 
+                        }
+                    }
+                }]
+            }
+        }
+    }
+}
