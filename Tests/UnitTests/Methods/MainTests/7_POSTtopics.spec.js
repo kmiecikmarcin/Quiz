@@ -13,7 +13,7 @@ const dataAboutTopic = {
 describe("POST /topics", () => {
   it("Create new topic with teacher permissions", (done) => {
     request(app)
-      .post("/quiz/schoolSubjects/topics")
+      .post("/quiz/schoolSubjects/topic")
       .set("Content-Type", "application/json")
       .set("Authorization", `Bearer ${teacherToken.teacherToken}`)
       .send(dataAboutTopic)
@@ -26,7 +26,7 @@ describe("POST /topics", () => {
 
   it("Create new topic with common user permissions", (done) => {
     request(app)
-      .post("/quiz/schoolSubjects/chapters")
+      .post("/quiz/schoolSubjects/topic")
       .set("Content-Type", "application/json")
       .set("Authorization", `Bearer ${userToken.token}`)
       .send(dataAboutTopic)

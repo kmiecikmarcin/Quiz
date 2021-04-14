@@ -9,36 +9,10 @@ const checkExistsOfUserEmail = require("../Functions/Users/checkExistsOfUserEmai
 
 const router = express.Router();
 
-/**
- * @swagger
- *  /administration/schoolSubjects:
- *    post:
- *      tags:
- *      - name: Administration
- *      summary: Create new school subject
- *      parameters:
- *        - in: body
- *          name: School subject
- *          description: The user can create new school subject.
- *          schema:
- *            type: object
- *            required: true
- *            properties:
- *              new_name_of_school_subject:
- *                type: string
- *                example: Etyka
- *      responses:
- *        201:
- *          description: Added new school subject!
- *        400:
- *          description: Error about entered data.
- *        403:
- *          description: Forbidden.
- */
 router.post(
-  "/schoolSubjects",
+  "/schoolSubject",
   [
-    check("new_name_of_school_subject")
+    check("name_of_school_subject")
       .exists()
       .withMessage("Brak wymaganych danych!")
       .isLength({ min: 3 })
@@ -79,12 +53,12 @@ router.post(
               if (authData.name === process.env.S3_ADMIN_PERMISSIONS) {
                 const checkSchoolSubjectExist = await checkTheSchoolSubjectExists(
                   Model.SchoolSubjects,
-                  req.body.new_name_of_school_subject
+                  req.body.name_of_school_subject
                 );
                 if (checkSchoolSubjectExist === false) {
                   const newSchoolSubject = await createNewSchoolSubject(
                     Model.SchoolSubjects,
-                    req.body.new_name_of_school_subject
+                    req.body.name_of_school_subject
                   );
                   if (newSchoolSubject !== false) {
                     res.status(201).json({

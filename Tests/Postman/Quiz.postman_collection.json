@@ -529,7 +529,7 @@
 									}
 								},
 								"url": {
-									"raw": "localhost:3000/quiz/schoolSubjects/chapters",
+									"raw": "localhost:3000/quiz/schoolSubjects/chapter",
 									"host": [
 										"localhost"
 									],
@@ -537,7 +537,7 @@
 									"path": [
 										"quiz",
 										"schoolSubjects",
-										"chapters"
+										"chapter"
 									]
 								}
 							},
@@ -817,7 +817,7 @@
 									}
 								},
 								"url": {
-									"raw": "localhost:3000/quiz/schoolSubjects/chapters",
+									"raw": "localhost:3000/quiz/schoolSubjects/chapter",
 									"host": [
 										"localhost"
 									],
@@ -825,7 +825,7 @@
 									"path": [
 										"quiz",
 										"schoolSubjects",
-										"chapters"
+										"chapter"
 									]
 								}
 							},
@@ -884,7 +884,7 @@
 									}
 								},
 								"url": {
-									"raw": "localhost:3000/quiz/schoolSubjects/topics",
+									"raw": "localhost:3000/quiz/schoolSubjects/topic",
 									"host": [
 										"localhost"
 									],
@@ -892,7 +892,7 @@
 									"path": [
 										"quiz",
 										"schoolSubjects",
-										"topics"
+										"topic"
 									]
 								}
 							},
@@ -940,7 +940,7 @@
 									}
 								},
 								"url": {
-									"raw": "localhost:3000/quiz/schoolSubjects/chapters",
+									"raw": "localhost:3000/quiz/schoolSubjects/update-chapter",
 									"host": [
 										"localhost"
 									],
@@ -948,7 +948,7 @@
 									"path": [
 										"quiz",
 										"schoolSubjects",
-										"chapters"
+										"update-chapter"
 									]
 								}
 							},
@@ -996,7 +996,7 @@
 									}
 								},
 								"url": {
-									"raw": "localhost:3000/quiz/schoolSubjects/topics",
+									"raw": "localhost:3000/quiz/schoolSubjects/update-topic",
 									"host": [
 										"localhost"
 									],
@@ -1004,7 +1004,7 @@
 									"path": [
 										"quiz",
 										"schoolSubjects",
-										"topics"
+										"update-topic"
 									]
 								}
 							},
@@ -1211,7 +1211,7 @@
 									}
 								},
 								"url": {
-									"raw": "localhost:3000/quiz/schoolSubjects/chapters",
+									"raw": "localhost:3000/quiz/schoolSubjects/chapter",
 									"host": [
 										"localhost"
 									],
@@ -1219,7 +1219,7 @@
 									"path": [
 										"quiz",
 										"schoolSubjects",
-										"chapters"
+										"chapter"
 									]
 								}
 							},
@@ -1267,7 +1267,7 @@
 									}
 								},
 								"url": {
-									"raw": "localhost:3000/quiz/schoolSubjects/chapters",
+									"raw": "localhost:3000/quiz/schoolSubjects/update-chapter",
 									"host": [
 										"localhost"
 									],
@@ -1275,7 +1275,7 @@
 									"path": [
 										"quiz",
 										"schoolSubjects",
-										"chapters"
+										"update-chapter"
 									]
 								}
 							},

@@ -9,7 +9,7 @@ const topicName = { name_of_topic: dataAboutTopic.name_of_topic };
 describe("PUT /topics", () => {
   it("Topic to be deleted", (done) => {
     request(app)
-      .put("/quiz/schoolSubjects/topics")
+      .put("/quiz/schoolSubjects/update-topic")
       .set("Content-Type", "application/json")
       .set("Authorization", `Bearer ${teacherToken.teacherToken}`)
       .send(topicName)
@@ -23,7 +23,7 @@ describe("PUT /topics", () => {
 
   it("Try to PUT topic without authorization", (done) => {
     request(app)
-      .put("/quiz/schoolSubjects/topics")
+      .put("/quiz/schoolSubjects/update-topic")
       .set("Content-Type", "application/json")
       .set("Authorization", "")
       .send(topicName)
