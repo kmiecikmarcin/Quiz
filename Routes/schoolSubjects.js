@@ -19,23 +19,6 @@ const topicToBeDeleted = require("../Functions/SchoolSubjects/topicToBeDeleted")
 
 const router = express.Router();
 
-/**
- * @swagger
- *  /schoolSubjects/subjects:
- *    get:
- *      tags:
- *      - name: School subjects
- *      summary: You can take all subjects
- *      responses:
- *        201:
- *          description: List of school subjects.
- *        400:
- *          description: Error about entered data.
- *        403:
- *          description: Forbidden.
- *        501:
- *          description: System error - subjects doesn't exist!
- */
 router.get("/subjects", verifyToken, (req, res) => {
   jwt.verify(
     req.token,
@@ -65,23 +48,6 @@ router.get("/subjects", verifyToken, (req, res) => {
   );
 });
 
-/**
- * @swagger
- *  /schoolSubjects/chapters:
- *    get:
- *      tags:
- *      - name: School subjects
- *      summary: You can take all chapters
- *      responses:
- *        201:
- *          description: List of chapters.
- *        400:
- *          description: Error about entered data.
- *        403:
- *          description: Forbidden.
- *        404:
- *          description: Not Found.
- */
 router.get("/chapters", verifyToken, (req, res) => {
   jwt.verify(
     req.token,
@@ -111,23 +77,6 @@ router.get("/chapters", verifyToken, (req, res) => {
   );
 });
 
-/**
- * @swagger
- *  /schoolSubjects/topics:
- *    get:
- *      tags:
- *      - name: School subjects
- *      summary: You can take all topics
- *      responses:
- *        201:
- *          description: List of topics.
- *        400:
- *          description: Error about entered data.
- *        403:
- *          description: Forbidden.
- *        404:
- *          description: Not Found.
- */
 router.get("/topics", verifyToken, (req, res) => {
   jwt.verify(
     req.token,
@@ -155,37 +104,8 @@ router.get("/topics", verifyToken, (req, res) => {
   );
 });
 
-/**
- * @swagger
- *  /schoolSubjects/chapters:
- *    post:
- *      tags:
- *      - name: School subjects
- *      summary: Create new chapter
- *      parameters:
- *        - in: body
- *          name: Chapter
- *          description: The user can create new chapter.
- *          schema:
- *            type: object
- *            required: true
- *            properties:
- *              name_of_subject:
- *                type: string
- *                example: Geografia
- *              name_of_chapter:
- *                type: string
- *                example: Lądy
- *      responses:
- *        201:
- *          description: Added new chapter!
- *        400:
- *          description: Error about entered data.
- *        403:
- *          description: Forbidden.
- */
 router.post(
-  "/chapters",
+  "/chapter",
   [
     check("name_of_subject")
       .exists()
@@ -297,37 +217,8 @@ router.post(
   }
 );
 
-/**
- * @swagger
- *  /schoolSubjects/topics:
- *    post:
- *      tags:
- *      - name: School subjects
- *      summary: Create new topic
- *      parameters:
- *        - in: body
- *          name: Chapter
- *          description: The user can create new topic.
- *          schema:
- *            type: object
- *            required: true
- *            properties:
- *              name_of_chapter:
- *                type: string
- *                example: Lądy
- *              name_of_topic:
- *                type: string
- *                example: Gleby
- *      responses:
- *        201:
- *          description: Added new topic!
- *        400:
- *          description: Error about entered data.
- *        403:
- *          description: Forbidden.
- */
 router.post(
-  "/topics",
+  "/topic",
   [
     check("name_of_chapter")
       .exists()
@@ -439,36 +330,8 @@ router.post(
   }
 );
 
-/**
- * @swagger
- *  /schoolSubjects/chapters:
- *    put:
- *      tags:
- *      - name: School subjects
- *      summary: Chapter to be deleted
- *      parameters:
- *        - in: body
- *          name: Chapter
- *          description: The user can delete chapter.
- *          schema:
- *            type: object
- *            required: true
- *            properties:
- *              name_of_chapter:
- *                type: string
- *                example: Lądy
- *      responses:
- *        201:
- *          description: Chapter deleted!
- *        400:
- *          description: Error about entered data.
- *        403:
- *          description: Forbidden.
- *        404:
- *          description: Not Found.
- */
 router.put(
-  "/chapters",
+  "/update-chapter",
   [
     check("name_of_chapter")
       .exists()
@@ -560,36 +423,8 @@ router.put(
   }
 );
 
-/**
- * @swagger
- *  /schoolSubjects/topics:
- *    put:
- *      tags:
- *      - name: School subjects
- *      summary: Topic to be deleted
- *      parameters:
- *        - in: body
- *          name: Topic
- *          description: The user can delete topic.
- *          schema:
- *            type: object
- *            required: true
- *            properties:
- *              name_of_topic:
- *                type: string
- *                example: Gleby
- *      responses:
- *        201:
- *          description: Topic deleted!
- *        400:
- *          description: Error about entered data.
- *        403:
- *          description: Forbidden.
- *        404:
- *          description: Not Found.
- */
 router.put(
-  "/topics",
+  "/update-topic",
   [
     check("name_of_topic")
       .exists()
