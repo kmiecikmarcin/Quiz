@@ -14,7 +14,7 @@ const dataAboutSchoolSubject = {
 describe("POST/schoolSubjects", () => {
   it("Create school subject with user permissions", (done) => {
     request(app)
-      .post("/quiz/administration/schoolSubjects")
+      .post("/quiz/administration/schoolSubject")
       .set("Content-Type", "application/json")
       .set("Authorization", `Bearer ${userToken.token}`)
       .send(dataAboutSchoolSubject)
@@ -26,7 +26,7 @@ describe("POST/schoolSubjects", () => {
   });
   it("Create school subject with teacher permissions", (done) => {
     request(app)
-      .post("/quiz/administration/schoolSubjects")
+      .post("/quiz/administration/schoolSubject")
       .set("Content-Type", "application/json")
       .set("Authorization", `Bearer ${teacherToken.teacherToken}`)
       .send(dataAboutSchoolSubject)
@@ -38,7 +38,7 @@ describe("POST/schoolSubjects", () => {
   });
   it("Create school subject with admin permissions", (done) => {
     request(app)
-      .post("/quiz/administration/schoolSubjects")
+      .post("/quiz/administration/schoolSubject")
       .set("Content-Type", "application/json")
       .set("Authorization", `Bearer ${adminToken.adminToken}`)
       .send(dataAboutSchoolSubject)
@@ -50,7 +50,7 @@ describe("POST/schoolSubjects", () => {
   });
   it("Create school subject which is in databse", (done) => {
     request(app)
-      .post("/quiz/administration/schoolSubjects")
+      .post("/quiz/administration/schoolSubject")
       .set("Content-Type", "application/json")
       .set("Authorization", `Bearer ${adminToken.adminToken}`)
       .send(dataAboutSchoolSubject)
