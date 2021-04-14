@@ -20,44 +20,6 @@ const changeUserPassword = require("../Functions/Users/changeUserPassword");
 
 const router = express.Router();
 
-/**
- * @swagger
- *  /users/register:
- *    post:
- *      tags:
- *      - name: Users
- *      summary: Registration in system
- *      parameters:
- *        - in: body
- *          name: Register
- *          description: The user registration with data wchich his entered.
- *          schema:
- *            type: object
- *            required: true
- *            properties:
- *              user_email:
- *                type: string
- *                example: exampleEmailAdress@gmail.com
- *              user_password:
- *                type: string
- *                example: password@
- *              confirm_password:
- *                type: string
- *                example: password@
- *              user_gender:
- *                type: string
- *                example: Kobieta
- *              user_verification:
- *                type: boolean
- *                example: false
- *      responses:
- *        201:
- *          description: Successfully registered!
- *        400:
- *          description: Error about entered data.
- *        501:
- *          description: System error - user role doesn't exist!
- */
 router.post(
   "/register",
   [
@@ -190,35 +152,6 @@ router.post(
   }
 );
 
-/**
- * @swagger
- *  /users/login:
- *    post:
- *      tags:
- *      - name: Users
- *      summary: Login in system
- *      parameters:
- *        - in: body
- *          name: Login
- *          description: The user login with data wchich his entered.
- *          schema:
- *            type: object
- *            required: true
- *            properties:
- *              user_email:
- *                type: string
- *                example: exampleEmailAdress@gmail.com
- *              user_password:
- *                type: string
- *                example: password@
- *      responses:
- *        200:
- *          description: System will return token.
- *        400:
- *          description: Error about entered data.
- *        404:
- *          description: Data not found.
- */
 router.post(
   "/login",
   [
@@ -291,37 +224,6 @@ router.post(
   }
 );
 
-/**
- * @swagger
- *  /users/email:
- *    put:
- *      tags:
- *      - name: Users
- *      summary: Change user e-mail
- *      parameters:
- *        - in: body
- *          name: Update
- *          description: User can change his e-mail adress.
- *          schema:
- *            type: object
- *            required: true
- *            properties:
- *              new_user_email:
- *                type: string
- *                example: newExampleEmailAdress@gmail.com
- *              user_password:
- *                type: string
- *                example: password@
- *      responses:
- *        200:
- *          description: Data changed successfully!
- *        400:
- *          description: Error about entered data.
- *        403:
- *          description: Forbidden.
- *        404:
- *          description: Data not found.
- */
 router.put(
   "/email",
   [
@@ -410,40 +312,6 @@ router.put(
   }
 );
 
-/**
- * @swagger
- *  /users/password:
- *    put:
- *      tags:
- *      - name: Users
- *      summary: Change user password
- *      parameters:
- *        - in: body
- *          name: Update
- *          description: User can change his password.
- *          schema:
- *            type: object
- *            required: true
- *            properties:
- *              new_user_password:
- *                type: string
- *                example: newUserPassword@
- *              confirm_new_user_password:
- *                type: string
- *                example: newUserPassword@
- *              user_password:
- *                type: string
- *                example: newUserPassword@
- *      responses:
- *        200:
- *          description: Data changed successfully!
- *        400:
- *          description: Error about entered data.
- *        403:
- *          description: Forbidden.
- *        404:
- *          description: Data not found.
- */
 router.put(
   "/password",
   [
@@ -540,37 +408,6 @@ router.put(
   }
 );
 
-/**
- * @swagger
- *  /users/delete:
- *    put:
- *      tags:
- *      - name: Users
- *      summary: Delete account
- *      parameters:
- *        - in: body
- *          name: Delete
- *          description: The user delete his account.
- *          schema:
- *            type: object
- *            required: true
- *            properties:
- *              user_password:
- *                type: string
- *                example: password@
- *              confirm_password:
- *                type: string
- *                example: password@
- *      responses:
- *        200:
- *          description: Data changed successfully!
- *        400:
- *          description: Error about entered data.
- *        403:
- *          description: Forbidden.
- *        404:
- *          description: Data not found.
- */
 router.put(
   "/delete",
   [
