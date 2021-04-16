@@ -1284,6 +1284,141 @@
 					]
 				}
 			]
+		},
+		{
+			"name": "Admin permissions",
+			"item": [
+				{
+					"name": "Login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response is correct\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData.Message).not.eql(null);\r",
+									"});\r",
+									"pm.test(\"Successful POST request\", function () {\r",
+									"    pm.expect(pm.response.code).to.be.oneOf([200]);\r",
+									"});\r",
+									"\r",
+									"let bodyData = JSON.parse(responseBody);\r",
+									"const adminToken = bodyData.Token;\r",
+									"pm.environment.set(\"adminToken\", adminToken);"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"const admin_email = \"admin@example.com\";\r",
+									"const admin_password = \"admin@\";\r",
+									"\r",
+									"pm.environment.set(\"admin_email\", admin_email);\r",
+									"pm.environment.set(\"admin_password\", admin_password);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"user_email\": \"{{admin_email}}\",\r\n    \"user_password\": \"{{admin_password}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:3000/quiz/users/login",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"quiz",
+								"users",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "School subject",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response is correct\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData.Message).not.eql(null);\r",
+									"});\r",
+									"pm.test(\"Successful POST request\", function () {\r",
+									"    pm.expect(pm.response.code).to.be.oneOf([201]);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"const name_of_school_subject = \"schoolSubject\" + _.random(0,10000);\r",
+									"\r",
+									"pm.environment.set(\"name_of_school_subject\", name_of_school_subject);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{adminToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name_of_school_subject\": \"{{name_of_school_subject}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:3000/quiz/administration/schoolSubject",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"quiz",
+								"administration",
+								"schoolSubject"
+							]
+						}
+					},
+					"response": []
+				}
+			]
 		}
 	],
 	"event": [
