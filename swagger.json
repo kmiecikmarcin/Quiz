@@ -442,6 +442,25 @@
                     }
                 }]
             }
+        },"/administration/subject": {
+            "delete": {
+                "tags": [
+                    "Administration"
+                ],
+                "summary": "Admin can create new school subject",
+                "produces": "application/json",
+                "responses": {
+                    "201": {
+                        "description": "Successfully completed"
+                    },
+                    "400": {
+                        "description": "Error about entered data"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    }
+                }
+            }
         }
     }
 }
