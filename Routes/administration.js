@@ -128,7 +128,9 @@ router.delete(
                 );
                 if (checkSchoolSubjectExist !== false) {
                   const deleteSchoolSubject = await removeSchoolSubjectFromDatabase(
+                    res,
                     Model.SchoolSubjects,
+                    Model.Chapters,
                     req.body.name_of_school_subject,
                     idSchoolSubject
                   );
