@@ -26,13 +26,18 @@ Documentation created with Swagger. [Check it out](https://learnandtest.herokuap
 
 ### Testing:
 * [Postman](https://www.postman.com) 
-* UnitTests: 
+* Unit tests: 
     * [Mocha](https://www.npmjs.com/package/mocha)
     * [Chai](https://www.npmjs.com/package/chai)
     * [Sinon](https://www.npmjs.com/package/sinon)
     * [Sequelize-test-helpers](https://www.npmjs.com/package/sequelize-test-helpers)
 
 ### Run with npm:
+* At first in your folder with project run:
+```
+npm install
+```
+It installs package for project. 
 * Create .env file
 * Update .env:
 
