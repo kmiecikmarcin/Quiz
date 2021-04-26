@@ -4,14 +4,14 @@ Rest API created in Node.js.
 ### Documentation
 Documentation created with Swagger. [Check it out](https://learnandtest.herokuapp.com/api-docs/)
 
-### Prerequisites:
+### Prerequisites
 * [Node.js](https://nodejs.org/en/) - you must have Node.js installed on your local system. Download the Node.js source code or a pre-built installer for your operating system.
 
 * [PostgreSQL](https://www.postgresql.org) - for database management.
 
 * NPM install - for installation of packages.
 
-### Built With:
+### Built With
 * [Express](https://expressjs.com) - The web framework used.
 * [Sequelize](https://sequelize.org) - Sequelize is a promise-based Node.js ORM for Postgres.
 * [Express-validator](https://express-validator.github.io/docs/) - is a set of express.js middlewares that wraps validator.js validator and sanitizer functions.
@@ -24,7 +24,7 @@ Documentation created with Swagger. [Check it out](https://learnandtest.herokuap
 * [Newman](https://www.npmjs.com/package/newman) - newman is a command-line collection runner for Postman.
 * [Pg](https://www.npmjs.com/package/pg) - non-blocking PostgreSQL client for Node.js.
 
-### Testing:
+### Testing
 * [Postman](https://www.postman.com) 
 * Unit tests: 
     * [Mocha](https://www.npmjs.com/package/mocha)
@@ -32,7 +32,7 @@ Documentation created with Swagger. [Check it out](https://learnandtest.herokuap
     * [Sinon](https://www.npmjs.com/package/sinon)
     * [Sequelize-test-helpers](https://www.npmjs.com/package/sequelize-test-helpers)
 
-### Run with npm:
+### Run with npm
 * At first in your folder with project run:
 ```
 npm install
