@@ -132,7 +132,7 @@ router.delete(
                     Model.SchoolSubjects,
                     Model.Chapters,
                     req.body.name_of_school_subject,
-                    idSchoolSubject
+                    checkSchoolSubjectExist
                   );
                   if (deleteSchoolSubject !== false) {
                     res.status(200).json({

@@ -6,7 +6,7 @@ const teacherToken = require("./12_loginAsTeacher.spec");
 const adminToken = require("./11_loginAsAdmin.spec");
 
 const dataAboutSchoolSubject = {
-  new_name_of_school_subject: `newSchoolSubject${Math.floor(
+  name_of_school_subject: `newSchoolSubject${Math.floor(
     Math.random() * (10000 - 1) + 1
   )}`,
 };
@@ -61,3 +61,5 @@ describe("POST/schoolSubjects", () => {
       });
   });
 });
+
+module.exports = dataAboutSchoolSubject;

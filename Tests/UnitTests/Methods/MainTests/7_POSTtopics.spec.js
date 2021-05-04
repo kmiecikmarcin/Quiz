@@ -19,7 +19,7 @@ describe("POST /topics", () => {
       .send(dataAboutTopic)
       .then((res) => {
         expect(res.statusCode).equal(201);
-        expect(res.body.Token).to.not.equal(null);
+        expect(res.body.Message).to.not.equal(null);
         done();
       });
   });

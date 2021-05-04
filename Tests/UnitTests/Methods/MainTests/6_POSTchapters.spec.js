@@ -12,13 +12,13 @@ const dataAboutChapter = {
 describe("POST /chapter", () => {
   it("Create new chapter with teacher permissions", (done) => {
     request(app)
-      .post("/quiz/schoolSubjects/chapters")
+      .post("/quiz/schoolSubjects/chapter")
       .set("Content-Type", "application/json")
       .set("Authorization", `Bearer ${teacherToken.teacherToken}`)
       .send(dataAboutChapter)
       .then((res) => {
         expect(res.statusCode).equal(201);
-        expect(res.body.Token).to.not.equal(null);
+        expect(res.body.Message).to.not.equal(null);
         done();
       });
   });

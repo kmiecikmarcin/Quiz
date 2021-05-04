@@ -1,3 +1,5 @@
+const findChapterBySchoolSubjectId = require("./findChapterBySchoolSubjectId");
+
 async function removeSchoolSubjectFromDatabase(
   res,
   SchoolSubjects,
@@ -9,11 +11,11 @@ async function removeSchoolSubjectFromDatabase(
     Chapters,
     idSchoolSubject
   );
-  if (checkExistsOfChapter === true) {
+  if (checkExistsOfChapter === false) {
     const deleteSchoolSubject = await SchoolSubjects.destroy({
       where: { id: idSchoolSubject, name: nameOfSchoolSubjects },
     });
-    if (deleteSchoolSubject) {
+    if (deleteSchoolSubject !== null) {
       return true;
     }
     return res.status(400).json({
