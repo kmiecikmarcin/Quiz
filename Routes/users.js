@@ -101,9 +101,16 @@ router.post(
   ],
   async (req, res) => {
     const error = validationResult(req);
+    const response = {
+      Message: {},
+      Error: {},
+    };
 
     if (!error.isEmpty()) {
-      res.status(400).json(error.mapped());
+      response.Error = error
+        .array({ onlyFirstError: true })
+        .map((err) => ({ [err.param]: err.msg }));
+      res.status(400).json(response);
     } else {
       const checkEnteredEmail = await checkEmailIsUnique(
         Model.Users,
@@ -127,26 +134,23 @@ router.post(
               checkEnteredGender
             );
             if (createAccount === true) {
-              res
-                .status(201)
-                .json({ Message: "Rejestracja przebiegła pomyślnie!" });
+              response.Message = "Rejestracja przebiegła pomyślnie!";
+              res.status(201).json(response);
             } else {
-              res.status(400).json({ Error: "Rejestracja nie powiodła się!" });
+              response.Error = "Rejestracja nie powiodła się!";
+              res.status(400).json(response);
             }
           } else {
-            res
-              .status(501)
-              .json({ Error: "Błąd systemu! Brak roli dla użytkownika!" });
+            response.Error = "Błąd systemu! Brak roli dla użytkownika!";
+            res.status(501).json(response);
           }
         } else {
-          res
-            .status(400)
-            .json({ Error: "Wprowadzona płeć nie istnieje w systemie!" });
+          response.Error = "Wprowadzona płeć nie istnieje w systemie!";
+          res.status(400).json(response);
         }
       } else {
-        res
-          .status(400)
-          .json({ Error: "Wprowadzony adres e-mail istnieje w systemie!" });
+        response.Error = "Wprowadzony adres e-mail istnieje w systemie!";
+        res.status(400).json(response);
       }
     }
   }
@@ -175,8 +179,16 @@ router.post(
   ],
   async (req, res) => {
     const error = validationResult(req);
+    const response = {
+      Token: {},
+      Error: {},
+    };
+
     if (!error.isEmpty()) {
-      res.status(400).json(error.mapped());
+      response.Error = error
+        .array({ onlyFirstError: true })
+        .map((err) => ({ [err.param]: err.msg }));
+      res.status(400).json(response);
     } else {
       const checkEneteredEmailAdress = await checkExistsOfUserEmail(
         Model.Users,
@@ -201,24 +213,23 @@ router.post(
               checkTypeOfUserRole
             );
             if (generatedTokenForUser !== false) {
-              res.status(200).json({ Token: generatedTokenForUser });
+              response.Token = generatedTokenForUser;
+              res.status(200).json(response);
             } else {
-              res.status(400).json({ Error: "Nie udało się zalogować!" });
+              response.Error = "Nie udało się zalogować!";
+              res.status(400).json(response);
             }
           } else {
-            res
-              .status(404)
-              .json({ Error: "Coś poszło nie tak. Sprawdź wprowadzone dane!" });
+            response.Error = "Coś poszło nie tak. Sprawdź wprowadzone dane!";
+            res.status(404).json(response);
           }
         } else {
-          res
-            .status(404)
-            .json({ Error: "Nie odnaleziono uprawnień dla tego użytkownika!" });
+          response.Error = "Nie odnaleziono uprawnień dla tego użytkownika!";
+          res.status(404).json(response);
         }
       } else {
-        res
-          .status(400)
-          .json({ Error: "Wprowadzony adress e-mail nie istnieje!" });
+        response.Error = "Wprowadzony adress e-mail nie istnieje!";
+        res.status(400).json(response);
       }
     }
   }
@@ -248,7 +259,15 @@ router.put(
   verifyToken,
   (req, res) => {
     const error = validationResult(req);
+    const response = {
+      Token: {},
+      Error: {},
+    };
+
     if (!error.isEmpty()) {
+      response.Error = error
+        .array({ onlyFirstError: true })
+        .map((err) => ({ [err.param]: err.msg }));
       res.status(400).json(error.mapped());
     } else {
       jwt.verify(
@@ -256,7 +275,8 @@ router.put(
         process.env.S3_SECRETKEY,
         async (jwtError, authData) => {
           if (jwtError) {
-            res.status(403).json({ Error: "Błąd uwierzytelniania!" });
+            response.Error = "Błąd uwierzytelniania!";
+            res.status(403).json(response);
           } else {
             const checkUser = await checkExistsOfUserEmail(
               Model.Users,
@@ -285,25 +305,26 @@ router.put(
                     checkUser.userRoleId
                   );
                   if (newTokenForUser !== false) {
-                    res.status(200).json({ Token: newTokenForUser });
+                    response.Token = newTokenForUser;
+                    res.status(200).json(response);
                   } else {
-                    res.status(403).json({
-                      Error:
-                        "Nie udało się przeprowadzić operacji uwierzytelnienia!",
-                    });
+                    response.Error =
+                      "Nie udało się przeprowadzić operacji uwierzytelnienia!";
+                    res.status(403).json(response);
                   }
                 } else {
-                  res.status(400).json({
-                    Error: "Coś poszło nie tak. Sprawdź wprowadzone dane!",
-                  });
+                  response.Error =
+                    "Coś poszło nie tak. Sprawdź wprowadzone dane!";
+                  res.status(400).json(response);
                 }
               } else {
-                res.status(404).json({
-                  Error: "Nie odnaleziono danych dotyczących użytkownika!",
-                });
+                response.Error =
+                  "Nie odnaleziono danych dotyczących użytkownika!";
+                res.status(404).json(response);
               }
             } else {
-              res.status(400).json({ Error: "Użytkownik nie istnieje!" });
+              response.Error = "Użytkownik nie istnieje!";
+              res.status(400).json(response);
             }
           }
         }
@@ -343,15 +364,24 @@ router.put(
   verifyToken,
   (req, res) => {
     const error = validationResult(req);
+    const response = {
+      Token: {},
+      Error: {},
+    };
+
     if (!error.isEmpty()) {
-      res.status(400).json(error.mapped());
+      response.Error = error
+        .array({ onlyFirstError: true })
+        .map((err) => ({ [err.param]: err.msg }));
+      res.status(400).json(response);
     } else {
       jwt.verify(
         req.token,
         process.env.S3_SECRETKEY,
         async (jwtError, authData) => {
           if (jwtError) {
-            res.status(403).json({ Error: "Błąd uwierzytelniania!" });
+            response.Error = "Błąd uwierzytelniania!";
+            res.status(403).json(response);
           } else {
             const checkUser = await checkExistsOfUserEmail(
               Model.Users,
@@ -380,26 +410,26 @@ router.put(
                     checkUser.userRoleId
                   );
                   if (newTokenForUser !== false) {
-                    res.status(200).json({ Token: newTokenForUser });
+                    response.Token = newTokenForUser;
+                    res.status(200).json(response);
                   } else {
-                    res.status(403).json({
-                      Error:
-                        "Nie udało się przeprowadzić operacji uwierzytelnienia!",
-                    });
+                    response.Error =
+                      "Nie udało się przeprowadzić operacji uwierzytelnienia!";
+                    res.status(403).json(response);
                   }
                 } else {
-                  res.status(400).json({
-                    Error:
-                      "Wprowadzone aktualne hasło jest nieprawidłowe. Sprawdź wprowadzone dane!",
-                  });
+                  response.Error =
+                    "Wprowadzone aktualne hasło jest nieprawidłowe. Sprawdź wprowadzone dane!";
+                  res.status(400).json(response);
                 }
               } else {
-                res.status(404).json({
-                  Error: "Nie odnaleziono danych dotyczących użytkownika!",
-                });
+                response.Error =
+                  "Nie odnaleziono danych dotyczących użytkownika!";
+                res.status(404).json(response);
               }
             } else {
-              res.status(400).json({ Error: "Użytkownik nie istnieje!" });
+              response.Error = "Użytkownik nie istnieje!";
+              res.status(400).json(response);
             }
           }
         }
@@ -433,15 +463,24 @@ router.put(
   verifyToken,
   (req, res) => {
     const error = validationResult(req);
+    const response = {
+      Message: {},
+      Error: {},
+    };
+
     if (!error.isEmpty()) {
-      res.status(400).json(error.mapped());
+      response.Error = error
+        .array({ onlyFirstError: true })
+        .map((err) => ({ [err.param]: err.msg }));
+      res.status(400).json(response);
     } else {
       jwt.verify(
         req.token,
         process.env.S3_SECRETKEY,
         async (jwtError, authData) => {
           if (jwtError) {
-            res.status(403).json({ Error: "Błąd uwierzytelniania!" });
+            response.Error = "Błąd uwierzytelniania!";
+            res.status(403).json(response);
           } else {
             const checkUser = await checkExistsOfUserEmail(
               Model.Users,
@@ -460,21 +499,21 @@ router.put(
                   takeUserData.password
                 );
                 if (deleteAccount !== false) {
-                  res
-                    .status(200)
-                    .json({ Message: "Pomyślnie usunięto konto!" });
+                  response.Message = "Pomyślnie usunięto konto!";
+                  res.status(200).json(response);
                 } else {
-                  res.status(400).json({
-                    Error: "Coś poszło nie tak. Sprawdź wprowadzone dane!",
-                  });
+                  response.Error =
+                    "Coś poszło nie tak. Sprawdź wprowadzone dane!";
+                  res.status(400).json(response);
                 }
               } else {
-                res.status(404).json({
-                  Error: "Nie odnaleziono danych dotyczących użytkownika!",
-                });
+                response.Error =
+                  "Nie odnaleziono danych dotyczących użytkownika!";
+                res.status(404).json(response);
               }
             } else {
-              res.status(400).json({ Error: "Użytkownik nie istnieje!" });
+              response.Error = "Użytkownik nie istnieje!";
+              res.status(400).json(response);
             }
           }
         }
