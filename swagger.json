@@ -14,15 +14,41 @@
             }
         }
     },
-    "basePath": "/quiz",
     "paths": {
-        "/users/register": {
+        "/quiz/users/register": {
             "post": {
                 "tags": [
                     "Users"
                 ],
                 "summary": "Registration in system",
-                "produces": "application/json",
+                "requestBody": {
+                    "description": "User data",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "user_email":{
+                                        "type": "string"
+                                    },
+                                    "user_password": {
+                                        "type": "string"
+                                    },
+                                    "confirm_password": {
+                                        "type": "string"
+                                    },
+                                    "user_gender": {
+                                        "type": "string"
+                                    },
+                                    "user_verification": {
+                                        "type": "boolean"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
                 "responses": {
                     "201": {
                         "description": "Successfully registered"
@@ -33,39 +59,34 @@
                     "500": {
                         "description": "System error - user role doesn't exist"
                     }
-                },
-                "parameters": [{
-                    "in": "body",
-                    "name": "body",
-                    "description": "User data",
-                    "required": "true",
-                    "properties": {
-                        "user_email": { 
-                            "type": "string" 
-                        },
-                        "user_password": {
-                            "type": "string"
-                        },
-                        "confirm_password": {
-                            "type": "string"
-                        },
-                        "user_gender": {
-                            "type": "string"
-                        },
-                        "user_verification": {
-                            "type": "boolean"
-                        }
-                    }   
-                }]
+                }
             }
         },
-        "/users/login": {
+        "/quiz/users/login": {
             "post": {
                 "tags": [
                     "Users"
                 ],
                 "summary": "Sign In",
-                "produces": "application/json",
+                "requestBody": {
+                    "description": "User data",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "user_email":{
+                                        "type": "string"
+                                    },
+                                    "user_password": {
+                                        "type": "string"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
                 "responses": {
                     "200": {
                         "description": "System will return token"
@@ -76,30 +97,37 @@
                     "404": {
                         "description": "Data not found"
                     }
-                },
-                "parameters": [{
-                    "in": "body",
-                    "name": "body",
-                    "description": "User data",
-                    "required": "true",
-                    "properties": {
-                        "user_email": { 
-                            "type": "string" 
-                        },
-                        "user_password": {
-                            "type": "string"
-                        }
-                    }   
-                }]
+                }
             }
         },
-        "/users/email": {
+        "/quiz/users/email": {
             "put": {
                 "tags": [
                     "Users"
                 ],
+                "security": [{
+                    "bearerAuth": []
+                }],
                 "summary": "User can change e-mail",
-                "produces": "application/json",
+                "requestBody": {
+                    "description": "User data",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "new_user_email":{
+                                        "type": "string"
+                                    },
+                                    "user_password": {
+                                        "type": "string"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
                 "responses": {
                     "200": {
                         "description": "Data changed successfully"
@@ -113,30 +141,40 @@
                     "404": {
                         "description": "Data not found"
                     }
-                },
-                "parameters": [{
-                    "in": "body",
-                    "name": "body",
-                    "description": "User data",
-                    "required": "true",
-                    "properties": {
-                        "new_user_email": { 
-                            "type": "string" 
-                        },
-                        "user_password": {
-                            "type": "string"
-                        }
-                    }   
-                }]
+                }
             }
         },
-        "/users/password": {
+        "/quiz/users/password": {
             "put": {
                 "tags": [
                     "Users"
                 ],
+                "security": [{
+                    "bearerAuth": []
+                }],
                 "summary": "User can change password",
-                "produces": "application/json",
+                "requestBody": {
+                    "description": "User data",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "new_user_password":{
+                                        "type": "string"
+                                    },
+                                    "confirm_new_user_password": {
+                                        "type": "string"
+                                    },
+                                    "user_password": {
+                                        "type": "string"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
                 "responses": {
                     "200": {
                         "description": "Data changed successfully"
@@ -150,33 +188,37 @@
                     "404": {
                         "description": "Data not found"
                     }
-                },
-                "parameters": [{
-                    "in": "body",
-                    "name": "body",
-                    "description": "User data",
-                    "required": "true",
-                    "properties": {
-                        "new_user_password": { 
-                            "type": "string" 
-                        },
-                        "confirm_new_user_password": { 
-                            "type": "string" 
-                        },
-                        "user_password": {
-                            "type": "string"
-                        }
-                    }   
-                }]
+                }
             }
         },
-        "/users/delete": {
+        "/quiz/users/delete": {
             "put": {
                 "tags": [
                     "Users"
                 ],
+                "security": [{
+                    "bearerAuth": []
+                }],
                 "summary": "User can delete account",
-                "produces": "application/json",
+                "requestBody": {
+                    "description": "User data",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "user_password":{
+                                        "type": "string"
+                                    },
+                                    "confirm_password": {
+                                        "type": "string"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
                 "responses": {
                     "200": {
                         "description": "Successful"
@@ -190,30 +232,18 @@
                     "404": {
                         "description": "Data not found"
                     }
-                },
-                "parameters": [{
-                    "in": "body",
-                    "name": "body",
-                    "description": "User data",
-                    "required": "true",
-                    "properties": {
-                        "user_password": { 
-                            "type": "string" 
-                        },
-                        "confirm_password": { 
-                            "type": "string" 
-                        }
-                    }   
-                }]
+                }
             }
         },
-        "/schoolSubjects/subjects": {
+        "/quiz/schoolSubjects/subjects": {
             "get": {
                 "tags": [
                     "School subjects"
                 ],
+                "security": [{
+                    "bearerAuth": []
+                }],
                 "summary": "Interface can take all subjects",
-                "produces": "application/json",
                 "responses": {
                     "200": {
                         "description": "List of school subjects"
@@ -230,13 +260,15 @@
                 }
             }
         },
-        "/schoolSubjects/chapters": {
+        "/quiz/schoolSubjects/chapters": {
             "get": {
                 "tags": [
                     "School subjects"
                 ],
+                "security": [{
+                    "bearerAuth": []
+                }],
                 "summary": "Interface can take all chapters",
-                "produces": "application/json",
                 "responses": {
                     "200": {
                         "description": "List of chapters"
@@ -253,13 +285,15 @@
                 }
             }
         },
-        "/schoolSubjects/topics": {
+        "/quiz/schoolSubjects/topics": {
             "get": {
                 "tags": [
                     "School subjects"
                 ],
+                "security": [{
+                    "bearerAuth": []
+                }],
                 "summary": "Interface can take all topics",
-                "produces": "application/json",
                 "responses": {
                     "200": {
                         "description": "List of topics"
@@ -276,13 +310,34 @@
                 }
             }
         },
-        "/schoolSubjects/chapter": {
+        "/quiz/schoolSubjects/chapter": {
             "post": {
                 "tags": [
                     "School subjects"
                 ],
+                "security": [{
+                    "bearerAuth": []
+                }],
                 "summary": "Teacher can add new chapter",
-                "produces": "application/json",
+                "requestBody": {
+                    "description": "Chapter data",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "name_of_subject":{
+                                        "type": "string"
+                                    },
+                                    "name_of_chapter": {
+                                        "type": "string"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
                 "responses": {
                     "201": {
                         "description": "New chapter added successfully"
@@ -293,30 +348,37 @@
                     "403": {
                         "description": "Forbidden"
                     }
-                },
-                "parameters": [{
-                    "in": "body",
-                    "name": "body",
-                    "description": "Chapter data",
-                    "required": "true",
-                    "properties": {
-                        "name_of_subject": { 
-                            "type": "string" 
-                        },
-                        "name_of_chapter": { 
-                            "type": "string" 
-                        }
-                    }  
-                }]
+                }
             }
         },
-        "/schoolSubjects/topic": {
+        "/quiz/schoolSubjects/topic": {
             "post": {
                 "tags": [
                     "School subjects"
                 ],
-                "summary": "TEacher can add new topic",
-                "produces": "application/json",
+                "security": [{
+                    "bearerAuth": []
+                }],
+                "summary": "Teacher can add new topic",
+                "requestBody": {
+                    "description": "Topic data",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "name_of_chapter": {
+                                        "type": "string"
+                                    },
+                                    "name_of_topic":{
+                                        "type": "string"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
                 "responses": {
                     "201": {
                         "description": "New topic added successfully"
@@ -327,30 +389,34 @@
                     "403": {
                         "description": "Forbidden"
                     }
-                },
-                "parameters": [{
-                    "in": "body",
-                    "name": "body",
-                    "description": "Topic data",
-                    "required": "true",
-                    "properties": {
-                        "name_of_chapter": { 
-                            "type": "string" 
-                        },
-                        "name_of_topic": { 
-                            "type": "string" 
-                        }
-                    }  
-                }]
+                }
             }
         },
-        "/schoolSubjects/remove-chapter": {
+        "/quiz/schoolSubjects/remove-chapter": {
             "put": {
                 "tags": [
                     "School subjects"
                 ],
+                "security": [{
+                    "bearerAuth": []
+                }],
                 "summary": "Teacher can delete chapter",
-                "produces": "application/json",
+                "requestBody": {
+                    "description": "Chapter data",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "name_of_chapter": {
+                                        "type": "string"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
                 "responses": {
                     "201": {
                         "description": "Successfully completed"
@@ -364,27 +430,34 @@
                     "404": {
                         "description": "Not Found"
                     }
-                },
-                "parameters": [{
-                    "in": "body",
-                    "name": "body",
-                    "description": "Chapter data",
-                    "required": "true",
-                    "properties": {
-                        "name_of_chapter": { 
-                            "type": "string" 
-                        }
-                    } 
-                }]
+                }
             }
         },
-        "/schoolSubjects/remove-topic": {
+        "/quiz/schoolSubjects/remove-topic": {
             "put": {
                 "tags": [
                     "School subjects"
                 ],
+                "security": [{
+                    "bearerAuth": []
+                }],
                 "summary": "Teacher can delete topic",
-                "produces": "application/json",
+                "requestBody": {
+                    "description": "Topic data",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "name_of_topic": {
+                                        "type": "string"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
                 "responses": {
                     "201": {
                         "description": "Successfully completed"
@@ -398,27 +471,34 @@
                     "404": {
                         "description": "Not Found"
                     }
-                },
-                "parameters": [{
-                    "in": "body",
-                    "name": "body",
-                    "description": "Topic data",
-                    "required": "true",
-                    "properties": {
-                        "name_of_topic": { 
-                            "type": "string" 
-                        }
-                    } 
-                }]
+                }
             }
         },
-        "/administration/schoolSubject": {
+        "/quiz/administration/schoolSubject": {
             "post": {
                 "tags": [
                     "Administration"
                 ],
+                "security": [{
+                    "bearerAuth": []
+                }],
                 "summary": "Admin can create new school subject",
-                "produces": "application/json",
+                "requestBody": {
+                    "description": "School subject data",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "name_of_school_subject": {
+                                        "type": "string"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
                 "responses": {
                     "201": {
                         "description": "Successfully completed"
@@ -429,26 +509,34 @@
                     "403": {
                         "description": "Forbidden"
                     }
-                },
-                "parameters": [{
-                    "in": "body",
-                    "name": "body",
-                    "description": "School subject data",
-                    "required": "true",
-                    "properties": {
-                        "name_of_school_subject": { 
-                            "type": "string" 
-                        }
-                    }
-                }]
+                }
             }
-        },"/administration/subject": {
+        },
+        "/quiz/administration/subject": {
             "delete": {
                 "tags": [
                     "Administration"
                 ],
-                "summary": "Admin can create new school subject",
-                "produces": "application/json",
+                "security": [{
+                    "bearerAuth": []
+                }],
+                "summary": "Admin can dalete school subject",
+                "requestBody": {
+                    "description": "School subject data",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "name_of_school_subject": {
+                                        "type": "string"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
                 "responses": {
                     "200": {
                         "description": "Successfully completed"
@@ -459,18 +547,45 @@
                     "403": {
                         "description": "Forbidden"
                     }
-                },
-                "parameters": [{
-                    "in": "body",
-                    "name": "body",
-                    "description": "School subject data",
-                    "required": "true",
-                    "properties": {
-                        "name_of_school_subject": { 
-                            "type": "string" 
+                }
+            }
+        },
+        "/quiz/administration/chapter": {
+            "delete": {
+                "tags": [
+                    "Administration"
+                ],
+                "security": [{
+                    "bearerAuth": []
+                }],
+                "summary": "Admin can delete chapter",
+                "requestBody": {
+                    "description": "Chapter data",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "name_of_chapter": {
+                                        "type": "string"
+                                    }
+                                }
+                            }
                         }
                     }
-                }]
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successfully completed"
+                    },
+                    "400": {
+                        "description": "Error about entered data"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    }
+                }
             }
         }
     }
