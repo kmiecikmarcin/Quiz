@@ -1,4 +1,4 @@
-## Teach&Check backend
+## School quiz backend
 Rest API created in Node.js.
 
 ### Documentation
