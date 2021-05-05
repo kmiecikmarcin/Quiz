@@ -35,16 +35,24 @@ router.post(
   verifyToken,
   (req, res) => {
     const error = validationResult(req);
+    const response = {
+      messages: {},
+      validationErrors: [],
+    };
 
     if (!error.isEmpty()) {
-      res.status(400).json(error.mapped());
+      response.validationErrors = error
+        .array({ onlyFirstError: true })
+        .map((err) => ({ [err.param]: err.msg }));
+      res.status(400).json(response);
     } else {
       jwt.verify(
         req.token,
         process.env.S3_SECRETKEY,
         async (jwtError, authData) => {
           if (jwtError) {
-            res.status(403).json({ Error: "Błąd uwierzytelniania!" });
+            response.messages = { error: "Błąd uwierzytelniania!" };
+            res.status(403).json(response);
           } else {
             const checkUser = await checkExistsOfUserEmail(
               Model.Users,
@@ -62,28 +70,33 @@ router.post(
                     req.body.name_of_school_subject
                   );
                   if (newSchoolSubject !== false) {
-                    res.status(201).json({
-                      Message: "Pomyślnie dodano nowy przedmiot szkolny!",
-                    });
+                    response.messages = {
+                      message: "Pomyślnie dodano nowy przedmiot szkolny!",
+                    };
+                    res.status(201).json(response);
                   } else {
-                    res.status(400).json({
-                      Error:
+                    response.messages = {
+                      error:
                         "Nie udało się utworzyć nowego przedmiotu szkolnego!",
-                    });
+                    };
+                    res.status(400).json(response);
                   }
                 } else {
-                  res
-                    .status(400)
-                    .json({ Error: "Przedmiot szkolny już istnieje!" });
+                  response.messages = {
+                    error: "Przedmiot szkolny już istnieje!",
+                  };
+                  res.status(400).json(response);
                 }
               } else {
-                res.status(400).json({
-                  Error:
+                response.messages = {
+                  error:
                     "Nie posiadasz uprawnień, by móc dodać nowy przedmiot szkolny!",
-                });
+                };
+                res.status(400).json(response);
               }
             } else {
-              res.status(400).json({ Error: "Użytkownik nie istnieje!" });
+              response.messages = { error: "Użytkownik nie istnieje!" };
+              res.status(400).json(response);
             }
           }
         }
@@ -105,16 +118,24 @@ router.delete(
   verifyToken,
   (req, res) => {
     const error = validationResult(req);
+    const response = {
+      messages: {},
+      validationErrors: [],
+    };
 
     if (!error.isEmpty()) {
-      res.status(400).json(error.mapped());
+      response.validationErrors = error
+        .array({ onlyFirstError: true })
+        .map((err) => ({ [err.param]: err.msg }));
+      res.status(400).json(response);
     } else {
       jwt.verify(
         req.token,
         process.env.S3_SECRETKEY,
         async (jwtError, authData) => {
           if (jwtError) {
-            res.status(403).json({ Error: "Błąd uwierzytelniania!" });
+            response.messages = { error: "Błąd uwierzytelniania!" };
+            res.status(403).json(response);
           } else {
             const checkUser = await checkExistsOfUserEmail(
               Model.Users,
@@ -135,26 +156,31 @@ router.delete(
                     checkSchoolSubjectExist
                   );
                   if (deleteSchoolSubject !== false) {
-                    res.status(200).json({
-                      Message: "Pomyślnie usunięto przedmiot szkolny!",
-                    });
+                    response.messages = {
+                      message: "Pomyślnie usunięto przedmiot szkolny!",
+                    };
+                    res.status(200).json(response);
                   } else {
-                    res.status(400).json({
-                      Error: "Nie udało się usunąć przedmiotu szkolnego!",
-                    });
+                    response.messages = {
+                      error: "Nie udało się usunąć przedmiotu szkolnego!",
+                    };
+                    res.status(400).json(response);
                   }
                 } else {
-                  res
-                    .status(400)
-                    .json({ Error: "Przedmiot szkolny nie istnieje!" });
+                  response.messages = {
+                    error: "Przedmiot szkolny nie istnieje!",
+                  };
+                  res.status(400).json(response);
                 }
               } else {
-                res.status(400).json({
-                  Error: "Nie posiadasz uprawnień, by móc dodać nowy rodział!",
-                });
+                response.messages = {
+                  error: "Nie posiadasz uprawnień, by móc dodać nowy rodział!",
+                };
+                res.status(400).json(response);
               }
             } else {
-              res.status(400).json({ Error: "Użytkownik nie istnieje!" });
+              response.messages = { error: "Użytkownik nie istnieje!" };
+              res.status(400).json(response);
             }
           }
         }
