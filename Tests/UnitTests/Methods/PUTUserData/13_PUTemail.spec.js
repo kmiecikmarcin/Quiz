@@ -26,9 +26,9 @@ describe("PUT /email", () => {
       .send(correctUserData)
       .then((res) => {
         expect(res.statusCode).equal(200);
-        expect(res.body).to.have.property("Token");
-        expect(res.body.Token).to.not.equal(null);
-        response.token = res.body.Token;
+        expect(res.body.messages).to.have.property("token");
+        expect(res.body.messages.token).to.not.equal(null);
+        response.token = res.body.messages.token;
         done();
       });
   });
@@ -41,8 +41,8 @@ describe("PUT /email", () => {
       .send(correctUserData)
       .then((res) => {
         expect(res.statusCode).equal(400);
-        expect(res.body).to.have.property("Error");
-        expect(res.body.Error).equal("Użytkownik nie istnieje!");
+        expect(res.body.messages).to.have.property("error");
+        expect(res.body.messages.error).equal("Użytkownik nie istnieje!");
         done();
       });
   });
@@ -55,8 +55,8 @@ describe("PUT /email", () => {
       .send(correctUserData)
       .then((res) => {
         expect(res.statusCode).equal(403);
-        expect(res.body).to.have.property("Error");
-        expect(res.body.Error).equal("Błąd uwierzytelniania!");
+        expect(res.body.messages).to.have.property("error");
+        expect(res.body.messages.error).equal("Błąd uwierzytelniania!");
         done();
       });
   });

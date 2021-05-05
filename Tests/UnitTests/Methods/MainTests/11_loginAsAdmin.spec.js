@@ -23,9 +23,9 @@ describe("POST /login", () => {
       .send(correctAdminDataForLogin)
       .then((res) => {
         expect(res.statusCode).equal(200);
-        expect(res.body).to.have.property("Token");
-        expect(res.body.Token).to.not.equal(null);
-        loginResponse.adminToken = res.body.Token;
+        expect(res.body.messages).to.have.property("token");
+        expect(res.body.messages.token).to.not.equal(null);
+        loginResponse.adminToken = res.body.messages.token;
         done();
       });
   });
@@ -36,8 +36,10 @@ describe("POST /login", () => {
       .send(incorrectAdminDataForLogin)
       .then((res) => {
         expect(res.statusCode).equal(400);
-        expect(res.body).to.have.property("Error");
-        expect(res.body.Error).equal("Wprowadzony adress e-mail nie istnieje!");
+        expect(res.body.messages).to.have.property("error");
+        expect(res.body.messages.error).equal(
+          "Wprowadzony adress e-mail nie istnieje!"
+        );
         done();
       });
   });

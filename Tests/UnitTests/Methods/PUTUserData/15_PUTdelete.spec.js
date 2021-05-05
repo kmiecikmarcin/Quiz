@@ -17,8 +17,8 @@ describe("PUT /delete", () => {
       .send(correctUserData)
       .then((res) => {
         expect(res.statusCode).equal(403);
-        expect(res.body).to.have.property("Error");
-        expect(res.body.Error).equal("Błąd uwierzytelniania!");
+        expect(res.body.messages).to.have.property("error");
+        expect(res.body.messages.error).equal("Błąd uwierzytelniania!");
         done();
       });
   });
@@ -31,8 +31,8 @@ describe("PUT /delete", () => {
       .send(correctUserData)
       .then((res) => {
         expect(res.statusCode).equal(200);
-        expect(res.body).to.have.property("Message");
-        expect(res.body.Message).equal("Pomyślnie usunięto konto!");
+        expect(res.body.messages).to.have.property("message");
+        expect(res.body.messages.message).equal("Pomyślnie usunięto konto!");
         done();
       });
   });

@@ -18,7 +18,7 @@ describe("POST /chapter", () => {
       .send(dataAboutChapter)
       .then((res) => {
         expect(res.statusCode).equal(201);
-        expect(res.body.Message).to.not.equal(null);
+        expect(res.body.messages.message).to.not.equal(null);
         done();
       });
   });
@@ -31,7 +31,7 @@ describe("POST /chapter", () => {
       .send(dataAboutChapter)
       .then((res) => {
         expect(res.statusCode).equal(400);
-        expect(res.body.Token).to.not.equal(null);
+        expect(res.body.messages.error).to.not.equal(null);
         done();
       });
   });

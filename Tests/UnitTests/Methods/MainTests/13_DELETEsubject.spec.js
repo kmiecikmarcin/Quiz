@@ -17,7 +17,9 @@ describe("DELETE /subjects", () => {
       .send(nameOfSubject)
       .then((res) => {
         expect(res.statusCode).equal(200);
-        expect(res.body.Message).equal("Pomyślnie usunięto przedmiot szkolny!");
+        expect(res.body.messages.message).equal(
+          "Pomyślnie usunięto przedmiot szkolny!"
+        );
         done();
       });
   });

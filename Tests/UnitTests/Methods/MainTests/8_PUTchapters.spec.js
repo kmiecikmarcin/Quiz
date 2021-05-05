@@ -16,9 +16,9 @@ describe("PUT /chapters", () => {
       .send(chapterName)
       .then((res) => {
         expect(res.statusCode).equal(400);
-        expect(res.body).to.have.property("Error");
-        expect(res.body.Error).equal(
-          "Rozdział posiada przypisane do siebie tematy."
+        expect(res.body.messages).to.have.property("error");
+        expect(res.body.messages.error).equal(
+          "Rozdział posiada przypisane do siebie tematy"
         );
         done();
       });
@@ -32,8 +32,8 @@ describe("PUT /chapters", () => {
       .send(chapterName)
       .then((res) => {
         expect(res.statusCode).equal(403);
-        expect(res.body).to.have.property("Error");
-        expect(res.body.Error).equal("Błąd uwierzytelniania!");
+        expect(res.body.messages).to.have.property("error");
+        expect(res.body.messages.error).equal("Błąd uwierzytelniania!");
         done();
       });
   });
@@ -46,7 +46,7 @@ describe("PUT /chapters", () => {
       .send(chapterName)
       .then((res) => {
         expect(res.statusCode).equal(400);
-        expect(res.body.Token).to.not.equal(null);
+        expect(res.body.messages.error).to.not.equal(null);
         done();
       });
   });

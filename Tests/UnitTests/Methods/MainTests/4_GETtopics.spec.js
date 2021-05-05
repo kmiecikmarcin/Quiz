@@ -12,7 +12,7 @@ describe("GET /topics", () => {
       .set("Authorization", `Bearer ${userToken.token}`)
       .then((res) => {
         expect(res.statusCode).equal(200);
-        expect(res.body.Token).to.not.equal(null);
+        expect(res.body.chapters).to.not.equal(null);
         done();
       });
   });
@@ -24,7 +24,7 @@ describe("GET /topics", () => {
       .set("Authorization", `Bearer ${teacherToken.teacherToken}`)
       .then((res) => {
         expect(res.statusCode).equal(200);
-        expect(res.body.Token).to.not.equal(null);
+        expect(res.body.chapters).to.not.equal(null);
         done();
       });
   });
@@ -36,8 +36,8 @@ describe("GET /topics", () => {
       .set("Authorization", "")
       .then((res) => {
         expect(res.statusCode).equal(403);
-        expect(res.body).to.have.property("Error");
-        expect(res.body.Error).equal("Błąd uwierzytelniania!");
+        expect(res.body.messages).to.have.property("error");
+        expect(res.body.messages.error).equal("Błąd uwierzytelniania!");
         done();
       });
   });

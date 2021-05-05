@@ -15,8 +15,8 @@ describe("PUT /topics", () => {
       .send(topicName)
       .then((res) => {
         expect(res.statusCode).equal(200);
-        expect(res.body).to.have.property("Message");
-        expect(res.body.Message).equal("Pomyślnie usunięto temat!");
+        expect(res.body.messages).to.have.property("message");
+        expect(res.body.messages.message).equal("Pomyślnie usunięto temat!");
         done();
       });
   });
@@ -29,8 +29,8 @@ describe("PUT /topics", () => {
       .send(topicName)
       .then((res) => {
         expect(res.statusCode).equal(403);
-        expect(res.body).to.have.property("Error");
-        expect(res.body.Error).equal("Błąd uwierzytelniania!");
+        expect(res.body.messages).to.have.property("error");
+        expect(res.body.messages.error).equal("Błąd uwierzytelniania!");
         done();
       });
   });
