@@ -384,7 +384,7 @@ router.post(
 );
 
 router.put(
-  "/update-chapter",
+  "/remove-chapter",
   [
     check("name_of_chapter")
       .exists()
@@ -493,7 +493,7 @@ router.put(
 );
 
 router.put(
-  "/update-topic",
+  "/remove-topic",
   [
     check("name_of_topic")
       .exists()

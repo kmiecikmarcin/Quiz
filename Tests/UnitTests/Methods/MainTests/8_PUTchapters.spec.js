@@ -10,7 +10,7 @@ const chapterName = { name_of_chapter: dataAboutChapter.name_of_chapter };
 describe("PUT /chapters", () => {
   it("Chapter to be deleted", (done) => {
     request(app)
-      .put("/quiz/schoolSubjects/update-chapter")
+      .put("/quiz/schoolSubjects/remove-chapter")
       .set("Content-Type", "application/json")
       .set("Authorization", `Bearer ${teacherToken.teacherToken}`)
       .send(chapterName)
@@ -26,7 +26,7 @@ describe("PUT /chapters", () => {
 
   it("Try to PUT chapter without authorization", (done) => {
     request(app)
-      .put("/quiz/schoolSubjects/update-chapter")
+      .put("/quiz/schoolSubjects/remove-chapter")
       .set("Content-Type", "application/json")
       .set("Authorization", "")
       .send(chapterName)
@@ -40,7 +40,7 @@ describe("PUT /chapters", () => {
 
   it("Try to PUT chapter with common user permissions", (done) => {
     request(app)
-      .put("/quiz/schoolSubjects/update-chapter")
+      .put("/quiz/schoolSubjects/remove-chapter")
       .set("Content-Type", "application/json")
       .set("Authorization", `Bearer ${userToken.token}`)
       .send(chapterName)

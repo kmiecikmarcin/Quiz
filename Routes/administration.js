@@ -7,6 +7,8 @@ const Model = require("../Functions/Others/takeModels");
 const createNewSchoolSubject = require("../Functions/SchoolSubjects/createNewSchoolSubject");
 const checkExistsOfUserEmail = require("../Functions/Users/checkExistsOfUserEmail");
 const removeSchoolSubjectFromDatabase = require("../Functions/SchoolSubjects/removeSchoolSubjectFromDatabase");
+const checkTheChapterExists = require("../Functions/SchoolSubjects/checkTheChapterExists");
+const removeChapterFromDatabase = require("../Functions/SchoolSubjects/removeChapterFromDatabase");
 
 const router = express.Router();
 
@@ -174,7 +176,92 @@ router.delete(
                 }
               } else {
                 response.messages = {
-                  error: "Nie posiadasz uprawnień, by móc dodać nowy rodział!",
+                  error:
+                    "Nie posiadasz uprawnień, by móc usunąć przedmiot szkolny!",
+                };
+                res.status(400).json(response);
+              }
+            } else {
+              response.messages = { error: "Użytkownik nie istnieje!" };
+              res.status(400).json(response);
+            }
+          }
+        }
+      );
+    }
+  }
+);
+
+router.delete(
+  "/chapter",
+  [
+    check("name_of_chapter")
+      .exists()
+      .withMessage("Brak wymaganych danych!")
+      .isLength({ min: 3 })
+      .withMessage("Wprowadzony nazwa jest za krótka!")
+      .isLength({ max: 64 }),
+  ],
+  verifyToken,
+  (req, res) => {
+    const error = validationResult(req);
+    const response = {
+      messages: {},
+      validationErrors: [],
+    };
+
+    if (!error.isEmpty()) {
+      response.validationErrors = error
+        .array({ onlyFirstError: true })
+        .map((err) => ({ [err.param]: err.msg }));
+      res.status(400).json(response);
+    } else {
+      jwt.verify(
+        req.token,
+        process.env.S3_SECRETKEY,
+        async (jwtError, authData) => {
+          if (jwtError) {
+            response.messages = { error: "Błąd uwierzytelniania!" };
+            res.status(403).json(response);
+          } else {
+            const checkUser = await checkExistsOfUserEmail(
+              Model.Users,
+              authData.email
+            );
+            if (checkUser !== false) {
+              if (authData.name === process.env.S3_ADMIN_PERMISSIONS) {
+                const checkChapter = await checkTheChapterExists(
+                  Model.Chapters,
+                  req.body.name_of_chapter
+                );
+                if (checkChapter !== false) {
+                  const deleteChapter = await removeChapterFromDatabase(
+                    res,
+                    Model.Chapters,
+                    Model.Topics,
+                    req.body.name_of_chapter,
+                    checkChapter
+                  );
+                  if (deleteChapter === true) {
+                    response.messages = {
+                      message: "Pomyślnie usunięto rozdział!",
+                    };
+                    res.status(200).json(response);
+                  } else {
+                    response.messages = {
+                      error: "Nie udało się usunąć rozdziału!",
+                    };
+                    res.status(400).json(response);
+                  }
+                } else {
+                  response.messages = {
+                    error: "rozdział nie istnieje!",
+                  };
+                  res.status(400).json(response);
+                }
+              } else {
+                response.messages = {
+                  error: "Nie posiadasz uprawnień, by móc usunąć rodział!",
                 };
                 res.status(400).json(response);
               }

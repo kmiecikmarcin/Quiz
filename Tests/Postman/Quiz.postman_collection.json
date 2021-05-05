@@ -20,7 +20,7 @@
 										"exec": [
 											"pm.test(\"Response is correct\", function () {\r",
 											"    var jsonData = pm.response.json();\r",
-											"    pm.expect(jsonData.Message).to.eql(\"Rejestracja przebiegła pomyślnie!\");\r",
+											"    pm.expect(jsonData.messages.message).to.eql(\"Rejestracja przebiegła pomyślnie!\");\r",
 											"});\r",
 											"pm.test(\"Successful POST request\", function () {\r",
 											"    pm.expect(pm.response.code).to.be.oneOf([201]);\r",
@@ -52,6 +52,9 @@
 									}
 								}
 							],
+							"protocolProfileBehavior": {
+								"disabledSystemHeaders": {}
+							},
 							"request": {
 								"method": "POST",
 								"header": [],
@@ -65,7 +68,8 @@
 									}
 								},
 								"url": {
-									"raw": "localhost:3000/quiz/users/register",
+									"raw": "http://localhost:3000/quiz/users/register",
+									"protocol": "http",
 									"host": [
 										"localhost"
 									],
@@ -88,14 +92,14 @@
 										"exec": [
 											"pm.test(\"Response is correct\", function () {\r",
 											"    var jsonData = pm.response.json();\r",
-											"    pm.expect(jsonData.Message).not.eql(null);\r",
+											"    pm.expect(jsonData.messages.message).not.eql(null);\r",
 											"});\r",
 											"pm.test(\"Successful POST request\", function () {\r",
 											"    pm.expect(pm.response.code).to.be.oneOf([200]);\r",
 											"});\r",
 											"\r",
 											"let bodyData = JSON.parse(responseBody);\r",
-											"const token = bodyData.Token;\r",
+											"const token = bodyData.messages.token;\r",
 											"pm.environment.set(\"token\", token);"
 										],
 										"type": "text/javascript"
@@ -142,11 +146,11 @@
 											"\r",
 											"pm.test(\"Response is correct\", function () {\r",
 											"    var jsonData = pm.response.json();\r",
-											"    pm.expect(jsonData.Message).not.eql(null);\r",
+											"    pm.expect(jsonData.messages.message).not.eql(null);\r",
 											"});\r",
 											"\r",
 											"let bodyData = JSON.parse(responseBody);\r",
-											"const token = bodyData.Token;\r",
+											"const token = bodyData.messages.token;\r",
 											"pm.environment.set(\"token\", token);"
 										],
 										"type": "text/javascript"
@@ -227,11 +231,11 @@
 											"\r",
 											"pm.test(\"Response is correct\", function () {\r",
 											"    var jsonData = pm.response.json();\r",
-											"    pm.expect(jsonData.Message).not.eql(null);\r",
+											"    pm.expect(jsonData.messages.message).not.eql(null);\r",
 											"});\r",
 											"\r",
 											"let bodyData = JSON.parse(responseBody);\r",
-											"const token = bodyData.Token;\r",
+											"const token = bodyData.messages.token;\r",
 											"pm.environment.set(\"token\", token);"
 										],
 										"type": "text/javascript"
@@ -288,7 +292,7 @@
 											"\r",
 											"pm.test(\"Response is correct\", function () {\r",
 											"    var jsonData = pm.response.json();\r",
-											"    pm.expect(jsonData.Error).to.eql(\"Coś poszło nie tak. Sprawdź wprowadzone dane!\");\r",
+											"    pm.expect(jsonData.messages.error).to.eql(\"Coś poszło nie tak. Sprawdź wprowadzone dane!\");\r",
 											"});"
 										],
 										"type": "text/javascript"
@@ -355,7 +359,7 @@
 										"exec": [
 											"pm.test(\"Response is correct\", function () {\r",
 											"    var jsonData = pm.response.json();\r",
-											"    pm.expect(jsonData.Message).not.eql(null);\r",
+											"    pm.expect(jsonData.schoolSubjects).not.eql(null);\r",
 											"});\r",
 											"pm.test(\"Successful GET request\", function () {\r",
 											"    pm.expect(pm.response.code).to.be.oneOf([200]);\r",
@@ -402,7 +406,7 @@
 										"exec": [
 											"pm.test(\"Response is correct\", function () {\r",
 											"    var jsonData = pm.response.json();\r",
-											"    pm.expect(jsonData.Message).not.eql(null);\r",
+											"    pm.expect(jsonData.chapters).not.eql(null);\r",
 											"});\r",
 											"pm.test(\"Successful GET request\", function () {\r",
 											"    pm.expect(pm.response.code).to.be.oneOf([200]);\r",
@@ -449,7 +453,7 @@
 										"exec": [
 											"pm.test(\"Response is correct\", function () {\r",
 											"    var jsonData = pm.response.json();\r",
-											"    pm.expect(jsonData.Message).not.eql(null);\r",
+											"    pm.expect(jsonData.topics).not.eql(null);\r",
 											"});\r",
 											"pm.test(\"Successful GET request\", function () {\r",
 											"    pm.expect(pm.response.code).to.be.oneOf([200]);\r",
@@ -496,7 +500,7 @@
 										"exec": [
 											"pm.test(\"Response is correct\", function () {\r",
 											"    var jsonData = pm.response.json();\r",
-											"    pm.expect(jsonData.Error).to.eql(\"Nie posiadasz uprawnień, by móc dodać nowy rodział!\");\r",
+											"    pm.expect(jsonData.messages.error).to.eql(\"Nie posiadasz uprawnień, by móc dodać nowy rodział!\");\r",
 											"});\r",
 											"pm.test(\"Successful POST request\", function () {\r",
 											"    pm.expect(pm.response.code).to.be.oneOf([400]);\r",
@@ -569,7 +573,7 @@
 											"});\r",
 											"\r",
 											"let bodyData = JSON.parse(responseBody);\r",
-											"const teacherToken = bodyData.Token;\r",
+											"const teacherToken = bodyData.messages.token;\r",
 											"pm.environment.set(\"teacherToken\", teacherToken);"
 										],
 										"type": "text/javascript"
@@ -940,7 +944,7 @@
 									}
 								},
 								"url": {
-									"raw": "localhost:3000/quiz/schoolSubjects/update-chapter",
+									"raw": "localhost:3000/quiz/schoolSubjects/remove-chapter",
 									"host": [
 										"localhost"
 									],
@@ -948,7 +952,7 @@
 									"path": [
 										"quiz",
 										"schoolSubjects",
-										"update-chapter"
+										"remove-chapter"
 									]
 								}
 							},
@@ -963,7 +967,7 @@
 										"exec": [
 											"pm.test(\"Response is correct\", function () {\r",
 											"    var jsonData = pm.response.json();\r",
-											"    pm.expect(jsonData.Message).to.eql(\"Pomyślnie usunięto temat!\");\r",
+											"    pm.expect(jsonData.messages.message).to.eql(\"Pomyślnie usunięto temat!\");\r",
 											"});\r",
 											"pm.test(\"Successful PUT request\", function () {\r",
 											"    pm.expect(pm.response.code).to.be.oneOf([200]);\r",
@@ -996,7 +1000,7 @@
 									}
 								},
 								"url": {
-									"raw": "localhost:3000/quiz/schoolSubjects/update-topic",
+									"raw": "localhost:3000/quiz/schoolSubjects/remove-topic",
 									"host": [
 										"localhost"
 									],
@@ -1004,7 +1008,7 @@
 									"path": [
 										"quiz",
 										"schoolSubjects",
-										"update-topic"
+										"remove-topic"
 									]
 								}
 							},
@@ -1267,7 +1271,7 @@
 									}
 								},
 								"url": {
-									"raw": "localhost:3000/quiz/schoolSubjects/update-chapter",
+									"raw": "localhost:3000/quiz/schoolSubjects/remove-chapter",
 									"host": [
 										"localhost"
 									],
@@ -1275,7 +1279,7 @@
 									"path": [
 										"quiz",
 										"schoolSubjects",
-										"update-chapter"
+										"remove-chapter"
 									]
 								}
 							},
@@ -1297,14 +1301,14 @@
 								"exec": [
 									"pm.test(\"Response is correct\", function () {\r",
 									"    var jsonData = pm.response.json();\r",
-									"    pm.expect(jsonData.Message).not.eql(null);\r",
+									"    pm.expect(jsonData.messages.token).not.eql(null);\r",
 									"});\r",
 									"pm.test(\"Successful POST request\", function () {\r",
 									"    pm.expect(pm.response.code).to.be.oneOf([200]);\r",
 									"});\r",
 									"\r",
 									"let bodyData = JSON.parse(responseBody);\r",
-									"const adminToken = bodyData.Token;\r",
+									"const adminToken = bodyData.messages.token;\r",
 									"pm.environment.set(\"adminToken\", adminToken);"
 								],
 								"type": "text/javascript"
@@ -1452,7 +1456,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"name_of_school_subject\": \"newSchoolSubject3951\"\r\n}",
+							"raw": "{\r\n    \"name_of_school_subject\": \"{{name_of_school_subject}}\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -1469,6 +1473,62 @@
 								"quiz",
 								"administration",
 								"subject"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Topic",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response is correct\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData.Message).not.eql(null);\r",
+									"});\r",
+									"pm.test(\"Successful DELETE request\", function () {\r",
+									"    pm.expect(pm.response.code).to.be.oneOf([200]);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{adminToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name_of_chapter\": \"{{name_of_chapter}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:3000/quiz/administration/chapter",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"quiz",
+								"administration",
+								"chapter"
 							]
 						}
 					},

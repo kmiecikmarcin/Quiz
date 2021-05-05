@@ -344,7 +344,7 @@
                 }]
             }
         },
-        "/schoolSubjects/update-chapter": {
+        "/schoolSubjects/remove-chapter": {
             "put": {
                 "tags": [
                     "School subjects"
@@ -378,7 +378,7 @@
                 }]
             }
         },
-        "/schoolSubjects/update-topic": {
+        "/schoolSubjects/remove-topic": {
             "put": {
                 "tags": [
                     "School subjects"
@@ -450,7 +450,7 @@
                 "summary": "Admin can create new school subject",
                 "produces": "application/json",
                 "responses": {
-                    "201": {
+                    "200": {
                         "description": "Successfully completed"
                     },
                     "400": {
@@ -459,7 +459,18 @@
                     "403": {
                         "description": "Forbidden"
                     }
-                }
+                },
+                "parameters": [{
+                    "in": "body",
+                    "name": "body",
+                    "description": "School subject data",
+                    "required": "true",
+                    "properties": {
+                        "name_of_school_subject": { 
+                            "type": "string" 
+                        }
+                    }
+                }]
             }
         }
     }
