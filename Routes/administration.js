@@ -10,6 +10,7 @@ const removeSchoolSubjectFromDatabase = require("../Functions/SchoolSubjects/rem
 const checkTheChapterExists = require("../Functions/SchoolSubjects/checkTheChapterExists");
 const removeChapterFromDatabase = require("../Functions/SchoolSubjects/removeChapterFromDatabase");
 const checkTheTopicExists = require("../Functions/SchoolSubjects/checkTheTopicExists");
+const removeTopicFromDatabase = require("../Functions/SchoolSubjects/removeTopicFromDatabase");
 
 const router = express.Router();
 
@@ -307,7 +308,7 @@ router.delete(
       res.status(400).json(response);
     } else {
       jwt.verify(
-        re.token,
+        req.token,
         process.env.S3_SECRETKEY,
         async (jwtError, authData) => {
           if (jwtError) {
@@ -319,10 +320,7 @@ router.delete(
               authData.email
             );
             if (checkUser !== false) {
-              if (
-                authData.name === process.env.S3_TEACHER_PERMISSIONS ||
-                authData.name === process.env.S3_ADMIN_PERMISSIONS
-              ) {
+              if (authData.name === process.env.S3_ADMIN_PERMISSIONS) {
                 const checkTopic = await checkTheTopicExists(
                   Model.Topics,
                   req.body.name_of_topic
