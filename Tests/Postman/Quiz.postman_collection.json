@@ -1576,7 +1576,7 @@
 							}
 						},
 						"url": {
-							"raw": "localhost:3000/quiz/administration/delete",
+							"raw": "localhost:3000/quiz/administration/topic",
 							"host": [
 								"localhost"
 							],
@@ -1584,7 +1584,7 @@
 							"path": [
 								"quiz",
 								"administration",
-								"delete"
+								"topic"
 							]
 						}
 					},
