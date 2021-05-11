@@ -20,44 +20,6 @@ const changeUserPassword = require("../Functions/Users/changeUserPassword");
 
 const router = express.Router();
 
-/**
- * @swagger
- *  /users/register:
- *    post:
- *      tags:
- *      - name: Users
- *      summary: Registration in system
- *      parameters:
- *        - in: body
- *          name: Register
- *          description: The user registration with data wchich his entered.
- *          schema:
- *            type: object
- *            required: true
- *            properties:
- *              user_email:
- *                type: string
- *                example: exampleEmailAdress@gmail.com
- *              user_password:
- *                type: string
- *                example: password@
- *              confirm_password:
- *                type: string
- *                example: password@
- *              user_gender:
- *                type: string
- *                example: Kobieta
- *              user_verification:
- *                type: boolean
- *                example: false
- *      responses:
- *        201:
- *          description: Successfully registered!
- *        400:
- *          description: Error about entered data.
- *        501:
- *          description: System error - user role doesn't exist!
- */
 router.post(
   "/register",
   [
@@ -139,9 +101,16 @@ router.post(
   ],
   async (req, res) => {
     const error = validationResult(req);
+    const response = {
+      messages: {},
+      validationErrors: [],
+    };
 
     if (!error.isEmpty()) {
-      res.status(400).json(error.mapped());
+      response.validationErrors = error
+        .array({ onlyFirstError: true })
+        .map((err) => ({ [err.param]: err.msg }));
+      res.status(400).json(response);
     } else {
       const checkEnteredEmail = await checkEmailIsUnique(
         Model.Users,
@@ -165,60 +134,36 @@ router.post(
               checkEnteredGender
             );
             if (createAccount === true) {
-              res
-                .status(201)
-                .json({ Message: "Rejestracja przebiegła pomyślnie!" });
+              response.messages = {
+                message: "Rejestracja przebiegła pomyślnie!",
+              };
+              res.status(201).json(response);
             } else {
-              res.status(400).json({ Error: "Rejestracja nie powiodła się!" });
+              response.messages = { error: "Rejestracja nie powiodła się!" };
+              res.status(400).json(response);
             }
           } else {
-            res
-              .status(501)
-              .json({ Error: "Błąd systemu! Brak roli dla użytkownika!" });
+            response.messages = {
+              error: "Błąd systemu! Brak roli dla użytkownika!",
+            };
+            res.status(501).json(response);
           }
         } else {
-          res
-            .status(400)
-            .json({ Error: "Wprowadzona płeć nie istnieje w systemie!" });
+          response.messages = {
+            error: "Wprowadzona płeć nie istnieje w systemie!",
+          };
+          res.status(400).json(response);
         }
       } else {
-        res
-          .status(400)
-          .json({ Error: "Wprowadzony adres e-mail istnieje w systemie!" });
+        response.messages = {
+          error: "Wprowadzony adres e-mail istnieje w systemie!",
+        };
+        res.status(400).json(response);
       }
     }
   }
 );
 
-/**
- * @swagger
- *  /users/login:
- *    post:
- *      tags:
- *      - name: Users
- *      summary: Login in system
- *      parameters:
- *        - in: body
- *          name: Login
- *          description: The user login with data wchich his entered.
- *          schema:
- *            type: object
- *            required: true
- *            properties:
- *              user_email:
- *                type: string
- *                example: exampleEmailAdress@gmail.com
- *              user_password:
- *                type: string
- *                example: password@
- *      responses:
- *        200:
- *          description: System will return token.
- *        400:
- *          description: Error about entered data.
- *        404:
- *          description: Data not found.
- */
 router.post(
   "/login",
   [
@@ -242,8 +187,16 @@ router.post(
   ],
   async (req, res) => {
     const error = validationResult(req);
+    const response = {
+      messages: {},
+      validationErrors: {},
+    };
+
     if (!error.isEmpty()) {
-      res.status(400).json(error.mapped());
+      response.validationErrors = error
+        .array({ onlyFirstError: true })
+        .map((err) => ({ [err.param]: err.msg }));
+      res.status(400).json(response);
     } else {
       const checkEneteredEmailAdress = await checkExistsOfUserEmail(
         Model.Users,
@@ -268,60 +221,34 @@ router.post(
               checkTypeOfUserRole
             );
             if (generatedTokenForUser !== false) {
-              res.status(200).json({ Token: generatedTokenForUser });
+              response.messages = { token: generatedTokenForUser };
+              res.status(200).json(response);
             } else {
-              res.status(400).json({ Error: "Nie udało się zalogować!" });
+              response.messages = { error: "Nie udało się zalogować!" };
+              res.status(400).json(response);
             }
           } else {
-            res
-              .status(404)
-              .json({ Error: "Coś poszło nie tak. Sprawdź wprowadzone dane!" });
+            response.messages = {
+              error: "Coś poszło nie tak. Sprawdź wprowadzone dane!",
+            };
+            res.status(404).json(response);
           }
         } else {
-          res
-            .status(404)
-            .json({ Error: "Nie odnaleziono uprawnień dla tego użytkownika!" });
+          response.messages = {
+            error: "Nie odnaleziono uprawnień dla tego użytkownika!",
+          };
+          res.status(404).json(response);
         }
       } else {
-        res
-          .status(400)
-          .json({ Error: "Wprowadzony adress e-mail nie istnieje!" });
+        response.messages = {
+          error: "Wprowadzony adress e-mail nie istnieje!",
+        };
+        res.status(400).json(response);
       }
     }
   }
 );
 
-/**
- * @swagger
- *  /users/email:
- *    put:
- *      tags:
- *      - name: Users
- *      summary: Change user e-mail
- *      parameters:
- *        - in: body
- *          name: Update
- *          description: User can change his e-mail adress.
- *          schema:
- *            type: object
- *            required: true
- *            properties:
- *              new_user_email:
- *                type: string
- *                example: newExampleEmailAdress@gmail.com
- *              user_password:
- *                type: string
- *                example: password@
- *      responses:
- *        200:
- *          description: Data changed successfully!
- *        400:
- *          description: Error about entered data.
- *        403:
- *          description: Forbidden.
- *        404:
- *          description: Data not found.
- */
 router.put(
   "/email",
   [
@@ -346,15 +273,24 @@ router.put(
   verifyToken,
   (req, res) => {
     const error = validationResult(req);
+    const response = {
+      messages: {},
+      validationErrors: {},
+    };
+
     if (!error.isEmpty()) {
-      res.status(400).json(error.mapped());
+      response.validationErrors = error
+        .array({ onlyFirstError: true })
+        .map((err) => ({ [err.param]: err.msg }));
+      res.status(400).json(response);
     } else {
       jwt.verify(
         req.token,
         process.env.S3_SECRETKEY,
         async (jwtError, authData) => {
           if (jwtError) {
-            res.status(403).json({ Error: "Błąd uwierzytelniania!" });
+            response.messages = { error: "Błąd uwierzytelniania!" };
+            res.status(403).json(response);
           } else {
             const checkUser = await checkExistsOfUserEmail(
               Model.Users,
@@ -383,25 +319,31 @@ router.put(
                     checkUser.userRoleId
                   );
                   if (newTokenForUser !== false) {
-                    res.status(200).json({ Token: newTokenForUser });
+                    response.messages = { token: newTokenForUser };
+                    res.status(200).json(response);
                   } else {
-                    res.status(403).json({
-                      Error:
+                    response.messages = {
+                      error:
                         "Nie udało się przeprowadzić operacji uwierzytelnienia!",
-                    });
+                    };
+                    res.status(403).json(response);
                   }
                 } else {
-                  res.status(400).json({
-                    Error: "Coś poszło nie tak. Sprawdź wprowadzone dane!",
-                  });
+                  response.messages = {
+                    error: "Coś poszło nie tak. Sprawdź wprowadzone dane!",
+                  };
+                  res.status(400).json(response);
                 }
               } else {
-                res.status(404).json({
-                  Error: "Nie odnaleziono danych dotyczących użytkownika!",
-                });
+                response.messages = {
+                  error: "Nie odnaleziono danych dotyczących użytkownika!",
+                };
+
+                res.status(404).json(response);
               }
             } else {
-              res.status(400).json({ Error: "Użytkownik nie istnieje!" });
+              response.messages = { error: "Użytkownik nie istnieje!" };
+              res.status(400).json(response);
             }
           }
         }
@@ -410,40 +352,6 @@ router.put(
   }
 );
 
-/**
- * @swagger
- *  /users/password:
- *    put:
- *      tags:
- *      - name: Users
- *      summary: Change user password
- *      parameters:
- *        - in: body
- *          name: Update
- *          description: User can change his password.
- *          schema:
- *            type: object
- *            required: true
- *            properties:
- *              new_user_password:
- *                type: string
- *                example: newUserPassword@
- *              confirm_new_user_password:
- *                type: string
- *                example: newUserPassword@
- *              user_password:
- *                type: string
- *                example: newUserPassword@
- *      responses:
- *        200:
- *          description: Data changed successfully!
- *        400:
- *          description: Error about entered data.
- *        403:
- *          description: Forbidden.
- *        404:
- *          description: Data not found.
- */
 router.put(
   "/password",
   [
@@ -475,15 +383,24 @@ router.put(
   verifyToken,
   (req, res) => {
     const error = validationResult(req);
+    const response = {
+      messages: {},
+      validationErrors: {},
+    };
+
     if (!error.isEmpty()) {
-      res.status(400).json(error.mapped());
+      response.validationErrors = error
+        .array({ onlyFirstError: true })
+        .map((err) => ({ [err.param]: err.msg }));
+      res.status(400).json(response);
     } else {
       jwt.verify(
         req.token,
         process.env.S3_SECRETKEY,
         async (jwtError, authData) => {
           if (jwtError) {
-            res.status(403).json({ Error: "Błąd uwierzytelniania!" });
+            response.messages = { error: "Błąd uwierzytelniania!" };
+            res.status(403).json(response);
           } else {
             const checkUser = await checkExistsOfUserEmail(
               Model.Users,
@@ -512,26 +429,34 @@ router.put(
                     checkUser.userRoleId
                   );
                   if (newTokenForUser !== false) {
-                    res.status(200).json({ Token: newTokenForUser });
+                    response.messages = { token: newTokenForUser };
+                    res.status(200).json(response);
                   } else {
-                    res.status(403).json({
-                      Error:
+                    response.messages = {
+                      error:
                         "Nie udało się przeprowadzić operacji uwierzytelnienia!",
-                    });
+                    };
+
+                    res.status(403).json(response);
                   }
                 } else {
-                  res.status(400).json({
-                    Error:
+                  response.messages = {
+                    error:
                       "Wprowadzone aktualne hasło jest nieprawidłowe. Sprawdź wprowadzone dane!",
-                  });
+                  };
+                  res.status(400).json(response);
                 }
               } else {
-                res.status(404).json({
-                  Error: "Nie odnaleziono danych dotyczących użytkownika!",
-                });
+                response.messages = {
+                  error: "Nie odnaleziono danych dotyczących użytkownika!",
+                };
+                res.status(404).json(response);
               }
             } else {
-              res.status(400).json({ Error: "Użytkownik nie istnieje!" });
+              response.messages = {
+                error: "Użytkownik nie istnieje!",
+              };
+              res.status(400).json(response);
             }
           }
         }
@@ -540,37 +465,6 @@ router.put(
   }
 );
 
-/**
- * @swagger
- *  /users/delete:
- *    put:
- *      tags:
- *      - name: Users
- *      summary: Delete account
- *      parameters:
- *        - in: body
- *          name: Delete
- *          description: The user delete his account.
- *          schema:
- *            type: object
- *            required: true
- *            properties:
- *              user_password:
- *                type: string
- *                example: password@
- *              confirm_password:
- *                type: string
- *                example: password@
- *      responses:
- *        200:
- *          description: Data changed successfully!
- *        400:
- *          description: Error about entered data.
- *        403:
- *          description: Forbidden.
- *        404:
- *          description: Data not found.
- */
 router.put(
   "/delete",
   [
@@ -596,15 +490,24 @@ router.put(
   verifyToken,
   (req, res) => {
     const error = validationResult(req);
+    const response = {
+      messages: {},
+      validationErrors: {},
+    };
+
     if (!error.isEmpty()) {
-      res.status(400).json(error.mapped());
+      response.Error = error
+        .array({ onlyFirstError: true })
+        .map((err) => ({ [err.param]: err.msg }));
+      res.status(400).json(response);
     } else {
       jwt.verify(
         req.token,
         process.env.S3_SECRETKEY,
         async (jwtError, authData) => {
           if (jwtError) {
-            res.status(403).json({ Error: "Błąd uwierzytelniania!" });
+            response.messages = { error: "Błąd uwierzytelniania!" };
+            res.status(403).json(response);
           } else {
             const checkUser = await checkExistsOfUserEmail(
               Model.Users,
@@ -623,21 +526,23 @@ router.put(
                   takeUserData.password
                 );
                 if (deleteAccount !== false) {
-                  res
-                    .status(200)
-                    .json({ Message: "Pomyślnie usunięto konto!" });
+                  response.messages = { message: "Pomyślnie usunięto konto!" };
+                  res.status(200).json(response);
                 } else {
-                  res.status(400).json({
-                    Error: "Coś poszło nie tak. Sprawdź wprowadzone dane!",
-                  });
+                  response.messages = {
+                    error: "Coś poszło nie tak. Sprawdź wprowadzone dane!",
+                  };
+                  res.status(400).json(response);
                 }
               } else {
-                res.status(404).json({
-                  Error: "Nie odnaleziono danych dotyczących użytkownika!",
-                });
+                response.messages = {
+                  error: "Nie odnaleziono danych dotyczących użytkownika!",
+                };
+                res.status(404).json(response);
               }
             } else {
-              res.status(400).json({ Error: "Użytkownik nie istnieje!" });
+              response.messages = { error: "Użytkownik nie istnieje!" };
+              res.status(400).json(response);
             }
           }
         }

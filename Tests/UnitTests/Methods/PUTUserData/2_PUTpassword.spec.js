@@ -1,8 +1,8 @@
 const { expect } = require("chai");
 const request = require("supertest");
-const app = require("../../../app");
-const userToken = require("./email.spec");
-const userData = require("./register.spec");
+const app = require("../../../../app");
+const userToken = require("./1_PUTemail.spec");
+const userData = require("../MainTests/1_register.spec");
 
 const newRandomUserPassword = `newPassword${Math.floor(
   Math.random() * (10000 - 1) + 1
@@ -16,6 +16,7 @@ const correctUserData = {
 
 const response = {
   token: "",
+  user_password: newRandomUserPassword,
 };
 
 describe("PUT /password", () => {
@@ -27,9 +28,9 @@ describe("PUT /password", () => {
       .send(correctUserData)
       .then((res) => {
         expect(res.statusCode).equal(200);
-        expect(res.body).to.have.property("Token");
-        expect(res.body.Token).to.not.equal(null);
-        response.token = res.body.Token;
+        expect(res.body.messages).to.have.property("token");
+        expect(res.body.messages.token).to.not.equal(null);
+        response.token = res.body.messages.token;
         done();
       });
   });
@@ -42,8 +43,8 @@ describe("PUT /password", () => {
       .send(correctUserData)
       .then((res) => {
         expect(res.statusCode).equal(400);
-        expect(res.body).to.have.property("Error");
-        expect(res.body.Error).equal(
+        expect(res.body.messages).to.have.property("error");
+        expect(res.body.messages.error).equal(
           "Wprowadzone aktualne hasło jest nieprawidłowe. Sprawdź wprowadzone dane!"
         );
         done();
@@ -58,8 +59,8 @@ describe("PUT /password", () => {
       .send(correctUserData)
       .then((res) => {
         expect(res.statusCode).equal(403);
-        expect(res.body).to.have.property("Error");
-        expect(res.body.Error).equal("Błąd uwierzytelniania!");
+        expect(res.body.messages).to.have.property("error");
+        expect(res.body.messages.error).equal("Błąd uwierzytelniania!");
         done();
       });
   });

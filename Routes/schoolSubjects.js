@@ -19,30 +19,18 @@ const topicToBeDeleted = require("../Functions/SchoolSubjects/topicToBeDeleted")
 
 const router = express.Router();
 
-/**
- * @swagger
- *  /schoolSubjects/subjects:
- *    get:
- *      tags:
- *      - name: School subjects
- *      summary: You can take all subjects
- *      responses:
- *        201:
- *          description: List of school subjects.
- *        400:
- *          description: Error about entered data.
- *        403:
- *          description: Forbidden.
- *        501:
- *          description: System error - subjects doesn't exist!
- */
 router.get("/subjects", verifyToken, (req, res) => {
+  const response = {
+    messages: {},
+    schoolSubjects: [],
+  };
   jwt.verify(
     req.token,
     process.env.S3_SECRETKEY,
     async (jwtError, authData) => {
       if (jwtError) {
-        res.status(403).json({ Error: "Błąd uwierzytelniania!" });
+        response.messages = { error: "Błąd uwierzytelniania!" };
+        res.status(403).json(response);
       } else {
         const checkUser = await checkExistsOfUserEmail(
           Model.Users,
@@ -53,42 +41,33 @@ router.get("/subjects", verifyToken, (req, res) => {
             Model.SchoolSubjects
           );
           if (takeSchoolSubjects !== false) {
-            res.status(200).json(takeSchoolSubjects);
+            response.schoolSubjects = takeSchoolSubjects;
+            res.status(200).json(response);
           } else {
-            res.status(501).json({ Error: "Brak przedmiotów szkolnych!" });
+            response.messages = { error: "Brak przedmiotów szkolnych!" };
+            res.status(501).json(response);
           }
         } else {
-          res.status(400).json({ Error: "Użytkownik nie istnieje!" });
+          response.messages = { error: "Użytkownik nie istnieje!" };
+          res.status(400).json(response);
         }
       }
     }
   );
 });
 
-/**
- * @swagger
- *  /schoolSubjects/chapters:
- *    get:
- *      tags:
- *      - name: School subjects
- *      summary: You can take all chapters
- *      responses:
- *        201:
- *          description: List of chapters.
- *        400:
- *          description: Error about entered data.
- *        403:
- *          description: Forbidden.
- *        404:
- *          description: Not Found.
- */
 router.get("/chapters", verifyToken, (req, res) => {
+  const response = {
+    messages: {},
+    chapters: [],
+  };
   jwt.verify(
     req.token,
     process.env.S3_SECRETKEY,
     async (jwtError, authData) => {
       if (jwtError) {
-        res.status(403).json({ Error: "Błąd uwierzytelniania!" });
+        response.messages = { error: "Błąd uwierzytelniania!" };
+        res.status(403).json(response);
       } else {
         const checkUser = await checkExistsOfUserEmail(
           Model.Users,
@@ -99,42 +78,33 @@ router.get("/chapters", verifyToken, (req, res) => {
             Model.Chapters
           );
           if (takeChapters !== false) {
-            res.status(200).json(takeChapters);
+            response.chapters = takeChapters;
+            res.status(200).json(response);
           } else {
-            res.status(404).json({ Error: "Brak rozdziałów w systemie!" });
+            response.messages = { error: "Brak rozdziałów w systemie!" };
+            res.status(404).json(response);
           }
         } else {
-          res.status(400).json({ Error: "Użytkownik nie istnieje!" });
+          response.messages = { error: "Użytkownik nie istnieje!" };
+          res.status(400).json(response);
         }
       }
     }
   );
 });
 
-/**
- * @swagger
- *  /schoolSubjects/topics:
- *    get:
- *      tags:
- *      - name: School subjects
- *      summary: You can take all topics
- *      responses:
- *        201:
- *          description: List of topics.
- *        400:
- *          description: Error about entered data.
- *        403:
- *          description: Forbidden.
- *        404:
- *          description: Not Found.
- */
 router.get("/topics", verifyToken, (req, res) => {
+  const response = {
+    messages: {},
+    topics: [],
+  };
   jwt.verify(
     req.token,
     process.env.S3_SECRETKEY,
     async (jwtError, authData) => {
       if (jwtError) {
-        res.status(403).json({ Error: "Błąd uwierzytelniania!" });
+        response.messages = { error: "Błąd uwierzytelniania!" };
+        res.status(403).json(response);
       } else {
         const checkUser = await checkExistsOfUserEmail(
           Model.Users,
@@ -143,49 +113,23 @@ router.get("/topics", verifyToken, (req, res) => {
         if (checkUser !== false) {
           const takeTopics = await takeDataAboutChaptersAndTopics(Model.Topics);
           if (takeTopics !== false) {
-            res.status(200).json(takeTopics);
+            response.topics = takeTopics;
+            res.status(200).json(response);
           } else {
-            res.status(404).json({ Error: "Brak tematów w systemie!" });
+            response.messages = { error: "Brak tematów w systemie!" };
+            res.status(404).json(response);
           }
         } else {
-          res.status(400).json({ Error: "Użytkownik nie istnieje!" });
+          response.messages = { error: "Użytkownik nie istnieje!" };
+          res.status(400).json(response);
         }
       }
     }
   );
 });
 
-/**
- * @swagger
- *  /schoolSubjects/chapters:
- *    post:
- *      tags:
- *      - name: School subjects
- *      summary: Create new chapter
- *      parameters:
- *        - in: body
- *          name: Chapter
- *          description: The user can create new chapter.
- *          schema:
- *            type: object
- *            required: true
- *            properties:
- *              name_of_subject:
- *                type: string
- *                example: Geografia
- *              name_of_chapter:
- *                type: string
- *                example: Lądy
- *      responses:
- *        201:
- *          description: Added new chapter!
- *        400:
- *          description: Error about entered data.
- *        403:
- *          description: Forbidden.
- */
 router.post(
-  "/chapters",
+  "/chapter",
   [
     check("name_of_subject")
       .exists()
@@ -227,16 +171,24 @@ router.post(
   verifyToken,
   (req, res) => {
     const error = validationResult(req);
+    const response = {
+      messages: {},
+      validationErrors: [],
+    };
 
     if (!error.isEmpty()) {
-      res.status(400).json(error.mapped());
+      response.validationErrors = error
+        .array({ onlyFirstError: true })
+        .map((err) => ({ [err.param]: err.msg }));
+      res.status(400).json(response);
     } else {
       jwt.verify(
         req.token,
         process.env.S3_SECRETKEY,
         async (jwtError, authData) => {
           if (jwtError) {
-            res.status(403).json({ Error: "Błąd uwierzytelniania!" });
+            response.messages = { error: "Błąd uwierzytelniania!" };
+            res.status(403).json(response);
           } else {
             const checkUser = await checkExistsOfUserEmail(
               Model.Users,
@@ -263,32 +215,39 @@ router.post(
                       req.body.name_of_chapter
                     );
                     if (addNewChapter !== false) {
-                      res
-                        .status(201)
-                        .json({ Message: "Pomyślnie dodano nowy rozdział!" });
+                      response.messages = {
+                        message: "Pomyślnie dodano nowy rozdział!",
+                      };
+                      res.status(201).json(response);
                     } else {
-                      res.status(400).json({
-                        Error:
+                      response.messages = {
+                        error:
                           "Nie udało się dodać nowego rodziału! Sprawdź wprowadzone dane.",
-                      });
+                      };
+
+                      res.status(400).json(response);
                     }
                   } else {
-                    res.status(400).json({
-                      Error: "Rozdział o wprowadzonej nazwie już istnieje!",
-                    });
+                    response.messages = {
+                      error: "Rozdział o wprowadzonej nazwie już istnieje!",
+                    };
+                    res.status(400).json(response);
                   }
                 } else {
-                  res
-                    .status(400)
-                    .json({ Error: "Wybrany przedmiot szkolny nie istnieje!" });
+                  response.messages = {
+                    error: "Wybrany przedmiot szkolny nie istnieje!",
+                  };
+                  res.status(400).json(response);
                 }
               } else {
-                res.status(400).json({
-                  Error: "Nie posiadasz uprawnień, by móc dodać nowy rodział!",
-                });
+                response.messages = {
+                  error: "Nie posiadasz uprawnień, by móc dodać nowy rodział!",
+                };
+                res.status(400).json(response);
               }
             } else {
-              res.status(400).json({ Error: "Użytkownik nie istnieje!" });
+              response.messages = { error: "Użytkownik nie istnieje!" };
+              res.status(400).json(response);
             }
           }
         }
@@ -297,37 +256,8 @@ router.post(
   }
 );
 
-/**
- * @swagger
- *  /schoolSubjects/topics:
- *    post:
- *      tags:
- *      - name: School subjects
- *      summary: Create new topic
- *      parameters:
- *        - in: body
- *          name: Chapter
- *          description: The user can create new topic.
- *          schema:
- *            type: object
- *            required: true
- *            properties:
- *              name_of_chapter:
- *                type: string
- *                example: Lądy
- *              name_of_topic:
- *                type: string
- *                example: Gleby
- *      responses:
- *        201:
- *          description: Added new topic!
- *        400:
- *          description: Error about entered data.
- *        403:
- *          description: Forbidden.
- */
 router.post(
-  "/topics",
+  "/topic",
   [
     check("name_of_chapter")
       .exists()
@@ -369,16 +299,24 @@ router.post(
   verifyToken,
   (req, res) => {
     const error = validationResult(req);
+    const response = {
+      messages: {},
+      validationErrors: [],
+    };
 
     if (!error.isEmpty()) {
-      res.status(400).json(error.mapped());
+      response.validationErrors = error
+        .array({ onlyFirstError: true })
+        .map((err) => ({ [err.param]: err.msg }));
+      res.status(400).json(response);
     } else {
       jwt.verify(
         req.token,
         process.env.S3_SECRETKEY,
         async (jwtError, authData) => {
           if (jwtError) {
-            res.status(403).json({ Error: "Błąd uwierzytelniania!" });
+            response.messages = { error: "Błąd uwierzytelniania!" };
+            res.status(403).json(response);
           } else {
             const checkUser = await checkExistsOfUserEmail(
               Model.Users,
@@ -405,32 +343,38 @@ router.post(
                       req.body.name_of_topic
                     );
                     if (addNewChapter !== false) {
-                      res
-                        .status(201)
-                        .json({ Message: "Pomyślnie dodano nowy temat!" });
+                      response.messages = {
+                        message: "Pomyślnie dodano nowy temat!",
+                      };
+                      res.status(201).json(response);
                     } else {
-                      res.status(400).json({
-                        Error:
+                      response.messages = {
+                        error:
                           "Nie udało się dodać nowego tematu! Sprawdź wprowadzone dane.",
-                      });
+                      };
+                      res.status(400).json(response);
                     }
                   } else {
-                    res.status(400).json({
-                      Error: "Temat o wprowadzonej nazwie już istnieje!",
-                    });
+                    response.messages = {
+                      error: "Temat o wprowadzonej nazwie już istnieje!",
+                    };
+                    res.status(400).json(response);
                   }
                 } else {
-                  res
-                    .status(400)
-                    .json({ Error: "Wybrany rozdział nie istnieje!" });
+                  response.messages = {
+                    error: "Wybrany rozdział nie istnieje!",
+                  };
+                  res.status(400).json(response);
                 }
               } else {
-                res.status(400).json({
-                  Error: "Nie posiadasz uprawnień, by móc dodać nowy temat!",
-                });
+                response.messages = {
+                  error: "Nie posiadasz uprawnień, by móc dodać nowy temat!",
+                };
+                res.status(400).json(response);
               }
             } else {
-              res.status(400).json({ Error: "Użytkownik nie istnieje!" });
+              response.messages = { error: "Użytkownik nie istnieje!" };
+              res.status(400).json(response);
             }
           }
         }
@@ -439,36 +383,8 @@ router.post(
   }
 );
 
-/**
- * @swagger
- *  /schoolSubjects/chapters:
- *    put:
- *      tags:
- *      - name: School subjects
- *      summary: Chapter to be deleted
- *      parameters:
- *        - in: body
- *          name: Chapter
- *          description: The user can delete chapter.
- *          schema:
- *            type: object
- *            required: true
- *            properties:
- *              name_of_chapter:
- *                type: string
- *                example: Lądy
- *      responses:
- *        201:
- *          description: Chapter deleted!
- *        400:
- *          description: Error about entered data.
- *        403:
- *          description: Forbidden.
- *        404:
- *          description: Not Found.
- */
 router.put(
-  "/chapters",
+  "/remove-chapter",
   [
     check("name_of_chapter")
       .exists()
@@ -492,16 +408,24 @@ router.put(
   verifyToken,
   (req, res) => {
     const error = validationResult(req);
+    const response = {
+      messages: {},
+      validationErrors: [],
+    };
 
     if (!error.isEmpty()) {
-      res.status(400).json(error.mapped());
+      response.validationErrors = error
+        .array({ onlyFirstError: true })
+        .map((err) => ({ [err.param]: err.msg }));
+      res.status(400).json(response);
     } else {
       jwt.verify(
         req.token,
         process.env.S3_SECRETKEY,
         async (jwtError, authData) => {
           if (jwtError) {
-            res.status(403).json({ Error: "Błąd uwierzytelniania!" });
+            response.messages = { error: "Błąd uwierzytelniania!" };
+            res.status(403).json(response);
           } else {
             const checkUser = await checkExistsOfUserEmail(
               Model.Users,
@@ -527,31 +451,39 @@ router.put(
                       resposneAboutChapterExists
                     );
                     if (deleteChapter !== false) {
-                      res
-                        .status(200)
-                        .json({ Message: "Pomyślnie usunięto rozdział!" });
+                      response.messages = {
+                        message: "Pomyślnie usunięto rozdział!",
+                      };
+                      res.status(200).json(response);
                     } else {
-                      res.status(400).json({
-                        Error: "Nie udało się usunąć wybranego rozdziału!",
-                      });
+                      response.messages = {
+                        error: "Nie udało się usunąć wybranego rozdziału!",
+                      };
+
+                      res.status(400).json(response);
                     }
                   } else {
-                    res.status(400).json({
-                      Error: "Rozdział posiada przypisane do siebie tematy.",
-                    });
+                    response.messages = {
+                      error: "Rozdział posiada przypisane do siebie tematy",
+                    };
+
+                    res.status(400).json(response);
                   }
                 } else {
-                  res
-                    .status(404)
-                    .json({ Error: "Wybrany rozdział nie istnieje!" });
+                  response.messages = {
+                    error: "Wybrany rozdział nie istnieje!",
+                  };
+                  res.status(404).json(response);
                 }
               } else {
-                res.status(400).json({
-                  Error: "Nie posiadasz uprawnień, by móc dodać nowy temat!",
-                });
+                response.messages = {
+                  error: "Nie posiadasz uprawnień, by móc dodać nowy temat!",
+                };
+                res.status(400).json(response);
               }
             } else {
-              res.status(400).json({ Error: "Użytkownik nie istnieje!" });
+              response.messages = { error: "Użytkownik nie istnieje!" };
+              res.status(400).json(response);
             }
           }
         }
@@ -560,36 +492,8 @@ router.put(
   }
 );
 
-/**
- * @swagger
- *  /schoolSubjects/topics:
- *    put:
- *      tags:
- *      - name: School subjects
- *      summary: Topic to be deleted
- *      parameters:
- *        - in: body
- *          name: Topic
- *          description: The user can delete topic.
- *          schema:
- *            type: object
- *            required: true
- *            properties:
- *              name_of_topic:
- *                type: string
- *                example: Gleby
- *      responses:
- *        201:
- *          description: Topic deleted!
- *        400:
- *          description: Error about entered data.
- *        403:
- *          description: Forbidden.
- *        404:
- *          description: Not Found.
- */
 router.put(
-  "/topics",
+  "/remove-topic",
   [
     check("name_of_topic")
       .exists()
@@ -613,16 +517,24 @@ router.put(
   verifyToken,
   (req, res) => {
     const error = validationResult(req);
+    const response = {
+      messages: {},
+      validationErrors: [],
+    };
 
     if (!error.isEmpty()) {
-      res.status(400).json(error.mapped());
+      response.validationErrors = error
+        .array({ onlyFirstError: true })
+        .map((err) => ({ [err.param]: err.msg }));
+      res.status(400).json(response);
     } else {
       jwt.verify(
         req.token,
         process.env.S3_SECRETKEY,
         async (jwtError, authData) => {
           if (jwtError) {
-            res.status(403).json({ Error: "Błąd uwierzytelniania!" });
+            response.messages = { error: "Błąd uwierzytelniania!" };
+            res.status(403).json(response);
           } else {
             const checkUser = await checkExistsOfUserEmail(
               Model.Users,
@@ -643,26 +555,29 @@ router.put(
                     resposneAboutTopicExists
                   );
                   if (deleteTopic !== false) {
-                    res
-                      .status(200)
-                      .json({ Message: "Pomyślnie usunięto temat!" });
+                    response.messages = {
+                      message: "Pomyślnie usunięto temat!",
+                    };
+                    res.status(200).json(response);
                   } else {
-                    res.status(400).json({
-                      Error: "Nie udało się usunąć wybranego tematu!",
-                    });
+                    response.messages = {
+                      error: "Nie udało się usunąć wybranego tematu!",
+                    };
+                    res.status(400).json(response);
                   }
                 } else {
-                  res
-                    .status(404)
-                    .json({ Error: "Wybrany temat nie istnieje!" });
+                  response.messages = { error: "Wybrany temat nie istnieje!" };
+                  res.status(404).json(response);
                 }
               } else {
-                res.status(400).json({
-                  Error: "Nie posiadasz uprawnień, by móc dodać nowy temat!",
-                });
+                response.messages = {
+                  error: "Nie posiadasz uprawnień, by móc dodać nowy temat!",
+                };
+                res.status(400).json(response);
               }
             } else {
-              res.status(400).json({ Error: "Użytkownik nie istnieje!" });
+              response.messages = { error: "Użytkownik nie istnieje!" };
+              res.status(400).json(response);
             }
           }
         }
