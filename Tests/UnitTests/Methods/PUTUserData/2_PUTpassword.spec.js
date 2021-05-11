@@ -1,7 +1,7 @@
 const { expect } = require("chai");
 const request = require("supertest");
 const app = require("../../../../app");
-const userToken = require("./13_PUTemail.spec");
+const userToken = require("./1_PUTemail.spec");
 const userData = require("../MainTests/1_register.spec");
 
 const newRandomUserPassword = `newPassword${Math.floor(

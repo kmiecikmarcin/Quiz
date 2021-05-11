@@ -9,6 +9,7 @@ const checkExistsOfUserEmail = require("../Functions/Users/checkExistsOfUserEmai
 const removeSchoolSubjectFromDatabase = require("../Functions/SchoolSubjects/removeSchoolSubjectFromDatabase");
 const checkTheChapterExists = require("../Functions/SchoolSubjects/checkTheChapterExists");
 const removeChapterFromDatabase = require("../Functions/SchoolSubjects/removeChapterFromDatabase");
+const checkTheTopicExists = require("../Functions/SchoolSubjects/checkTheTopicExists");
 
 const router = express.Router();
 
@@ -23,10 +24,11 @@ router.post(
       .isLength({ max: 24 })
       .withMessage("Wprowadzony nazwa jest za długa!")
       .custom((value) => {
-        // eslint-disable-next-line no-useless-escape
-        const badSpecialKeys = /[\,\+\=\.\<\>\{\}\[\]\:\;\'\"\|\~\`\_\-\@\#\!\$\%\^\&\*]/.test(
-          value
-        );
+        const badSpecialKeys =
+          // eslint-disable-next-line no-useless-escape
+          /[\,\+\=\.\<\>\{\}\[\]\:\;\'\"\|\~\`\_\-\@\#\!\$\%\^\&\*]/.test(
+            value
+          );
         if (badSpecialKeys === true) {
           throw new Error("Nazwa zawiera nieprawidłowy znak!");
         } else {
@@ -62,10 +64,11 @@ router.post(
             );
             if (checkUser !== false) {
               if (authData.name === process.env.S3_ADMIN_PERMISSIONS) {
-                const checkSchoolSubjectExist = await checkTheSchoolSubjectExists(
-                  Model.SchoolSubjects,
-                  req.body.name_of_school_subject
-                );
+                const checkSchoolSubjectExist =
+                  await checkTheSchoolSubjectExists(
+                    Model.SchoolSubjects,
+                    req.body.name_of_school_subject
+                  );
                 if (checkSchoolSubjectExist === false) {
                   const newSchoolSubject = await createNewSchoolSubject(
                     Model.SchoolSubjects,
@@ -145,18 +148,20 @@ router.delete(
             );
             if (checkUser !== false) {
               if (authData.name === process.env.S3_ADMIN_PERMISSIONS) {
-                const checkSchoolSubjectExist = await checkTheSchoolSubjectExists(
-                  Model.SchoolSubjects,
-                  req.body.name_of_school_subject
-                );
-                if (checkSchoolSubjectExist !== false) {
-                  const deleteSchoolSubject = await removeSchoolSubjectFromDatabase(
-                    res,
+                const checkSchoolSubjectExist =
+                  await checkTheSchoolSubjectExists(
                     Model.SchoolSubjects,
-                    Model.Chapters,
-                    req.body.name_of_school_subject,
-                    checkSchoolSubjectExist
+                    req.body.name_of_school_subject
                   );
+                if (checkSchoolSubjectExist !== false) {
+                  const deleteSchoolSubject =
+                    await removeSchoolSubjectFromDatabase(
+                      res,
+                      Model.SchoolSubjects,
+                      Model.Chapters,
+                      req.body.name_of_school_subject,
+                      checkSchoolSubjectExist
+                    );
                   if (deleteSchoolSubject !== false) {
                     response.messages = {
                       message: "Pomyślnie usunięto przedmiot szkolny!",
@@ -255,13 +260,99 @@ router.delete(
                   }
                 } else {
                   response.messages = {
-                    error: "rozdział nie istnieje!",
+                    error: "Rozdział nie istnieje!",
                   };
                   res.status(400).json(response);
                 }
               } else {
                 response.messages = {
                   error: "Nie posiadasz uprawnień, by móc usunąć rodział!",
+                };
+                res.status(400).json(response);
+              }
+            } else {
+              response.messages = { error: "Użytkownik nie istnieje!" };
+              res.status(400).json(response);
+            }
+          }
+        }
+      );
+    }
+  }
+);
+
+router.delete(
+  "/topic",
+  [
+    check("name_of_topic")
+      .exists()
+      .withMessage("Brak wymaganych danych!")
+      .isLength({ min: 3 })
+      .withMessage("Wprowadzony nazwa jest za krótka!")
+      .isLength({ max: 64 })
+      .withMessage("Wprowadzony nazwa jest za długa!"),
+  ],
+  verifyToken,
+  (req, res) => {
+    const error = validationResult(req);
+    const response = {
+      messages: {},
+      validationErrors: [],
+    };
+
+    if (!error.isEmpty()) {
+      response.validationErrors = error
+        .array({ onlyFirstError: true })
+        .map((err) => ({ [err.param]: err.msg }));
+      res.status(400).json(response);
+    } else {
+      jwt.verify(
+        re.token,
+        process.env.S3_SECRETKEY,
+        async (jwtError, authData) => {
+          if (jwtError) {
+            response.messages = { error: "Błąd uwierzytelniania!" };
+            res.status(403).json(response);
+          } else {
+            const checkUser = await checkExistsOfUserEmail(
+              Model.Users,
+              authData.email
+            );
+            if (checkUser !== false) {
+              if (
+                authData.name === process.env.S3_TEACHER_PERMISSIONS ||
+                authData.name === process.env.S3_ADMIN_PERMISSIONS
+              ) {
+                const checkTopic = await checkTheTopicExists(
+                  Model.Topics,
+                  req.body.name_of_topic
+                );
+                if (checkTopic !== false) {
+                  const deleteTopic = await removeTopicFromDatabase(
+                    Model.Topics,
+                    checkTopic,
+                    req.body.name_of_topic
+                  );
+                  if (deleteTopic !== false) {
+                    response.messages = {
+                      message: "Pomyślnie usunięto temat!",
+                    };
+                    res.status(200).json(response);
+                  } else {
+                    response.messages = {
+                      error: "Nie udało się usunąć tematu!",
+                    };
+                    res.status(400).json(response);
+                  }
+                } else {
+                  response.messages = {
+                    error: "Temat nie istnieje!",
+                  };
+                  res.status(400).json(response);
+                }
+              } else {
+                response.messages = {
+                  error: "Nie posiadasz uprawnień, by móc usunąć temat!",
                 };
                 res.status(400).json(response);
               }

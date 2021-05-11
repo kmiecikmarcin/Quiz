@@ -1,7 +1,7 @@
 const { expect } = require("chai");
 const request = require("supertest");
 const app = require("../../../../app");
-const userData = require("./14_PUTpassword.spec");
+const userData = require("./2_PUTpassword.spec");
 
 const correctUserData = {
   user_password: userData.user_password,
