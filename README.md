@@ -47,8 +47,8 @@ S3_DATABASE_NAME = exampleName
 S3_DATABASE_PASSWORD = examplePassword  
 S3_DATABASE_USER = exampleUserName
 S3_SECRETKEY = ExAmP1EKeY
-S3_USER_PERMISSIONS = Student
-S3_TEACHER_PERMISSIONS = Teacher
+S3_USER_PERMISSIONS = Uczeń
+S3_TEACHER_PERMISSIONS = Nauczyciel
 S3_ADMIN_PERMISSIONS = Administrator
 ```
 * You can run:
