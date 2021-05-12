@@ -26,8 +26,6 @@ router.post(
     check("user_email")
       .exists()
       .withMessage("Brak wymaganych danych!")
-      .isLength({ min: 1 })
-      .withMessage("Wprowadzony adres e-mail jest za krótki!")
       .isLength({ max: 254 })
       .withMessage("Wprowadzony adres e-mail jest za długi!")
       .isEmail()
@@ -75,8 +73,10 @@ router.post(
     check("user_gender")
       .exists()
       .withMessage("Brak wymaganych danych!")
-      .isLength({ min: 1, max: 20 })
-      .withMessage("Nie wprowadzono danych!")
+      .isLength({ min: 1 })
+      .withMessage("Wprowadzone dane są za krótkie!")
+      .isLength({ max: 20 })
+      .isMessage("Wprowadzone dane sa za długie!")
       .custom((value) => {
         if (checkEnteredGender(value) === false) {
           throw new Error("Podano błędną wartość!");
