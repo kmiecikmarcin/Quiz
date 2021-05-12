@@ -76,7 +76,7 @@ router.post(
       .isLength({ min: 1 })
       .withMessage("Wprowadzone dane są za krótkie!")
       .isLength({ max: 20 })
-      .isMessage("Wprowadzone dane sa za długie!")
+      .withMessage("Wprowadzone dane sa za długie!")
       .custom((value) => {
         if (checkEnteredGender(value) === false) {
           throw new Error("Podano błędną wartość!");
