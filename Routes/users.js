@@ -189,7 +189,7 @@ router.post(
     const error = validationResult(req);
     const response = {
       messages: {},
-      validationErrors: {},
+      validationErrors: [],
     };
 
     if (!error.isEmpty()) {
@@ -275,7 +275,7 @@ router.put(
     const error = validationResult(req);
     const response = {
       messages: {},
-      validationErrors: {},
+      validationErrors: [],
     };
 
     if (!error.isEmpty()) {
@@ -385,7 +385,7 @@ router.put(
     const error = validationResult(req);
     const response = {
       messages: {},
-      validationErrors: {},
+      validationErrors: [],
     };
 
     if (!error.isEmpty()) {
@@ -492,7 +492,7 @@ router.put(
     const error = validationResult(req);
     const response = {
       messages: {},
-      validationErrors: {},
+      validationErrors: [],
     };
 
     if (!error.isEmpty()) {
