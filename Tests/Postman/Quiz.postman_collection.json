@@ -68,8 +68,7 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:3000/quiz/users/register",
-									"protocol": "http",
+									"raw": "localhost:3000/quiz/users/register",
 									"host": [
 										"localhost"
 									],
@@ -1585,6 +1584,53 @@
 								"quiz",
 								"administration",
 								"topic"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Take list of users",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response is correct\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData.listOfUsers).not.eql(null);\r",
+									"});\r",
+									"pm.test(\"Successful GET request\", function () {\r",
+									"    pm.expect(pm.response.code).to.be.oneOf([200]);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{adminToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:3000/quiz/administration/users",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"quiz",
+								"administration",
+								"users"
 							]
 						}
 					},

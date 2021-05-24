@@ -8,6 +8,5 @@ module.exports = new Sequelize(
   {
     host: process.env.S3_DATABASE_HOST,
     dialect: "postgres",
-    dialectOptions: { ssl: { required: true, rejectUnauthorized: false } },
   }
 );

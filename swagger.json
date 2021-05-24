@@ -474,6 +474,28 @@
                 }
             }
         },
+        "/quiz/administration/users": {
+            "get": {
+                "tags": [
+                    "Administration"
+                ],
+                "security": [{
+                    "bearerAuth": []
+                }],
+                "summary": "Admin takes list of users which has account to delete",
+                "responses": {
+                    "200": {
+                        "description": "List of users"
+                    },
+                    "400": {
+                        "description": "Error about data"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    }
+                }
+            }
+        },
         "/quiz/administration/schoolSubject": {
             "post": {
                 "tags": [

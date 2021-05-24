@@ -11,6 +11,7 @@ const checkTheChapterExists = require("../Functions/SchoolSubjects/checkTheChapt
 const removeChapterFromDatabase = require("../Functions/SchoolSubjects/removeChapterFromDatabase");
 const checkTheTopicExists = require("../Functions/SchoolSubjects/checkTheTopicExists");
 const removeTopicFromDatabase = require("../Functions/SchoolSubjects/removeTopicFromDatabase");
+const takeListOfUsersWhichAreToRemove = require("../Functions/Users/takeListOfUsersWhichAreToRemove");
 
 const router = express.Router();
 
@@ -364,5 +365,51 @@ router.delete(
     }
   }
 );
+
+router.get("/users", verifyToken, (req, res) => {
+  const response = {
+    messages: {},
+    listOfUsers: [],
+  };
+  jwt.verify(
+    req.token,
+    process.env.S3_SECRETKEY,
+    async (jwtError, authData) => {
+      if (jwtError) {
+        response.messages = { error: "Błąd uwierzytelniania!" };
+        res.status(403).json(response);
+      } else {
+        const checkUser = await checkExistsOfUserEmail(
+          Model.Users,
+          authData.email
+        );
+        if (checkUser !== false) {
+          if (authData.name === process.env.S3_ADMIN_PERMISSIONS) {
+            const takeListOfUsers = await takeListOfUsersWhichAreToRemove(
+              Model.Users
+            );
+            if (takeListOfUsers !== false) {
+              response.listOfUsers = takeListOfUsers;
+              res.status(200).json(response);
+            } else {
+              response.messages = {
+                error: "Nie udało się pobrać listy użytkowników!",
+              };
+              res.status(400).json(response);
+            }
+          } else {
+            response.messages = {
+              error: "Nie posiadasz uprawnień!",
+            };
+            res.status(400).json(response);
+          }
+        } else {
+          response.messages = { error: "Użytkownik nie istnieje!" };
+          res.status(400).json(response);
+        }
+      }
+    }
+  );
+});
 
 module.exports = router;
