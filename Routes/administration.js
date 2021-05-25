@@ -12,6 +12,8 @@ const removeChapterFromDatabase = require("../Functions/SchoolSubjects/removeCha
 const checkTheTopicExists = require("../Functions/SchoolSubjects/checkTheTopicExists");
 const removeTopicFromDatabase = require("../Functions/SchoolSubjects/removeTopicFromDatabase");
 const takeListOfUsersWhichAreToRemove = require("../Functions/Users/takeListOfUsersWhichAreToRemove");
+const deleteUserById = require("../Functions/Users/deleteUserById");
+const findUserById = require("../Functions/Users/findUserById");
 
 const router = express.Router();
 
@@ -411,5 +413,84 @@ router.get("/users", verifyToken, (req, res) => {
     }
   );
 });
+
+router.delete(
+  "/user",
+  [
+    check("user_id")
+      .exists()
+      .withMessage("Brak wymaganych danych!")
+      .isUUID()
+      .withMessage("Niepoprawny format id użytkownika"),
+  ],
+  verifyToken,
+  (req, res) => {
+    const error = validationResult(req);
+    const response = {
+      messages: {},
+      validationErrors: [],
+    };
+    if (!error.isEmpty()) {
+      response.validationErrors = error
+        .array({ onlyFirstError: true })
+        .map((err) => ({ [err.param]: err.msg }));
+      res.status(400).json(response);
+    } else {
+      jwt.verify(
+        req.token,
+        process.env.S3_SECRETKEY,
+        async (jwtError, authData) => {
+          if (jwtError) {
+            response.messages = { error: "Błąd uwierzytelniania!" };
+            res.status(403).json(response);
+          } else {
+            const checkUser = await checkExistsOfUserEmail(
+              Model.Users,
+              authData.email
+            );
+            if (checkUser !== false) {
+              if (authData.name === process.env.S3_ADMIN_PERMISSIONS) {
+                const findUser = await findUserById(
+                  Model.Users,
+                  req.body.user_id
+                );
+                if (findUser !== false) {
+                  const deleteUser = await deleteUserById(
+                    Model.Users,
+                    req.body.user_id
+                  );
+                  if (deleteUser !== false) {
+                    response.messages = {
+                      message: "Pomyślnie usunięto użytkownika!",
+                    };
+                    res.status(200).json(response);
+                  } else {
+                    response.messages = {
+                      error: "Nie udało się usunąć użytkownika!",
+                    };
+                    res.status(400).json(response);
+                  }
+                } else {
+                  response.messages = {
+                    error: "Użytkownik nie istnieje!",
+                  };
+                  res.status(404).json(response);
+                }
+              } else {
+                response.messages = {
+                  error: "Nie posiadasz uprawnień, aby móc usunąć użytkownika!",
+                };
+                res.status(400).json(response);
+              }
+            } else {
+              response.messages = { error: "Użytkownik nie istnieje!" };
+              res.status(400).json(response);
+            }
+          }
+        }
+      );
+    }
+  }
+);
 
 module.exports = router;
