@@ -1,12 +1,12 @@
 {
     "openapi": "3.0.3",
-    "info":{
+    "info": {
         "description": "API for easy study new things from school",
         "version": "0.3.4",
         "title": "Learn and test knowledge - API"
     },
     "components": {
-        "securitySchemes" : {
+        "securitySchemes": {
             "bearerAuth": {
                 "type": "http",
                 "scheme": "bearer",
@@ -29,7 +29,7 @@
                             "schema": {
                                 "type": "object",
                                 "properties": {
-                                    "user_email":{
+                                    "user_email": {
                                         "type": "string"
                                     },
                                     "user_password": {
@@ -76,7 +76,7 @@
                             "schema": {
                                 "type": "object",
                                 "properties": {
-                                    "user_email":{
+                                    "user_email": {
                                         "type": "string"
                                     },
                                     "user_password": {
@@ -105,9 +105,11 @@
                 "tags": [
                     "Users"
                 ],
-                "security": [{
-                    "bearerAuth": []
-                }],
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
                 "summary": "User can change e-mail",
                 "requestBody": {
                     "description": "User data",
@@ -117,7 +119,7 @@
                             "schema": {
                                 "type": "object",
                                 "properties": {
-                                    "new_user_email":{
+                                    "new_user_email": {
                                         "type": "string"
                                     },
                                     "user_password": {
@@ -149,9 +151,11 @@
                 "tags": [
                     "Users"
                 ],
-                "security": [{
-                    "bearerAuth": []
-                }],
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
                 "summary": "User can change password",
                 "requestBody": {
                     "description": "User data",
@@ -161,7 +165,7 @@
                             "schema": {
                                 "type": "object",
                                 "properties": {
-                                    "new_user_password":{
+                                    "new_user_password": {
                                         "type": "string"
                                     },
                                     "confirm_new_user_password": {
@@ -196,9 +200,11 @@
                 "tags": [
                     "Users"
                 ],
-                "security": [{
-                    "bearerAuth": []
-                }],
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
                 "summary": "User can delete account",
                 "requestBody": {
                     "description": "User data",
@@ -208,7 +214,7 @@
                             "schema": {
                                 "type": "object",
                                 "properties": {
-                                    "user_password":{
+                                    "user_password": {
                                         "type": "string"
                                     },
                                     "confirm_password": {
@@ -240,9 +246,11 @@
                 "tags": [
                     "School subjects"
                 ],
-                "security": [{
-                    "bearerAuth": []
-                }],
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
                 "summary": "Interface can take all subjects",
                 "responses": {
                     "200": {
@@ -265,9 +273,11 @@
                 "tags": [
                     "School subjects"
                 ],
-                "security": [{
-                    "bearerAuth": []
-                }],
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
                 "summary": "Interface can take all chapters",
                 "responses": {
                     "200": {
@@ -290,9 +300,11 @@
                 "tags": [
                     "School subjects"
                 ],
-                "security": [{
-                    "bearerAuth": []
-                }],
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
                 "summary": "Interface can take all topics",
                 "responses": {
                     "200": {
@@ -315,9 +327,11 @@
                 "tags": [
                     "School subjects"
                 ],
-                "security": [{
-                    "bearerAuth": []
-                }],
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
                 "summary": "Teacher can add new chapter",
                 "requestBody": {
                     "description": "Chapter data",
@@ -327,7 +341,7 @@
                             "schema": {
                                 "type": "object",
                                 "properties": {
-                                    "name_of_subject":{
+                                    "name_of_subject": {
                                         "type": "string"
                                     },
                                     "name_of_chapter": {
@@ -356,9 +370,11 @@
                 "tags": [
                     "School subjects"
                 ],
-                "security": [{
-                    "bearerAuth": []
-                }],
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
                 "summary": "Teacher can add new topic",
                 "requestBody": {
                     "description": "Topic data",
@@ -371,7 +387,7 @@
                                     "name_of_chapter": {
                                         "type": "string"
                                     },
-                                    "name_of_topic":{
+                                    "name_of_topic": {
                                         "type": "string"
                                     }
                                 }
@@ -397,9 +413,11 @@
                 "tags": [
                     "School subjects"
                 ],
-                "security": [{
-                    "bearerAuth": []
-                }],
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
                 "summary": "Teacher can delete chapter",
                 "requestBody": {
                     "description": "Chapter data",
@@ -438,9 +456,11 @@
                 "tags": [
                     "School subjects"
                 ],
-                "security": [{
-                    "bearerAuth": []
-                }],
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
                 "summary": "Teacher can delete topic",
                 "requestBody": {
                     "description": "Topic data",
@@ -479,9 +499,11 @@
                 "tags": [
                     "Administration"
                 ],
-                "security": [{
-                    "bearerAuth": []
-                }],
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
                 "summary": "Admin takes list of users which has account to delete",
                 "responses": {
                     "200": {
@@ -501,9 +523,11 @@
                 "tags": [
                     "Administration"
                 ],
-                "security": [{
-                    "bearerAuth": []
-                }],
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
                 "summary": "Admin can create new school subject",
                 "requestBody": {
                     "description": "School subject data",
@@ -539,9 +563,11 @@
                 "tags": [
                     "Administration"
                 ],
-                "security": [{
-                    "bearerAuth": []
-                }],
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
                 "summary": "Admin can dalete school subject",
                 "requestBody": {
                     "description": "School subject data",
@@ -577,9 +603,11 @@
                 "tags": [
                     "Administration"
                 ],
-                "security": [{
-                    "bearerAuth": []
-                }],
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
                 "summary": "Admin can delete chapter",
                 "requestBody": {
                     "description": "Chapter data",
@@ -606,6 +634,46 @@
                     },
                     "403": {
                         "description": "Forbidden"
+                    }
+                }
+            }
+        },
+        "/quiz/administration/user": {
+            "delete": {
+                "tags": [
+                    "Administration"
+                ],
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "summary": "Admin can delete user",
+                "requestBody": {
+                    "description": "Delete user by his id",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "user_id": {
+                                        "type": "uuid"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successfully"
+                    },
+                    "400": {
+                        "description": "Error about entered data"
+                    },
+                    "404": {
+                        "description": "Not found"
                     }
                 }
             }
