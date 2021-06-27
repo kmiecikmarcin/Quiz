@@ -672,8 +672,78 @@
                     "400": {
                         "description": "Error about entered data"
                     },
+                    "403": {
+                        "description": "Forbidden"
+                    },
                     "404": {
                         "description": "Not found"
+                    }
+                }
+            }
+        },
+        "/quiz/administration/allUsers": {
+            "get": {
+                "tags": [
+                    "Administration"
+                ],
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "summary": "Admin can take list of all users",
+                "responses": {
+                    "200": {
+                        "description": "Successfully completed"
+                    },
+                    "400": {
+                        "description": "Error about entered data"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    }
+                }
+            }
+        },
+        "/quiz/administration/permissions": {
+            "put": {
+                "tags": [
+                    "Administration"
+                ],
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "summary": "Admin can give teacher permissions",
+                "requestBody": {
+                    "description": "Give teacher permissions for user",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "object",
+                                "properties": {
+                                    "user_id": {
+                                        "type": "uuid"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successfully completed"
+                    },
+                    "400": {
+                        "description": "Error about entered data"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    },
+                    "404": {
+                        "description": "Not Found"
                     }
                 }
             }
