@@ -68,8 +68,7 @@
 									}
 								},
 								"url": {
-									"raw": "http://localhost:3000/quiz/users/register",
-									"protocol": "http",
+									"raw": "localhost:3000/quiz/users/register",
 									"host": [
 										"localhost"
 									],
@@ -1585,6 +1584,210 @@
 								"quiz",
 								"administration",
 								"topic"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Take list of users to remove",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response is correct\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData.listOfUsers).not.eql(null);\r",
+									"});\r",
+									"pm.test(\"Successful GET request\", function () {\r",
+									"    pm.expect(pm.response.code).to.be.oneOf([200]);\r",
+									"});\r",
+									"\r",
+									"let bodyData = JSON.parse(responseBody);\r",
+									"const user_id = bodyData.listOfUsers[0].id;\r",
+									"pm.environment.set(\"user_id\", user_id);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{adminToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:3000/quiz/administration/users",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"quiz",
+								"administration",
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete user",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response is correct\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData.messages.message).not.eql(null);\r",
+									"});\r",
+									"pm.test(\"Successful DELETE request\", function () {\r",
+									"    pm.expect(pm.response.code).to.be.oneOf([200]);\r",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{adminToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"user_id\": \"{{user_id}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:3000/quiz/administration/user",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"quiz",
+								"administration",
+								"user"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Take all users",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response is correct\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData.listOfUsers).not.eql(null);\r",
+									"});\r",
+									"pm.test(\"Successful GET request\", function () {\r",
+									"    pm.expect(pm.response.code).to.be.oneOf([200]);\r",
+									"});\r",
+									"\r",
+									"let bodyData = JSON.parse(responseBody);\r",
+									"var user_id_for_put_permissions;\r",
+									"for(var i = 0; i < bodyData.listOfUsers.length; i++) {\r",
+									"    if(bodyData.listOfUsers[i].accountToBeDeleted === false) {\r",
+									"        user_id_for_put_permissions = bodyData.listOfUsers[i].id;\r",
+									"        break;\r",
+									"    }\r",
+									"}\r",
+									"\r",
+									"pm.environment.set(\"user_id_for_put_permissions\", user_id_for_put_permissions);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{adminToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:3000/quiz/administration/allUsers",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"quiz",
+								"administration",
+								"allUsers"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Teacher permissions",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{adminToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"user_id\": \"{{user_id_for_put_permissions}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:3000/quiz/administration/permissions",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"quiz",
+								"administration",
+								"permissions"
 							]
 						}
 					},
