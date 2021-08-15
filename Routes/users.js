@@ -1,29 +1,17 @@
 const express = require("express");
 const { check, validationResult } = require("express-validator");
-const jwt = require("jsonwebtoken");
-const Model = require("../Functions/Others/takeModels");
+const userControllers = require("../Controllers/users");
 const checkPasswordAboutOneSpecialKey = require("../Functions/Others/checkPasswordAboutOneSpecialKey");
 const checkEnteredGender = require("../Functions/Others/checkEnteredGender");
 const checkUserVerification = require("../Functions/Others/checkUserVerification");
-const checkEmailIsUnique = require("../Functions/Users/checkEmailIsUnique");
-const checkGenderIsCorrectAndFindIt = require("../Functions/Users/checkGenderIsCorrectAndFindIt");
-const createNewUserCommonAccount = require("../Functions/Users/createNewUserCommonAccount");
-const findBasicUserRole = require("../Functions/Users/findBasicUserRole");
-const checkExistsOfUserEmail = require("../Functions/Users/checkExistsOfUserEmail");
-const findUserRoleById = require("../Functions/Users/findUserRoleById");
-const userTryToLogin = require("../Functions/Users/userTryToLogin");
-const takeDataAboutUser = require("../Functions/Users/takeDataAboutUser");
 const verifyToken = require("../Functions/Others/verifyToken");
-const userDeleteHisAccount = require("../Functions/Users/userDeleteHisAccount");
-const changeUserEmailAdress = require("../Functions/Users/changeUserEmailAdress");
-const changeUserPassword = require("../Functions/Users/changeUserPassword");
 
 const router = express.Router();
 
 router.post(
   "/register",
   [
-    check("user_email")
+    check("userEmail")
       .exists()
       .withMessage("Brak wymaganych danych!")
       .isLength({ max: 254 })
@@ -31,7 +19,7 @@ router.post(
       .isEmail()
       .withMessage("Adres e-mail został wprowadzony niepoprawnie!"),
 
-    check("user_password")
+    check("userPassword")
       .exists()
       .withMessage("Brak wymaganych danych!")
       .isLength({ min: 6 })
@@ -59,18 +47,18 @@ router.post(
         }
       }),
 
-    check("confirm_password")
+    check("confirmPassword")
       .exists()
       .withMessage("Brak wymaganych danych!")
       .custom((value, { req }) => {
-        if (value !== req.body.user_password) {
+        if (value !== req.body.userPassword) {
           throw new Error("Hasła sa różne!");
         } else {
           return value;
         }
       }),
 
-    check("user_gender")
+    check("userGender")
       .exists()
       .withMessage("Brak wymaganych danych!")
       .isLength({ min: 1 })
@@ -85,7 +73,7 @@ router.post(
         }
       }),
 
-    check("user_verification")
+    check("userVerification")
       .exists()
       .withMessage("Brak wymaganych danych!")
       .isBoolean()
@@ -102,7 +90,6 @@ router.post(
   async (req, res) => {
     const error = validationResult(req);
     const response = {
-      messages: {},
       validationErrors: [],
     };
 
@@ -112,54 +99,7 @@ router.post(
         .map((err) => ({ [err.param]: err.msg }));
       res.status(400).json(response);
     } else {
-      const checkEnteredEmail = await checkEmailIsUnique(
-        Model.Users,
-        req.body.user_email
-      );
-      if (checkEnteredEmail === true) {
-        const checkEnteredGender = await checkGenderIsCorrectAndFindIt(
-          Model.Genders,
-          req.body.user_gender
-        );
-        if (checkEnteredGender !== null) {
-          const findRoleForUser = await findBasicUserRole(
-            Model.TypesOfUsersRoles
-          );
-          if (findRoleForUser !== false) {
-            const createAccount = await createNewUserCommonAccount(
-              Model.Users,
-              req.body.user_email,
-              req.body.user_password,
-              findRoleForUser,
-              checkEnteredGender
-            );
-            if (createAccount === true) {
-              response.messages = {
-                message: "Rejestracja przebiegła pomyślnie!",
-              };
-              res.status(201).json(response);
-            } else {
-              response.messages = { error: "Rejestracja nie powiodła się!" };
-              res.status(400).json(response);
-            }
-          } else {
-            response.messages = {
-              error: "Błąd systemu! Brak roli dla użytkownika!",
-            };
-            res.status(501).json(response);
-          }
-        } else {
-          response.messages = {
-            error: "Wprowadzona płeć nie istnieje w systemie!",
-          };
-          res.status(400).json(response);
-        }
-      } else {
-        response.messages = {
-          error: "Wprowadzony adres e-mail istnieje w systemie!",
-        };
-        res.status(400).json(response);
-      }
+      await userControllers.registration(req, res);
     }
   }
 );
@@ -167,7 +107,7 @@ router.post(
 router.post(
   "/login",
   [
-    check("user_email")
+    check("userEmail")
       .exists()
       .withMessage("Brak wymaganych danych!")
       .isLength({ max: 254 })
@@ -175,7 +115,7 @@ router.post(
       .isEmail()
       .withMessage("Adres e-mail został wprowadzony niepoprawnie!"),
 
-    check("user_password")
+    check("userPassword")
       .exists()
       .withMessage("Brak wymaganych danych!")
       .isLength({ min: 6 })
@@ -186,7 +126,6 @@ router.post(
   async (req, res) => {
     const error = validationResult(req);
     const response = {
-      messages: {},
       validationErrors: [],
     };
 
@@ -196,61 +135,15 @@ router.post(
         .map((err) => ({ [err.param]: err.msg }));
       res.status(400).json(response);
     } else {
-      const checkEneteredEmailAdress = await checkExistsOfUserEmail(
-        Model.Users,
-        req.body.user_email
-      );
-      if (checkEneteredEmailAdress !== false) {
-        const checkTypeOfUserRole = await findUserRoleById(
-          Model.TypesOfUsersRoles,
-          checkEneteredEmailAdress.userRoleId
-        );
-        if (checkTypeOfUserRole !== false) {
-          const userData = await takeDataAboutUser(
-            Model.Users,
-            checkEneteredEmailAdress.userId
-          );
-          if (userData !== false) {
-            const generatedTokenForUser = await userTryToLogin(
-              req.body.user_password,
-              userData.id,
-              userData.email,
-              userData.password,
-              checkTypeOfUserRole
-            );
-            if (generatedTokenForUser !== false) {
-              response.messages = { token: generatedTokenForUser };
-              res.status(200).json(response);
-            } else {
-              response.messages = { error: "Nie udało się zalogować!" };
-              res.status(400).json(response);
-            }
-          } else {
-            response.messages = {
-              error: "Coś poszło nie tak. Sprawdź wprowadzone dane!",
-            };
-            res.status(404).json(response);
-          }
-        } else {
-          response.messages = {
-            error: "Nie odnaleziono uprawnień dla tego użytkownika!",
-          };
-          res.status(404).json(response);
-        }
-      } else {
-        response.messages = {
-          error: "Wprowadzony adress e-mail nie istnieje!",
-        };
-        res.status(400).json(response);
-      }
+      await userControllers.login(req, res);
     }
   }
 );
 
-router.put(
+router.patch(
   "/email",
   [
-    check("new_user_email")
+    check("newUserEmail")
       .exists()
       .withMessage("Brak wymaganych danych!")
       .isLength({ max: 254 })
@@ -258,7 +151,7 @@ router.put(
       .isEmail()
       .withMessage("Adres e-mail został wprowadzony niepoprawnie!"),
 
-    check("user_password")
+    check("userPassword")
       .exists()
       .withMessage("Brak wymaganych danych!")
       .isLength({ min: 6 })
@@ -270,7 +163,6 @@ router.put(
   (req, res) => {
     const error = validationResult(req);
     const response = {
-      messages: {},
       validationErrors: [],
     };
 
@@ -280,95 +172,32 @@ router.put(
         .map((err) => ({ [err.param]: err.msg }));
       res.status(400).json(response);
     } else {
-      jwt.verify(
-        req.token,
-        process.env.S3_SECRETKEY,
-        async (jwtError, authData) => {
-          if (jwtError) {
-            response.messages = { error: "Błąd uwierzytelniania!" };
-            res.status(403).json(response);
-          } else {
-            const checkUser = await checkExistsOfUserEmail(
-              Model.Users,
-              authData.email
-            );
-            if (checkUser !== false) {
-              const takeUserData = await takeDataAboutUser(
-                Model.Users,
-                checkUser.userId
-              );
-              if (takeUserData !== false) {
-                const updateUserEmail = await changeUserEmailAdress(
-                  Model.Users,
-                  takeUserData.id,
-                  takeUserData.email,
-                  takeUserData.password,
-                  req.body.user_password,
-                  req.body.new_user_email
-                );
-                if (updateUserEmail !== false) {
-                  const newTokenForUser = await userTryToLogin(
-                    req.body.user_password,
-                    takeUserData.id,
-                    req.body.new_user_email,
-                    takeUserData.password,
-                    checkUser.userRoleId
-                  );
-                  if (newTokenForUser !== false) {
-                    response.messages = { token: newTokenForUser };
-                    res.status(200).json(response);
-                  } else {
-                    response.messages = {
-                      error:
-                        "Nie udało się przeprowadzić operacji uwierzytelnienia!",
-                    };
-                    res.status(403).json(response);
-                  }
-                } else {
-                  response.messages = {
-                    error: "Coś poszło nie tak. Sprawdź wprowadzone dane!",
-                  };
-                  res.status(400).json(response);
-                }
-              } else {
-                response.messages = {
-                  error: "Nie odnaleziono danych dotyczących użytkownika!",
-                };
-
-                res.status(404).json(response);
-              }
-            } else {
-              response.messages = { error: "Użytkownik nie istnieje!" };
-              res.status(400).json(response);
-            }
-          }
-        }
-      );
+      userControllers.email(req, res);
     }
   }
 );
 
-router.put(
+router.patch(
   "/password",
   [
-    check("new_user_password")
+    check("newUserPassword")
       .exists()
       .withMessage("Brak wymaganych danych!")
       .isLength({ min: 6 })
       .withMessage("Hasło jest za krótkie!")
       .isLength({ max: 32 })
       .withMessage("Hasło jest za długie!"),
-    check("confirm_new_user_password")
+    check("confirmNewUserPassword")
       .exists()
       .withMessage("Brak wymaganych danych!")
       .custom((value, { req }) => {
-        if (value !== req.body.new_user_password) {
+        if (value !== req.body.newUserPassword) {
           throw new Error("Hasła sa różne!");
         } else {
           return value;
         }
       }),
-    check("user_password")
+    check("userPassword")
       .exists()
       .withMessage("Brak wymaganych danych!")
       .isLength({ min: 6 })
@@ -390,81 +219,15 @@ router.put(
         .map((err) => ({ [err.param]: err.msg }));
       res.status(400).json(response);
     } else {
-      jwt.verify(
-        req.token,
-        process.env.S3_SECRETKEY,
-        async (jwtError, authData) => {
-          if (jwtError) {
-            response.messages = { error: "Błąd uwierzytelniania!" };
-            res.status(403).json(response);
-          } else {
-            const checkUser = await checkExistsOfUserEmail(
-              Model.Users,
-              authData.email
-            );
-            if (checkUser !== false) {
-              const takeUserData = await takeDataAboutUser(
-                Model.Users,
-                checkUser.userId
-              );
-              if (takeUserData !== false) {
-                const updateUserPassword = await changeUserPassword(
-                  Model.Users,
-                  takeUserData.id,
-                  takeUserData.email,
-                  takeUserData.password,
-                  req.body.user_password,
-                  req.body.new_user_password
-                );
-                if (updateUserPassword !== false) {
-                  const newTokenForUser = await userTryToLogin(
-                    req.body.new_user_password,
-                    takeUserData.id,
-                    takeUserData.email,
-                    updateUserPassword,
-                    checkUser.userRoleId
-                  );
-                  if (newTokenForUser !== false) {
-                    response.messages = { token: newTokenForUser };
-                    res.status(200).json(response);
-                  } else {
-                    response.messages = {
-                      error:
-                        "Nie udało się przeprowadzić operacji uwierzytelnienia!",
-                    };
-
-                    res.status(403).json(response);
-                  }
-                } else {
-                  response.messages = {
-                    error:
-                      "Wprowadzone aktualne hasło jest nieprawidłowe. Sprawdź wprowadzone dane!",
-                  };
-                  res.status(400).json(response);
-                }
-              } else {
-                response.messages = {
-                  error: "Nie odnaleziono danych dotyczących użytkownika!",
-                };
-                res.status(404).json(response);
-              }
-            } else {
-              response.messages = {
-                error: "Użytkownik nie istnieje!",
-              };
-              res.status(400).json(response);
-            }
-          }
-        }
-      );
+      userControllers.password(req, res);
     }
   }
 );
 
-router.put(
+router.patch(
   "/delete",
   [
-    check("user_password")
+    check("userPassword")
       .exists()
       .withMessage("Brak wymaganych danych!")
       .isLength({ min: 6 })
@@ -472,11 +235,11 @@ router.put(
       .isLength({ max: 32 })
       .withMessage("Hasło jest za długie!"),
 
-    check("confirm_password")
+    check("confirmPassword")
       .exists()
       .withMessage("Brak wymaganych danych!")
       .custom((value, { req }) => {
-        if (value !== req.body.user_password) {
+        if (value !== req.body.userPassword) {
           throw new Error("Hasła sa różne!");
         } else {
           return value;
@@ -497,52 +260,7 @@ router.put(
         .map((err) => ({ [err.param]: err.msg }));
       res.status(400).json(response);
     } else {
-      jwt.verify(
-        req.token,
-        process.env.S3_SECRETKEY,
-        async (jwtError, authData) => {
-          if (jwtError) {
-            response.messages = { error: "Błąd uwierzytelniania!" };
-            res.status(403).json(response);
-          } else {
-            const checkUser = await checkExistsOfUserEmail(
-              Model.Users,
-              authData.email
-            );
-            if (checkUser !== false) {
-              const takeUserData = await takeDataAboutUser(
-                Model.Users,
-                checkUser.userId
-              );
-              if (takeUserData !== false) {
-                const deleteAccount = await userDeleteHisAccount(
-                  Model.Users,
-                  req.body.user_password,
-                  takeUserData.id,
-                  takeUserData.password
-                );
-                if (deleteAccount !== false) {
-                  response.messages = { message: "Pomyślnie usunięto konto!" };
-                  res.status(200).json(response);
-                } else {
-                  response.messages = {
-                    error: "Coś poszło nie tak. Sprawdź wprowadzone dane!",
-                  };
-                  res.status(400).json(response);
-                }
-              } else {
-                response.messages = {
-                  error: "Nie odnaleziono danych dotyczących użytkownika!",
-                };
-                res.status(404).json(response);
-              }
-            } else {
-              response.messages = { error: "Użytkownik nie istnieje!" };
-              res.status(400).json(response);
-            }
-          }
-        }
-      );
+      userControllers.accountToDelete(req, res);
     }
   }
 );

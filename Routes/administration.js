@@ -5,7 +5,6 @@ const verifyToken = require("../Functions/Others/verifyToken");
 const checkTheSchoolSubjectExists = require("../Functions/SchoolSubjects/checkTheSchoolSubjectExists");
 const Model = require("../Functions/Others/takeModels");
 const createNewSchoolSubject = require("../Functions/SchoolSubjects/createNewSchoolSubject");
-const checkExistsOfUserEmail = require("../Functions/Users/checkExistsOfUserEmail");
 const removeSchoolSubjectFromDatabase = require("../Functions/SchoolSubjects/removeSchoolSubjectFromDatabase");
 const checkTheChapterExists = require("../Functions/SchoolSubjects/checkTheChapterExists");
 const removeChapterFromDatabase = require("../Functions/SchoolSubjects/removeChapterFromDatabase");

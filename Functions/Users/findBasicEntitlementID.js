@@ -1,4 +1,4 @@
-async function findBasicUserRole(TypesOfUsersRoles) {
+async function findBasicEntitlementID(TypesOfUsersRoles) {
   const findUserRole = await TypesOfUsersRoles.findOne({
     where: { name: process.env.S3_USER_PERMISSIONS },
   });
@@ -8,4 +8,4 @@ async function findBasicUserRole(TypesOfUsersRoles) {
   return false;
 }
 
-module.exports = findBasicUserRole;
+module.exports = findBasicEntitlementID;

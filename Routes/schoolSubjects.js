@@ -2,7 +2,6 @@ const express = require("express");
 const jwt = require("jsonwebtoken");
 const { check, validationResult } = require("express-validator");
 const verifyToken = require("../Functions/Others/verifyToken");
-const checkExistsOfUserEmail = require("../Functions/Users/checkExistsOfUserEmail");
 const Model = require("../Functions/Others/takeModels");
 const takeDataAboutChaptersAndTopics = require("../Functions/SchoolSubjects/takeDataAboutChaptersAndTopics");
 const checkTheChapterIsUnique = require("../Functions/SchoolSubjects/checkTheChapterIsUnique");
@@ -140,9 +139,10 @@ router.post(
       .withMessage("Wprowadzony nazwa jest za długa!")
       .custom((value) => {
         // eslint-disable-next-line no-useless-escape
-        const badSpecialKeys = /[\,\+\=\.\<\>\{\}\[\]\:\;\'\"\|\~\`\_\-\@\#\!\$\%\^\&\*]/.test(
-          value
-        );
+        const badSpecialKeys =
+          /[\,\+\=\.\<\>\{\}\[\]\:\;\'\"\|\~\`\_\-\@\#\!\$\%\^\&\*]/.test(
+            value
+          );
         if (badSpecialKeys === true) {
           throw new Error("Nazwa zawiera nieprawidłowy znak!");
         } else {
@@ -158,9 +158,10 @@ router.post(
       .withMessage("Wprowadzony nazwa jest za długa!")
       .custom((value) => {
         // eslint-disable-next-line no-useless-escape
-        const badSpecialKeys = /[\,\+\=\.\<\>\{\}\[\]\:\;\'\"\|\~\`\_\-\@\#\!\$\%\^\&\*]/.test(
-          value
-        );
+        const badSpecialKeys =
+          /[\,\+\=\.\<\>\{\}\[\]\:\;\'\"\|\~\`\_\-\@\#\!\$\%\^\&\*]/.test(
+            value
+          );
         if (badSpecialKeys === true) {
           throw new Error("Nazwa zawiera nieprawidłowy znak!");
         } else {
@@ -204,10 +205,11 @@ router.post(
                   req.body.name_of_subject
                 );
                 if (resposneAboutSubjectExists !== false) {
-                  const responseAboutUniquenessOfChapter = await checkTheChapterIsUnique(
-                    Model.Chapters,
-                    req.body.name_of_chapter
-                  );
+                  const responseAboutUniquenessOfChapter =
+                    await checkTheChapterIsUnique(
+                      Model.Chapters,
+                      req.body.name_of_chapter
+                    );
                   if (responseAboutUniquenessOfChapter === true) {
                     const addNewChapter = await createNewChapter(
                       Model.Chapters,
@@ -268,9 +270,10 @@ router.post(
       .withMessage("Wprowadzony nazwa jest za długa!")
       .custom((value) => {
         // eslint-disable-next-line no-useless-escape
-        const badSpecialKeys = /[\,\+\=\.\<\>\{\}\[\]\:\;\'\"\|\~\`\_\-\@\#\!\$\%\^\&\*]/.test(
-          value
-        );
+        const badSpecialKeys =
+          /[\,\+\=\.\<\>\{\}\[\]\:\;\'\"\|\~\`\_\-\@\#\!\$\%\^\&\*]/.test(
+            value
+          );
         if (badSpecialKeys === true) {
           throw new Error("Nazwa zawiera nieprawidłowy znak!");
         } else {
@@ -286,9 +289,10 @@ router.post(
       .withMessage("Wprowadzony nazwa jest za długa!")
       .custom((value) => {
         // eslint-disable-next-line no-useless-escape
-        const badSpecialKeys = /[\,\+\=\.\<\>\{\}\[\]\:\;\'\"\|\~\`\_\-\@\#\!\$\%\^\&\*]/.test(
-          value
-        );
+        const badSpecialKeys =
+          /[\,\+\=\.\<\>\{\}\[\]\:\;\'\"\|\~\`\_\-\@\#\!\$\%\^\&\*]/.test(
+            value
+          );
         if (badSpecialKeys === true) {
           throw new Error("Nazwa zawiera nieprawidłowy znak!");
         } else {
@@ -332,10 +336,11 @@ router.post(
                   req.body.name_of_chapter
                 );
                 if (resposneAboutChapterExists !== false) {
-                  const responseAboutUniquenessOfTopic = await checkTheTopicIsUnique(
-                    Model.Topics,
-                    req.body.name_of_topic
-                  );
+                  const responseAboutUniquenessOfTopic =
+                    await checkTheTopicIsUnique(
+                      Model.Topics,
+                      req.body.name_of_topic
+                    );
                   if (responseAboutUniquenessOfTopic === true) {
                     const addNewChapter = await createNewTopic(
                       Model.Topics,
@@ -395,9 +400,10 @@ router.put(
       .withMessage("Wprowadzony nazwa jest za długa!")
       .custom((value) => {
         // eslint-disable-next-line no-useless-escape
-        const badSpecialKeys = /[\,\+\=\.\<\>\{\}\[\]\:\;\'\"\|\~\`\_\-\@\#\!\$\%\^\&\*]/.test(
-          value
-        );
+        const badSpecialKeys =
+          /[\,\+\=\.\<\>\{\}\[\]\:\;\'\"\|\~\`\_\-\@\#\!\$\%\^\&\*]/.test(
+            value
+          );
         if (badSpecialKeys === true) {
           throw new Error("Nazwa zawiera nieprawidłowy znak!");
         } else {
@@ -504,9 +510,10 @@ router.put(
       .withMessage("Wprowadzony nazwa jest za długa!")
       .custom((value) => {
         // eslint-disable-next-line no-useless-escape
-        const badSpecialKeys = /[\,\+\=\.\<\>\{\}\[\]\:\;\'\"\|\~\`\_\-\@\#\!\$\%\^\&\*]/.test(
-          value
-        );
+        const badSpecialKeys =
+          /[\,\+\=\.\<\>\{\}\[\]\:\;\'\"\|\~\`\_\-\@\#\!\$\%\^\&\*]/.test(
+            value
+          );
         if (badSpecialKeys === true) {
           throw new Error("Nazwa zawiera nieprawidłowy znak!");
         } else {

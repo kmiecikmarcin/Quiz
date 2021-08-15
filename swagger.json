@@ -29,19 +29,19 @@
                             "schema": {
                                 "type": "object",
                                 "properties": {
-                                    "user_email": {
+                                    "userEmail": {
                                         "type": "string"
                                     },
-                                    "user_password": {
+                                    "userPassword": {
                                         "type": "string"
                                     },
-                                    "confirm_password": {
+                                    "confirmPassword": {
                                         "type": "string"
                                     },
-                                    "user_gender": {
+                                    "userGender": {
                                         "type": "string"
                                     },
-                                    "user_verification": {
+                                    "userVerification": {
                                         "type": "boolean"
                                     }
                                 }
@@ -76,10 +76,10 @@
                             "schema": {
                                 "type": "object",
                                 "properties": {
-                                    "user_email": {
+                                    "userEmail": {
                                         "type": "string"
                                     },
-                                    "user_password": {
+                                    "userPassword": {
                                         "type": "string"
                                     }
                                 }
@@ -101,7 +101,7 @@
             }
         },
         "/quiz/users/email": {
-            "put": {
+            "patch": {
                 "tags": [
                     "Users"
                 ],
@@ -119,10 +119,10 @@
                             "schema": {
                                 "type": "object",
                                 "properties": {
-                                    "new_user_email": {
+                                    "newUserEmail": {
                                         "type": "string"
                                     },
-                                    "user_password": {
+                                    "userPassword": {
                                         "type": "string"
                                     }
                                 }
@@ -147,7 +147,7 @@
             }
         },
         "/quiz/users/password": {
-            "put": {
+            "patch": {
                 "tags": [
                     "Users"
                 ],
@@ -165,13 +165,13 @@
                             "schema": {
                                 "type": "object",
                                 "properties": {
-                                    "new_user_password": {
+                                    "newUserPassword": {
                                         "type": "string"
                                     },
-                                    "confirm_new_user_password": {
+                                    "confirmNewUserPassword": {
                                         "type": "string"
                                     },
-                                    "user_password": {
+                                    "userPassword": {
                                         "type": "string"
                                     }
                                 }
@@ -196,7 +196,7 @@
             }
         },
         "/quiz/users/delete": {
-            "put": {
+            "patch": {
                 "tags": [
                     "Users"
                 ],
@@ -214,10 +214,10 @@
                             "schema": {
                                 "type": "object",
                                 "properties": {
-                                    "user_password": {
+                                    "userPassword": {
                                         "type": "string"
                                     },
-                                    "confirm_password": {
+                                    "confirmPassword": {
                                         "type": "string"
                                     }
                                 }
