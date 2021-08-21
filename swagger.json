@@ -341,10 +341,10 @@
                             "schema": {
                                 "type": "object",
                                 "properties": {
-                                    "name_of_subject": {
+                                    "nameOfSubject": {
                                         "type": "string"
                                     },
-                                    "name_of_chapter": {
+                                    "nameOfChapter": {
                                         "type": "string"
                                     }
                                 }
