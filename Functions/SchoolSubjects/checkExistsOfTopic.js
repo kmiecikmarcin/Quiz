@@ -1,4 +1,4 @@
-async function checkTheTopicExists(Topics, topicName) {
+async function checkExistsOfTopic(Topics, topicName) {
   const findTopic = await Topics.findOne({
     where: { name: topicName },
   });
@@ -8,4 +8,4 @@ async function checkTheTopicExists(Topics, topicName) {
   return false;
 }
 
-module.exports = checkTheTopicExists;
+module.exports = checkExistsOfTopic;

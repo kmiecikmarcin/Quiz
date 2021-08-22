@@ -87,7 +87,7 @@ router.post(
         }
       }),
   ],
-  async (req, res) => {
+  (req, res) => {
     const error = validationResult(req);
     const response = {
       validationErrors: [],
@@ -99,7 +99,7 @@ router.post(
         .map((err) => ({ [err.param]: err.msg }));
       res.status(400).json(response);
     } else {
-      await userControllers.registration(req, res);
+      userControllers.registration(req, res);
     }
   }
 );
@@ -123,7 +123,7 @@ router.post(
       .isLength({ max: 32 })
       .withMessage("Hasło jest za długie!"),
   ],
-  async (req, res) => {
+  (req, res) => {
     const error = validationResult(req);
     const response = {
       validationErrors: [],
@@ -135,7 +135,7 @@ router.post(
         .map((err) => ({ [err.param]: err.msg }));
       res.status(400).json(response);
     } else {
-      await userControllers.login(req, res);
+      userControllers.login(req, res);
     }
   }
 );

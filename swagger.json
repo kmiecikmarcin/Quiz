@@ -384,10 +384,10 @@
                             "schema": {
                                 "type": "object",
                                 "properties": {
-                                    "name_of_chapter": {
+                                    "nameOfChapter": {
                                         "type": "string"
                                     },
-                                    "name_of_topic": {
+                                    "nameOfTopic": {
                                         "type": "string"
                                     }
                                 }
@@ -409,7 +409,7 @@
             }
         },
         "/quiz/schoolSubjects/remove-chapter": {
-            "put": {
+            "patch": {
                 "tags": [
                     "School subjects"
                 ],
@@ -427,7 +427,7 @@
                             "schema": {
                                 "type": "object",
                                 "properties": {
-                                    "name_of_chapter": {
+                                    "nameOfChapter": {
                                         "type": "string"
                                     }
                                 }
@@ -452,7 +452,7 @@
             }
         },
         "/quiz/schoolSubjects/remove-topic": {
-            "put": {
+            "patch": {
                 "tags": [
                     "School subjects"
                 ],
@@ -470,7 +470,7 @@
                             "schema": {
                                 "type": "object",
                                 "properties": {
-                                    "name_of_topic": {
+                                    "nameOfTopic": {
                                         "type": "string"
                                     }
                                 }

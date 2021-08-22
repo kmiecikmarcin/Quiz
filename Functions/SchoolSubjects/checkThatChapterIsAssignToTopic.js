@@ -1,4 +1,4 @@
-async function checkChapterAssignedToTopics(Topics, chapterId) {
+async function checkThatChapterIsAssignToTopic(Topics, chapterId) {
   const findChapterAssignedToTopics = await Topics.findAll({
     where: { ChapterId: chapterId },
   });
@@ -8,4 +8,4 @@ async function checkChapterAssignedToTopics(Topics, chapterId) {
   return false;
 }
 
-module.exports = checkChapterAssignedToTopics;
+module.exports = checkThatChapterIsAssignToTopic;

@@ -8,7 +8,6 @@ const createNewSchoolSubject = require("../Functions/SchoolSubjects/createNewSch
 const removeSchoolSubjectFromDatabase = require("../Functions/SchoolSubjects/removeSchoolSubjectFromDatabase");
 const checkTheChapterExists = require("../Functions/SchoolSubjects/checkExistsOfChapter");
 const removeChapterFromDatabase = require("../Functions/SchoolSubjects/removeChapterFromDatabase");
-const checkTheTopicExists = require("../Functions/SchoolSubjects/checkTheTopicExists");
 const removeTopicFromDatabase = require("../Functions/SchoolSubjects/removeTopicFromDatabase");
 const takeListOfUsersWhichAreToRemove = require("../Functions/Users/takeListOfUsersWhichAreToRemove");
 const deleteUserById = require("../Functions/Users/deleteUserById");
