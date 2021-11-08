@@ -2,9 +2,9 @@ const express = require("express");
 const jwt = require("jsonwebtoken");
 const { check, validationResult } = require("express-validator");
 const verifyToken = require("../Functions/Others/verifyToken");
+const administrationsControllers = require("../Controllers/administration");
 const checkTheSchoolSubjectExists = require("../Functions/SchoolSubjects/checkTheSchoolSubjectExists");
 const Model = require("../Functions/Others/takeModels");
-const createNewSchoolSubject = require("../Functions/SchoolSubjects/createNewSchoolSubject");
 const removeSchoolSubjectFromDatabase = require("../Functions/SchoolSubjects/removeSchoolSubjectFromDatabase");
 const checkTheChapterExists = require("../Functions/SchoolSubjects/checkExistsOfChapter");
 const removeChapterFromDatabase = require("../Functions/SchoolSubjects/removeChapterFromDatabase");
@@ -46,7 +46,6 @@ router.post(
   (req, res) => {
     const error = validationResult(req);
     const response = {
-      messages: {},
       validationErrors: [],
     };
 
@@ -56,62 +55,7 @@ router.post(
         .map((err) => ({ [err.param]: err.msg }));
       res.status(400).json(response);
     } else {
-      jwt.verify(
-        req.token,
-        process.env.S3_SECRETKEY,
-        async (jwtError, authData) => {
-          if (jwtError) {
-            response.messages = { error: "Błąd uwierzytelniania!" };
-            res.status(403).json(response);
-          } else {
-            const checkUser = await checkExistsOfUserEmail(
-              Model.Users,
-              authData.email
-            );
-            if (checkUser !== false) {
-              if (authData.name === process.env.S3_ADMIN_PERMISSIONS) {
-                const checkSchoolSubjectExist =
-                  await checkTheSchoolSubjectExists(
-                    Model.SchoolSubjects,
-                    req.body.name_of_school_subject
-                  );
-                if (checkSchoolSubjectExist === false) {
-                  const newSchoolSubject = await createNewSchoolSubject(
-                    Model.SchoolSubjects,
-                    req.body.name_of_school_subject
-                  );
-                  if (newSchoolSubject !== false) {
-                    response.messages = {
-                      message: "Pomyślnie dodano nowy przedmiot szkolny!",
-                    };
-                    res.status(201).json(response);
-                  } else {
-                    response.messages = {
-                      error:
-                        "Nie udało się utworzyć nowego przedmiotu szkolnego!",
-                    };
-                    res.status(400).json(response);
-                  }
-                } else {
-                  response.messages = {
-                    error: "Przedmiot szkolny już istnieje!",
-                  };
-                  res.status(400).json(response);
-                }
-              } else {
-                response.messages = {
-                  error:
-                    "Nie posiadasz uprawnień, by móc dodać nowy przedmiot szkolny!",
-                };
-                res.status(400).json(response);
-              }
-            } else {
-              response.messages = { error: "Użytkownik nie istnieje!" };
-              res.status(400).json(response);
-            }
-          }
-        }
-      );
+      administrationsControllers.createSchoolSubject(req, res);
     }
   }
 );
