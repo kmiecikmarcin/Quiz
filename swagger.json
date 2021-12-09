@@ -537,7 +537,7 @@
                             "schema": {
                                 "type": "object",
                                 "properties": {
-                                    "name_of_school_subject": {
+                                    "nameOfSchoolSubject": {
                                         "type": "string"
                                     }
                                 }
@@ -577,7 +577,7 @@
                             "schema": {
                                 "type": "object",
                                 "properties": {
-                                    "name_of_school_subject": {
+                                    "nameOfSchoolSubject": {
                                         "type": "string"
                                     }
                                 }

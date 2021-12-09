@@ -3,9 +3,7 @@ const jwt = require("jsonwebtoken");
 const { check, validationResult } = require("express-validator");
 const verifyToken = require("../Functions/Others/verifyToken");
 const administrationsControllers = require("../Controllers/administration");
-const checkTheSchoolSubjectExists = require("../Functions/SchoolSubjects/checkTheSchoolSubjectExists");
 const Model = require("../Functions/Others/takeModels");
-const removeSchoolSubjectFromDatabase = require("../Functions/SchoolSubjects/removeSchoolSubjectFromDatabase");
 const checkTheChapterExists = require("../Functions/SchoolSubjects/checkExistsOfChapter");
 const removeChapterFromDatabase = require("../Functions/SchoolSubjects/removeChapterFromDatabase");
 const removeTopicFromDatabase = require("../Functions/SchoolSubjects/removeTopicFromDatabase");
@@ -22,7 +20,7 @@ const router = express.Router();
 router.post(
   "/schoolSubject",
   [
-    check("name_of_school_subject")
+    check("nameOfSchoolSubject")
       .exists()
       .withMessage("Brak wymaganych danych!")
       .isLength({ min: 3 })
@@ -63,7 +61,7 @@ router.post(
 router.delete(
   "/subject",
   [
-    check("name_of_school_subject")
+    check("nameOfSchoolSubject")
       .exists()
       .withMessage("Brak wymaganych danych!")
       .isLength({ min: 3 })
@@ -84,65 +82,7 @@ router.delete(
         .map((err) => ({ [err.param]: err.msg }));
       res.status(400).json(response);
     } else {
-      jwt.verify(
-        req.token,
-        process.env.S3_SECRETKEY,
-        async (jwtError, authData) => {
-          if (jwtError) {
-            response.messages = { error: "Błąd uwierzytelniania!" };
-            res.status(403).json(response);
-          } else {
-            const checkUser = await checkExistsOfUserEmail(
-              Model.Users,
-              authData.email
-            );
-            if (checkUser !== false) {
-              if (authData.name === process.env.S3_ADMIN_PERMISSIONS) {
-                const checkSchoolSubjectExist =
-                  await checkTheSchoolSubjectExists(
-                    Model.SchoolSubjects,
-                    req.body.name_of_school_subject
-                  );
-                if (checkSchoolSubjectExist !== false) {
-                  const deleteSchoolSubject =
-                    await removeSchoolSubjectFromDatabase(
-                      res,
-                      Model.SchoolSubjects,
-                      Model.Chapters,
-                      req.body.name_of_school_subject,
-                      checkSchoolSubjectExist
-                    );
-                  if (deleteSchoolSubject !== false) {
-                    response.messages = {
-                      message: "Pomyślnie usunięto przedmiot szkolny!",
-                    };
-                    res.status(200).json(response);
-                  } else {
-                    response.messages = {
-                      error: "Nie udało się usunąć przedmiotu szkolnego!",
-                    };
-                    res.status(400).json(response);
-                  }
-                } else {
-                  response.messages = {
-                    error: "Przedmiot szkolny nie istnieje!",
-                  };
-                  res.status(400).json(response);
-                }
-              } else {
-                response.messages = {
-                  error:
-                    "Nie posiadasz uprawnień, by móc usunąć przedmiot szkolny!",
-                };
-                res.status(400).json(response);
-              }
-            } else {
-              response.messages = { error: "Użytkownik nie istnieje!" };
-              res.status(400).json(response);
-            }
-          }
-        }
-      );
+      administrationsControllers.removeSchoolSubject(req, res);
     }
   }
 );
