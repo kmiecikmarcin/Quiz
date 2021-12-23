@@ -1,19 +1,7 @@
 const express = require("express");
-const jwt = require("jsonwebtoken");
 const { check, validationResult } = require("express-validator");
 const verifyToken = require("../Functions/Others/verifyToken");
 const administrationsControllers = require("../Controllers/administration");
-const Model = require("../Functions/Others/takeModels");
-const checkTheChapterExists = require("../Functions/SchoolSubjects/checkExistsOfChapter");
-const removeChapterFromDatabase = require("../Functions/SchoolSubjects/removeChapterFromDatabase");
-const removeTopicFromDatabase = require("../Functions/SchoolSubjects/removeTopicFromDatabase");
-const takeListOfUsersWhichAreToRemove = require("../Functions/Users/takeListOfUsersWhichAreToRemove");
-const deleteUserById = require("../Functions/Users/deleteUserById");
-const findUserById = require("../Functions/Users/findUserById");
-const findIdOfTeacherPermission = require("../Functions/Users/findIdOfTeacherPermission");
-const updateUserPermissionToTeacherPermissions = require("../Functions/Users/updateUserPermissionToTeacherPermissions");
-const takeAllUsers = require("../Functions/Users/takeAllUsers");
-const findAdminRoleId = require("../Functions/Users/findAdminRoleId");
 
 const router = express.Router();
 
@@ -90,7 +78,7 @@ router.delete(
 router.delete(
   "/chapter",
   [
-    check("name_of_chapter")
+    check("nameOfChapter")
       .exists()
       .withMessage("Brak wymaganych danych!")
       .isLength({ min: 3 })
@@ -111,62 +99,7 @@ router.delete(
         .map((err) => ({ [err.param]: err.msg }));
       res.status(400).json(response);
     } else {
-      jwt.verify(
-        req.token,
-        process.env.S3_SECRETKEY,
-        async (jwtError, authData) => {
-          if (jwtError) {
-            response.messages = { error: "Błąd uwierzytelniania!" };
-            res.status(403).json(response);
-          } else {
-            const checkUser = await checkExistsOfUserEmail(
-              Model.Users,
-              authData.email
-            );
-            if (checkUser !== false) {
-              if (authData.name === process.env.S3_ADMIN_PERMISSIONS) {
-                const checkChapter = await checkTheChapterExists(
-                  Model.Chapters,
-                  req.body.name_of_chapter
-                );
-                if (checkChapter !== false) {
-                  const deleteChapter = await removeChapterFromDatabase(
-                    res,
-                    Model.Chapters,
-                    Model.Topics,
-                    req.body.name_of_chapter,
-                    checkChapter
-                  );
-                  if (deleteChapter === true) {
-                    response.messages = {
-                      message: "Pomyślnie usunięto rozdział!",
-                    };
-                    res.status(200).json(response);
-                  } else {
-                    response.messages = {
-                      error: "Nie udało się usunąć rozdziału!",
-                    };
-                    res.status(400).json(response);
-                  }
-                } else {
-                  response.messages = {
-                    error: "Rozdział nie istnieje!",
-                  };
-                  res.status(400).json(response);
-                }
-              } else {
-                response.messages = {
-                  error: "Nie posiadasz uprawnień, by móc usunąć rodział!",
-                };
-                res.status(400).json(response);
-              }
-            } else {
-              response.messages = { error: "Użytkownik nie istnieje!" };
-              res.status(400).json(response);
-            }
-          }
-        }
-      );
+      administrationsControllers.removeChapter(req, res);
     }
   }
 );
@@ -174,7 +107,7 @@ router.delete(
 router.delete(
   "/topic",
   [
-    check("name_of_topic")
+    check("nameOfTopic")
       .exists()
       .withMessage("Brak wymaganych danych!")
       .isLength({ min: 3 })
@@ -196,114 +129,19 @@ router.delete(
         .map((err) => ({ [err.param]: err.msg }));
       res.status(400).json(response);
     } else {
-      jwt.verify(
-        req.token,
-        process.env.S3_SECRETKEY,
-        async (jwtError, authData) => {
-          if (jwtError) {
-            response.messages = { error: "Błąd uwierzytelniania!" };
-            res.status(403).json(response);
-          } else {
-            const checkUser = await checkExistsOfUserEmail(
-              Model.Users,
-              authData.email
-            );
-            if (checkUser !== false) {
-              if (authData.name === process.env.S3_ADMIN_PERMISSIONS) {
-                const checkTopic = await checkTheTopicExists(
-                  Model.Topics,
-                  req.body.name_of_topic
-                );
-                if (checkTopic !== false) {
-                  const deleteTopic = await removeTopicFromDatabase(
-                    Model.Topics,
-                    checkTopic,
-                    req.body.name_of_topic
-                  );
-                  if (deleteTopic !== false) {
-                    response.messages = {
-                      message: "Pomyślnie usunięto temat!",
-                    };
-                    res.status(200).json(response);
-                  } else {
-                    response.messages = {
-                      error: "Nie udało się usunąć tematu!",
-                    };
-                    res.status(400).json(response);
-                  }
-                } else {
-                  response.messages = {
-                    error: "Temat nie istnieje!",
-                  };
-                  res.status(400).json(response);
-                }
-              } else {
-                response.messages = {
-                  error: "Nie posiadasz uprawnień, by móc usunąć temat!",
-                };
-                res.status(400).json(response);
-              }
-            } else {
-              response.messages = { error: "Użytkownik nie istnieje!" };
-              res.status(400).json(response);
-            }
-          }
-        }
-      );
+      administrationsControllers.removeTopic(req, res);
     }
   }
 );
 
-router.get("/users", verifyToken, (req, res) => {
-  const response = {
-    messages: {},
-    listOfUsers: [],
-  };
-  jwt.verify(
-    req.token,
-    process.env.S3_SECRETKEY,
-    async (jwtError, authData) => {
-      if (jwtError) {
-        response.messages = { error: "Błąd uwierzytelniania!" };
-        res.status(403).json(response);
-      } else {
-        const checkUser = await checkExistsOfUserEmail(
-          Model.Users,
-          authData.email
-        );
-        if (checkUser !== false) {
-          if (authData.name === process.env.S3_ADMIN_PERMISSIONS) {
-            const takeListOfUsers = await takeListOfUsersWhichAreToRemove(
-              Model.Users
-            );
-            if (takeListOfUsers !== false) {
-              response.listOfUsers = takeListOfUsers;
-              res.status(200).json(response);
-            } else {
-              response.messages = {
-                error: "Nie udało się pobrać listy użytkowników!",
-              };
-              res.status(400).json(response);
-            }
-          } else {
-            response.messages = {
-              error: "Nie posiadasz uprawnień!",
-            };
-            res.status(400).json(response);
-          }
-        } else {
-          response.messages = { error: "Użytkownik nie istnieje!" };
-          res.status(400).json(response);
-        }
-      }
-    }
-  );
+router.get("/usersToRemove", verifyToken, (req, res) => {
+  administrationsControllers.takeAllUsersToRemove(req, res);
 });
 
 router.delete(
   "/user",
   [
-    check("user_id")
+    check("userId")
       .exists()
       .withMessage("Brak wymaganych danych!")
       .isUUID()
@@ -322,117 +160,19 @@ router.delete(
         .map((err) => ({ [err.param]: err.msg }));
       res.status(400).json(response);
     } else {
-      jwt.verify(
-        req.token,
-        process.env.S3_SECRETKEY,
-        async (jwtError, authData) => {
-          if (jwtError) {
-            response.messages = { error: "Błąd uwierzytelniania!" };
-            res.status(403).json(response);
-          } else {
-            const checkUser = await checkExistsOfUserEmail(
-              Model.Users,
-              authData.email
-            );
-            if (checkUser !== false) {
-              if (authData.name === process.env.S3_ADMIN_PERMISSIONS) {
-                const findUser = await findUserById(
-                  Model.Users,
-                  req.body.user_id
-                );
-                if (findUser !== false) {
-                  const deleteUser = await deleteUserById(
-                    Model.Users,
-                    req.body.user_id
-                  );
-                  if (deleteUser !== false) {
-                    response.messages = {
-                      message: "Pomyślnie usunięto użytkownika!",
-                    };
-                    res.status(200).json(response);
-                  } else {
-                    response.messages = {
-                      error: "Nie udało się usunąć użytkownika!",
-                    };
-                    res.status(400).json(response);
-                  }
-                } else {
-                  response.messages = {
-                    error: "Użytkownik nie istnieje!",
-                  };
-                  res.status(404).json(response);
-                }
-              } else {
-                response.messages = {
-                  error: "Nie posiadasz uprawnień, aby móc usunąć użytkownika!",
-                };
-                res.status(400).json(response);
-              }
-            } else {
-              response.messages = { error: "Użytkownik nie istnieje!" };
-              res.status(400).json(response);
-            }
-          }
-        }
-      );
+      administrationsControllers.daleteUserAccount(req, res);
     }
   }
 );
 
-router.get("/allUsers", verifyToken, (req, res) => {
-  const response = {
-    messages: {},
-    listOfUsers: [],
-  };
-  jwt.verify(
-    req.token,
-    process.env.S3_SECRETKEY,
-    async (jwtError, authData) => {
-      if (jwtError) {
-        response.messages = { error: "Błąd uwierzytelniania!" };
-        res.status(403).json(response);
-      } else {
-        const checkUser = await checkExistsOfUserEmail(
-          Model.Users,
-          authData.email
-        );
-        if (checkUser !== false) {
-          if (authData.name === process.env.S3_ADMIN_PERMISSIONS) {
-            const takeAdminRoleId = await findAdminRoleId(
-              Model.TypesOfUsersRoles
-            );
-            const takeListOfUsers = await takeAllUsers(
-              Model.Users,
-              takeAdminRoleId
-            );
-            if (takeListOfUsers !== false) {
-              response.listOfUsers = takeListOfUsers;
-              res.status(200).json(response);
-            } else {
-              response.messages = {
-                error: "Nie udało się pobrać listy użytkowników!",
-              };
-              res.status(400).json(response);
-            }
-          } else {
-            response.messages = {
-              error: "Nie posiadasz uprawnień!",
-            };
-            res.status(400).json(response);
-          }
-        } else {
-          response.messages = { error: "Użytkownik nie istnieje!" };
-          res.status(400).json(response);
-        }
-      }
-    }
-  );
+router.get("/users", verifyToken, (req, res) => {
+  administrationsControllers.takeAllUsers(req, res);
 });
 
-router.put(
+router.patch(
   "/permissions",
   [
-    check("user_id")
+    check("userId")
       .exists()
       .withMessage("Brak wymaganych danych!")
       .isUUID()
@@ -451,74 +191,7 @@ router.put(
         .map((err) => ({ [err.param]: err.msg }));
       res.status(400).json(response);
     } else {
-      jwt.verify(
-        req.token,
-        process.env.S3_SECRETKEY,
-        async (jwtError, authData) => {
-          if (jwtError) {
-            response.messages = { error: "Błąd uwierzytelniania!" };
-            res.status(403).json(response);
-          } else {
-            const checkUser = await checkExistsOfUserEmail(
-              Model.Users,
-              authData.email
-            );
-            if (checkUser !== false) {
-              if (authData.name === process.env.S3_ADMIN_PERMISSIONS) {
-                const findUser = await findUserById(
-                  Model.Users,
-                  req.body.user_id
-                );
-                if (findUser !== false) {
-                  const findIdOfTeacher = await findIdOfTeacherPermission(
-                    Model.TypesOfUsersRoles
-                  );
-                  if (findIdOfTeacher !== false) {
-                    const updatePermission =
-                      await updateUserPermissionToTeacherPermissions(
-                        Model.Users,
-                        findIdOfTeacher,
-                        req.body.user_id
-                      );
-                    if (updatePermission !== false) {
-                      response.messages = {
-                        message:
-                          "Pomyślnie zmieniono uprawnienia dla użytkownika!",
-                      };
-                      res.status(200).json(response);
-                    } else {
-                      response.messages = {
-                        error:
-                          "Nie udało się zmienić uprawnień wybranemu użytkownikowi!",
-                      };
-                      res.status(400).json(response);
-                    }
-                  } else {
-                    response.messages = {
-                      error: "Wybrana rola użytkownika nie istnieje!",
-                    };
-                    res.status(404).json(response);
-                  }
-                } else {
-                  response.messages = {
-                    error: "Użytkownik nie istnieje!",
-                  };
-                  res.status(404).json(response);
-                }
-              } else {
-                response.messages = {
-                  error:
-                    "Nie posiadasz uprawnień, aby zmienić uprawnienia dla użytkownika!",
-                };
-                res.status(400).json(response);
-              }
-            } else {
-              response.messages = { error: "Użytkownik nie istnieje!" };
-              res.status(400).json(response);
-            }
-          }
-        }
-      );
+      administrationsControllers.assignTeacherPermissions(req, res);
     }
   }
 );

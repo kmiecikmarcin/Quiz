@@ -494,7 +494,7 @@
                 }
             }
         },
-        "/quiz/administration/users": {
+        "/quiz/administration/usersToRemove": {
             "get": {
                 "tags": [
                     "Administration"
@@ -617,7 +617,7 @@
                             "schema": {
                                 "type": "object",
                                 "properties": {
-                                    "name_of_chapter": {
+                                    "nameOfChapter": {
                                         "type": "string"
                                     }
                                 }
@@ -657,7 +657,7 @@
                             "schema": {
                                 "type": "object",
                                 "properties": {
-                                    "user_id": {
+                                    "userId": {
                                         "type": "uuid"
                                     }
                                 }
@@ -681,7 +681,7 @@
                 }
             }
         },
-        "/quiz/administration/allUsers": {
+        "/quiz/administration/users": {
             "get": {
                 "tags": [
                     "Administration"
@@ -706,7 +706,7 @@
             }
         },
         "/quiz/administration/permissions": {
-            "put": {
+            "patch": {
                 "tags": [
                     "Administration"
                 ],
@@ -724,7 +724,7 @@
                             "schema": {
                                 "type": "object",
                                 "properties": {
-                                    "user_id": {
+                                    "userId": {
                                         "type": "uuid"
                                     }
                                 }
