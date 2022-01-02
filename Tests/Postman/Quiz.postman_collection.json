@@ -60,7 +60,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n    \"user_email\": \"{{user_email}}\",\r\n    \"user_password\": \"{{user_password}}\",\r\n    \"confirm_password\": \"{{user_password}}\",\r\n    \"user_gender\": \"{{user_gender}}\",\r\n    \"user_verification\": true\r\n}",
+									"raw": "{\r\n    \"userEmail\": \"{{user_email}}\",\r\n    \"userPassword\": \"{{user_password}}\",\r\n    \"confirmPassword\": \"{{user_password}}\",\r\n    \"userGender\": \"{{user_gender}}\",\r\n    \"userVerification\": true\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -110,7 +110,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n    \"user_email\": \"{{user_email}}\",\r\n    \"user_password\": \"{{user_password}}\"\r\n}",
+									"raw": "{\r\n    \"userEmail\": \"{{user_email}}\",\r\n    \"userPassword\": \"{{user_password}}\"\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -139,7 +139,7 @@
 									"listen": "test",
 									"script": {
 										"exec": [
-											"pm.test(\"Successful PUT request\", function () {\r",
+											"pm.test(\"Successful PATCH request\", function () {\r",
 											"    pm.expect(pm.response.code).to.be.oneOf([200]);\r",
 											"});\r",
 											"\r",
@@ -179,11 +179,11 @@
 										}
 									]
 								},
-								"method": "PUT",
+								"method": "PATCH",
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n    \"new_user_email\": \"{{new_user_email}}\",\r\n    \"user_password\": \"{{user_password}}\"\r\n}",
+									"raw": "{\r\n    \"newUserEmail\": \"{{new_user_email}}\",\r\n    \"userPassword\": \"{{user_password}}\"\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -252,11 +252,11 @@
 										}
 									]
 								},
-								"method": "PUT",
+								"method": "PATCH",
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n    \"new_user_password\": \"{{new_user_password}}\",\r\n    \"confirm_new_user_password\": \"{{new_user_password}}\",\r\n    \"user_password\": \"{{user_password}}\"\r\n}",
+									"raw": "{\r\n    \"newUserPassword\": \"{{new_user_password}}\",\r\n    \"confirmNewUserPassword\": \"{{new_user_password}}\",\r\n    \"userPassword\": \"{{user_password}}\"\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -318,11 +318,11 @@
 										}
 									]
 								},
-								"method": "PUT",
+								"method": "PATCH",
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n    \"user_password\": \"{{user_password}}\",\r\n    \"confirm_password\": \"{{user_password}}\"\r\n}",
+									"raw": "{\r\n    \"userPassword\": \"{{new_user_password}}\",\r\n    \"confirmPassword\": \"{{new_user_password}}\"\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -524,7 +524,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n    \"name_of_subject\": \"Geografia\",\r\n    \"name_of_chapter\": \"Lądy\"\r\n}",
+									"raw": "{\r\n    \"nameOfSubject\": \"Geografia\",\r\n    \"nameOfChapter\": \"Lądy\"\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -597,7 +597,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n    \"user_email\": \"{{teacher_email}}\",\r\n    \"user_password\": \"{{teacher_password}}\"\r\n}",
+									"raw": "{\r\n    \"userEmail\": \"{{teacher_email}}\",\r\n    \"userPassword\": \"{{teacher_password}}\"\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -649,7 +649,7 @@
 									"bearer": [
 										{
 											"key": "token",
-											"value": "{{teacherToken}}",
+											"value": "",
 											"type": "string"
 										}
 									]
@@ -787,11 +787,11 @@
 									"listen": "prerequest",
 									"script": {
 										"exec": [
-											"const name_of_subject = \"Geografia\";\r",
-											"const name_of_chapter = \"newChapter\" + _.random(0,10000);\r",
+											"const nameOfSubject = \"Geografia\";\r",
+											"const nameOfChapter = \"newChapter\" + _.random(0,10000);\r",
 											"\r",
-											"pm.environment.set(\"name_of_subject\", name_of_subject);\r",
-											"pm.environment.set(\"name_of_chapter\", name_of_chapter);"
+											"pm.environment.set(\"nameOfSubject\", nameOfSubject);\r",
+											"pm.environment.set(\"nameOfChapter\", nameOfChapter);"
 										],
 										"type": "text/javascript"
 									}
@@ -812,7 +812,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n    \"name_of_subject\": \"{{name_of_subject}}\",\r\n    \"name_of_chapter\": \"{{name_of_chapter}}\"\r\n}",
+									"raw": "{\r\n    \"nameOfSubject\": \"{{nameOfSubject}}\",\r\n    \"nameOfChapter\": \"{{nameOfChapter}}\"\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -856,9 +856,9 @@
 									"listen": "prerequest",
 									"script": {
 										"exec": [
-											"const name_of_topic = \"newTopic\" + _.random(0,10000);\r",
+											"const nameOfTopic = \"newTopic\" + _.random(0,10000);\r",
 											"\r",
-											"pm.environment.set(\"name_of_topic\", name_of_topic);"
+											"pm.environment.set(\"nameOfTopic\", nameOfTopic);"
 										],
 										"type": "text/javascript"
 									}
@@ -879,7 +879,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n    \"name_of_chapter\": \"{{name_of_chapter}}\",\r\n    \"name_of_topic\": \"{{name_of_topic}}\"\r\n}",
+									"raw": "{\r\n    \"nameOfChapter\": \"{{nameOfChapter}}\",\r\n    \"nameOfTopic\": \"{{nameOfTopic}}\"\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -931,11 +931,11 @@
 										}
 									]
 								},
-								"method": "PUT",
+								"method": "PATCH",
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n    \"name_of_chapter\": \"{{name_of_chapter}}\"\r\n}",
+									"raw": "{\r\n    \"nameOfChapter\": \"{{nameOfChapter}}\"\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -987,11 +987,11 @@
 										}
 									]
 								},
-								"method": "PUT",
+								"method": "PATCH",
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n    \"name_of_topic\": \"{{name_of_topic}}\"\r\n}",
+									"raw": "{\r\n    \"nameOfTopic\": \"{{nameOfTopic}}\"\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -1181,11 +1181,11 @@
 									"listen": "prerequest",
 									"script": {
 										"exec": [
-											"const name_of_subject = \"Geografia\";\r",
-											"const name_of_chapter = \"newChapter\" + _.random(0,10000);\r",
+											"const nameOfSubject = \"Geografia\";\r",
+											"const nameOfChapter = \"newChapter\" + _.random(0,10000);\r",
 											"\r",
-											"pm.environment.set(\"name_of_subject\", name_of_subject);\r",
-											"pm.environment.set(\"name_of_chapter\", name_of_chapter);"
+											"pm.environment.set(\"nameOfSubject\", nameOfSubject);\r",
+											"pm.environment.set(\"nameOfChapter\", nameOfChapter);"
 										],
 										"type": "text/javascript"
 									}
@@ -1206,7 +1206,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n    \"name_of_subject\": \"{{name_of_subject}}\",\r\n    \"name_of_chapter\": \"{{name_of_chapter}}\"\r\n}",
+									"raw": "{\r\n    \"nameOfSubject\": \"{{nameOfSubject}}\",\r\n    \"nameOfChapter\": \"{{nameOfChapter}}\"\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -1258,11 +1258,11 @@
 										}
 									]
 								},
-								"method": "PUT",
+								"method": "PATCH",
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n    \"name_of_chapter\": \"{{name_of_chapter}}\"\r\n}",
+									"raw": "{\r\n    \"nameOfChapter\": \"{{nameOfChapter}}\"\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -1332,7 +1332,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"user_email\": \"{{admin_email}}\",\r\n    \"user_password\": \"{{admin_password}}\"\r\n}",
+							"raw": "{\r\n    \"userEmail\": \"{{admin_email}}\",\r\n    \"userPassword\": \"{{admin_password}}\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -1376,9 +1376,9 @@
 							"listen": "prerequest",
 							"script": {
 								"exec": [
-									"const name_of_school_subject = \"schoolSubject\" + _.random(0,10000);\r",
+									"const nameOfSchoolSubject = \"schoolSubject\" + _.random(0,10000);\r",
 									"\r",
-									"pm.environment.set(\"name_of_school_subject\", name_of_school_subject);"
+									"pm.environment.set(\"nameOfSchoolSubject\", nameOfSchoolSubject);"
 								],
 								"type": "text/javascript"
 							}
@@ -1399,7 +1399,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"name_of_school_subject\": \"{{name_of_school_subject}}\"\r\n}",
+							"raw": "{\r\n    \"nameOfSchoolSubject\": \"{{nameOfSchoolSubject}}\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -1455,7 +1455,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"name_of_school_subject\": \"{{name_of_school_subject}}\"\r\n}",
+							"raw": "{\r\n    \"nameOfSchoolSubject\": \"{{nameOfSchoolSubject}}\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -1511,7 +1511,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"name_of_chapter\": \"{{name_of_chapter}}\"\r\n}",
+							"raw": "{\r\n    \"nameOfChapter\": \"{{nameOfChapter}}\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -1567,7 +1567,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"name_of_topic\": \"{{name_of_topic}}\"\r\n}",
+							"raw": "{\r\n    \"nameOfTopic\": \"{{nameOfTopic}}\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -1626,7 +1626,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "localhost:3000/quiz/administration/users",
+							"raw": "localhost:3000/quiz/administration/users-to-remove",
 							"host": [
 								"localhost"
 							],
@@ -1634,7 +1634,7 @@
 							"path": [
 								"quiz",
 								"administration",
-								"users"
+								"users-to-remove"
 							]
 						}
 					},
@@ -1740,7 +1740,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "localhost:3000/quiz/administration/allUsers",
+							"raw": "localhost:3000/quiz/administration/users",
 							"host": [
 								"localhost"
 							],
@@ -1748,7 +1748,7 @@
 							"path": [
 								"quiz",
 								"administration",
-								"allUsers"
+								"users"
 							]
 						}
 					},
@@ -1767,11 +1767,11 @@
 								}
 							]
 						},
-						"method": "PUT",
+						"method": "PATCH",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"user_id\": \"{{user_id_for_put_permissions}}\"\r\n}",
+							"raw": "{\r\n    \"userId\": \"{{user_id_for_put_permissions}}\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
