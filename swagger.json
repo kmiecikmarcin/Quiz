@@ -29,19 +29,19 @@
                             "schema": {
                                 "type": "object",
                                 "properties": {
-                                    "user_email": {
+                                    "userEmail": {
                                         "type": "string"
                                     },
-                                    "user_password": {
+                                    "userPassword": {
                                         "type": "string"
                                     },
-                                    "confirm_password": {
+                                    "confirmPassword": {
                                         "type": "string"
                                     },
-                                    "user_gender": {
+                                    "userGender": {
                                         "type": "string"
                                     },
-                                    "user_verification": {
+                                    "userVerification": {
                                         "type": "boolean"
                                     }
                                 }
@@ -76,10 +76,10 @@
                             "schema": {
                                 "type": "object",
                                 "properties": {
-                                    "user_email": {
+                                    "userEmail": {
                                         "type": "string"
                                     },
-                                    "user_password": {
+                                    "userPassword": {
                                         "type": "string"
                                     }
                                 }
@@ -101,7 +101,7 @@
             }
         },
         "/quiz/users/email": {
-            "put": {
+            "patch": {
                 "tags": [
                     "Users"
                 ],
@@ -119,10 +119,10 @@
                             "schema": {
                                 "type": "object",
                                 "properties": {
-                                    "new_user_email": {
+                                    "newUserEmail": {
                                         "type": "string"
                                     },
-                                    "user_password": {
+                                    "userPassword": {
                                         "type": "string"
                                     }
                                 }
@@ -147,7 +147,7 @@
             }
         },
         "/quiz/users/password": {
-            "put": {
+            "patch": {
                 "tags": [
                     "Users"
                 ],
@@ -165,13 +165,13 @@
                             "schema": {
                                 "type": "object",
                                 "properties": {
-                                    "new_user_password": {
+                                    "newUserPassword": {
                                         "type": "string"
                                     },
-                                    "confirm_new_user_password": {
+                                    "confirmNewUserPassword": {
                                         "type": "string"
                                     },
-                                    "user_password": {
+                                    "userPassword": {
                                         "type": "string"
                                     }
                                 }
@@ -196,7 +196,7 @@
             }
         },
         "/quiz/users/delete": {
-            "put": {
+            "patch": {
                 "tags": [
                     "Users"
                 ],
@@ -214,10 +214,10 @@
                             "schema": {
                                 "type": "object",
                                 "properties": {
-                                    "user_password": {
+                                    "userPassword": {
                                         "type": "string"
                                     },
-                                    "confirm_password": {
+                                    "confirmPassword": {
                                         "type": "string"
                                     }
                                 }
@@ -341,10 +341,10 @@
                             "schema": {
                                 "type": "object",
                                 "properties": {
-                                    "name_of_subject": {
+                                    "nameOfSubject": {
                                         "type": "string"
                                     },
-                                    "name_of_chapter": {
+                                    "nameOfChapter": {
                                         "type": "string"
                                     }
                                 }
@@ -384,10 +384,10 @@
                             "schema": {
                                 "type": "object",
                                 "properties": {
-                                    "name_of_chapter": {
+                                    "nameOfChapter": {
                                         "type": "string"
                                     },
-                                    "name_of_topic": {
+                                    "nameOfTopic": {
                                         "type": "string"
                                     }
                                 }
@@ -409,7 +409,7 @@
             }
         },
         "/quiz/schoolSubjects/remove-chapter": {
-            "put": {
+            "patch": {
                 "tags": [
                     "School subjects"
                 ],
@@ -427,7 +427,7 @@
                             "schema": {
                                 "type": "object",
                                 "properties": {
-                                    "name_of_chapter": {
+                                    "nameOfChapter": {
                                         "type": "string"
                                     }
                                 }
@@ -452,7 +452,7 @@
             }
         },
         "/quiz/schoolSubjects/remove-topic": {
-            "put": {
+            "patch": {
                 "tags": [
                     "School subjects"
                 ],
@@ -470,7 +470,7 @@
                             "schema": {
                                 "type": "object",
                                 "properties": {
-                                    "name_of_topic": {
+                                    "nameOfTopic": {
                                         "type": "string"
                                     }
                                 }
@@ -494,7 +494,7 @@
                 }
             }
         },
-        "/quiz/administration/users": {
+        "/quiz/administration/usersToRemove": {
             "get": {
                 "tags": [
                     "Administration"
@@ -537,7 +537,7 @@
                             "schema": {
                                 "type": "object",
                                 "properties": {
-                                    "name_of_school_subject": {
+                                    "nameOfSchoolSubject": {
                                         "type": "string"
                                     }
                                 }
@@ -577,7 +577,7 @@
                             "schema": {
                                 "type": "object",
                                 "properties": {
-                                    "name_of_school_subject": {
+                                    "nameOfSchoolSubject": {
                                         "type": "string"
                                     }
                                 }
@@ -617,7 +617,7 @@
                             "schema": {
                                 "type": "object",
                                 "properties": {
-                                    "name_of_chapter": {
+                                    "nameOfChapter": {
                                         "type": "string"
                                     }
                                 }
@@ -657,7 +657,7 @@
                             "schema": {
                                 "type": "object",
                                 "properties": {
-                                    "user_id": {
+                                    "userId": {
                                         "type": "uuid"
                                     }
                                 }
@@ -681,7 +681,7 @@
                 }
             }
         },
-        "/quiz/administration/allUsers": {
+        "/quiz/administration/users": {
             "get": {
                 "tags": [
                     "Administration"
@@ -706,7 +706,7 @@
             }
         },
         "/quiz/administration/permissions": {
-            "put": {
+            "patch": {
                 "tags": [
                     "Administration"
                 ],
@@ -724,7 +724,7 @@
                             "schema": {
                                 "type": "object",
                                 "properties": {
-                                    "user_id": {
+                                    "userId": {
                                         "type": "uuid"
                                     }
                                 }

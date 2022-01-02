@@ -1,4 +1,4 @@
-async function checkTheSubjectExists(Chapters, enteredChapter) {
+async function checkExistsOfChapter(Chapters, enteredChapter) {
   const findChapter = await Chapters.findOne({
     where: { name: enteredChapter },
   });
@@ -8,4 +8,4 @@ async function checkTheSubjectExists(Chapters, enteredChapter) {
   return false;
 }
 
-module.exports = checkTheSubjectExists;
+module.exports = checkExistsOfChapter;

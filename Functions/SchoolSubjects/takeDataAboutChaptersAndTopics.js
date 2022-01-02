@@ -1,4 +1,4 @@
-async function takeDataAboutChaptersAndTopics(Model) {
+async function takeDataAboutChaptersandTopics(Model) {
   const takeAll = await Model.findAll({
     attributes: ["name"],
     where: { toRemove: false },
@@ -9,4 +9,4 @@ async function takeDataAboutChaptersAndTopics(Model) {
   return false;
 }
 
-module.exports = takeDataAboutChaptersAndTopics;
+module.exports = takeDataAboutChaptersandTopics;

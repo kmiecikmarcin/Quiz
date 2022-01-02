@@ -1,4 +1,4 @@
-async function findUserRoleById(TypesOfUsersRoles, userRoleId) {
+async function findNameOfUserEntitlement(TypesOfUsersRoles, userRoleId) {
   const findUserRole = await TypesOfUsersRoles.findOne({
     where: { id: userRoleId },
   });
@@ -8,4 +8,4 @@ async function findUserRoleById(TypesOfUsersRoles, userRoleId) {
   return false;
 }
 
-module.exports = findUserRoleById;
+module.exports = findNameOfUserEntitlement;

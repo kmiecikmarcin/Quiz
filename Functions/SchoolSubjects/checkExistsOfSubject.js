@@ -1,4 +1,4 @@
-async function checkTheSubjectExists(Subjects, enteredSubject) {
+async function checkExistsOfSubject(Subjects, enteredSubject) {
   const findSubject = await Subjects.findOne({
     where: { name: enteredSubject },
   });
@@ -8,4 +8,4 @@ async function checkTheSubjectExists(Subjects, enteredSubject) {
   return false;
 }
 
-module.exports = checkTheSubjectExists;
+module.exports = checkExistsOfSubject;

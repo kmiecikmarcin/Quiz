@@ -1,4 +1,4 @@
-async function checkGenderIsCorrectAndFindIt(Genders, userGender) {
+async function findGenderID(Genders, userGender) {
   const findGender = await Genders.findOne({
     where: { name: userGender },
   });
@@ -8,4 +8,4 @@ async function checkGenderIsCorrectAndFindIt(Genders, userGender) {
   return false;
 }
 
-module.exports = checkGenderIsCorrectAndFindIt;
+module.exports = findGenderID;
