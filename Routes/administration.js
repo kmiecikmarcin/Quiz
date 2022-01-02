@@ -28,18 +28,27 @@ router.post(
         }
       }),
   ],
-  verifyToken,
   (req, res) => {
-    const error = validationResult(req);
     const response = {
-      validationErrors: [],
+      messages: {
+        message: [],
+        error: [],
+      },
     };
+
+    const error = validationResult(req);
+    const validationHeaderResults = verifyToken(req);
 
     if (!error.isEmpty()) {
       response.validationErrors = error
         .array({ onlyFirstError: true })
         .map((err) => ({ [err.param]: err.msg }));
       res.status(400).json(response);
+    } else if (validationHeaderResults === false) {
+      response.messages.error.push(
+        "Nie udało się przeprowadzić procesu uwierzytelniania!"
+      );
+      res.status(403).send(response);
     } else {
       administrationsControllers.createSchoolSubject(req, res);
     }
@@ -56,19 +65,27 @@ router.delete(
       .withMessage("Wprowadzony nazwa jest za krótka!")
       .isLength({ max: 24 }),
   ],
-  verifyToken,
   (req, res) => {
-    const error = validationResult(req);
     const response = {
-      messages: {},
-      validationErrors: [],
+      messages: {
+        message: [],
+        error: [],
+      },
     };
+
+    const error = validationResult(req);
+    const validationHeaderResults = verifyToken(req);
 
     if (!error.isEmpty()) {
       response.validationErrors = error
         .array({ onlyFirstError: true })
         .map((err) => ({ [err.param]: err.msg }));
       res.status(400).json(response);
+    } else if (validationHeaderResults === false) {
+      response.messages.error.push(
+        "Nie udało się przeprowadzić procesu uwierzytelniania!"
+      );
+      res.status(403).send(response);
     } else {
       administrationsControllers.removeSchoolSubject(req, res);
     }
@@ -85,19 +102,27 @@ router.delete(
       .withMessage("Wprowadzony nazwa jest za krótka!")
       .isLength({ max: 64 }),
   ],
-  verifyToken,
   (req, res) => {
-    const error = validationResult(req);
     const response = {
-      messages: {},
-      validationErrors: [],
+      messages: {
+        message: [],
+        error: [],
+      },
     };
+
+    const error = validationResult(req);
+    const validationHeaderResults = verifyToken(req);
 
     if (!error.isEmpty()) {
       response.validationErrors = error
         .array({ onlyFirstError: true })
         .map((err) => ({ [err.param]: err.msg }));
       res.status(400).json(response);
+    } else if (validationHeaderResults === false) {
+      response.messages.error.push(
+        "Nie udało się przeprowadzić procesu uwierzytelniania!"
+      );
+      res.status(403).send(response);
     } else {
       administrationsControllers.removeChapter(req, res);
     }
@@ -115,27 +140,51 @@ router.delete(
       .isLength({ max: 64 })
       .withMessage("Wprowadzony nazwa jest za długa!"),
   ],
-  verifyToken,
   (req, res) => {
-    const error = validationResult(req);
     const response = {
-      messages: {},
-      validationErrors: [],
+      messages: {
+        message: [],
+        error: [],
+      },
     };
+
+    const error = validationResult(req);
+    const validationHeaderResults = verifyToken(req);
 
     if (!error.isEmpty()) {
       response.validationErrors = error
         .array({ onlyFirstError: true })
         .map((err) => ({ [err.param]: err.msg }));
       res.status(400).json(response);
+    } else if (validationHeaderResults === false) {
+      response.messages.error.push(
+        "Nie udało się przeprowadzić procesu uwierzytelniania!"
+      );
+      res.status(403).send(response);
     } else {
       administrationsControllers.removeTopic(req, res);
     }
   }
 );
 
-router.get("/usersToRemove", verifyToken, (req, res) => {
-  administrationsControllers.takeAllUsersToRemove(req, res);
+router.get("/users-to-remove", (req, res) => {
+  const response = {
+    messages: {
+      message: [],
+      error: [],
+    },
+  };
+
+  const headerValidationResults = verifyToken(req);
+
+  if (headerValidationResults === false) {
+    response.messages.error.push(
+      "Nie udało się przeprowadzić procesu uwierzytelniania!"
+    );
+    res.status(403).send(response);
+  } else {
+    administrationsControllers.takeAllUsersToRemove(req, res);
+  }
 });
 
 router.delete(
@@ -147,26 +196,51 @@ router.delete(
       .isUUID()
       .withMessage("Niepoprawny format id użytkownika"),
   ],
-  verifyToken,
   (req, res) => {
-    const error = validationResult(req);
     const response = {
-      messages: {},
-      validationErrors: [],
+      messages: {
+        message: [],
+        error: [],
+      },
     };
+
+    const error = validationResult(req);
+    const validationHeaderResults = verifyToken(req);
+
     if (!error.isEmpty()) {
       response.validationErrors = error
         .array({ onlyFirstError: true })
         .map((err) => ({ [err.param]: err.msg }));
       res.status(400).json(response);
+    } else if (validationHeaderResults === false) {
+      response.messages.error.push(
+        "Nie udało się przeprowadzić procesu uwierzytelniania!"
+      );
+      res.status(403).send(response);
     } else {
       administrationsControllers.daleteUserAccount(req, res);
     }
   }
 );
 
-router.get("/users", verifyToken, (req, res) => {
-  administrationsControllers.takeAllUsers(req, res);
+router.get("/users", (req, res) => {
+  const response = {
+    messages: {
+      message: [],
+      error: [],
+    },
+  };
+
+  const headerValidationResults = verifyToken(req);
+
+  if (headerValidationResults === false) {
+    response.messages.error.push(
+      "Nie udało się przeprowadzić procesu uwierzytelniania!"
+    );
+    res.status(403).send(response);
+  } else {
+    administrationsControllers.takeAllUsers(req, res);
+  }
 });
 
 router.patch(
@@ -178,18 +252,27 @@ router.patch(
       .isUUID()
       .withMessage("Niepoprawny format id użytkownika"),
   ],
-  verifyToken,
   (req, res) => {
-    const error = validationResult(req);
     const response = {
-      messages: {},
-      validationErrors: [],
+      messages: {
+        message: [],
+        error: [],
+      },
     };
+
+    const error = validationResult(req);
+    const validationHeaderResults = verifyToken(req);
+
     if (!error.isEmpty()) {
       response.validationErrors = error
         .array({ onlyFirstError: true })
         .map((err) => ({ [err.param]: err.msg }));
       res.status(400).json(response);
+    } else if (validationHeaderResults === false) {
+      response.messages.error.push(
+        "Nie udało się przeprowadzić procesu uwierzytelniania!"
+      );
+      res.status(403).send(response);
     } else {
       administrationsControllers.assignTeacherPermissions(req, res);
     }

@@ -19,11 +19,11 @@ const createSchoolSubject = async (req, res) => {
   const response = {
     messages: {
       message: [],
-      error: []
+      error: [],
     },
   };
 
-  const { nameOfSubject } = req.body;
+  const nameOfSubject = req.body.nameOfSchoolSubject;
 
   let dataFromAuth;
 
@@ -49,18 +49,19 @@ const createSchoolSubject = async (req, res) => {
 
   try {
     if (dataFromAuth.name === process.env.S3_ADMIN_PERMISSIONS) {
-      const checkSchoolSubjectExist =
-                  await checkTheSchoolSubjectExists(
-                    Model.SchoolSubjects,
-                    nameOfSubject
-                  );
+      const checkSchoolSubjectExist = await checkTheSchoolSubjectExists(
+        Model.SchoolSubjects,
+        nameOfSubject
+      );
       if (checkSchoolSubjectExist === false) {
         const newSchoolSubject = await createNewSchoolSubject(
           Model.SchoolSubjects,
           nameOfSubject
         );
         if (newSchoolSubject === false) {
-          response.messages.error.push("Nie udało się utworzyć nowego przedmiotu szkolnego!");
+          response.messages.error.push(
+            "Nie udało się utworzyć nowego przedmiotu szkolnego!"
+          );
           return res.status(400).json(response);
         }
       } else {
@@ -73,7 +74,8 @@ const createSchoolSubject = async (req, res) => {
       );
       return res.status(400).json(response);
     }
-  } catch {
+  } catch (err) {
+    console.log(err);
     response.messages.error.push(
       "Nie można przeprowadzić procesu dodawania nowego przedmiotu szkolnego!"
     );
@@ -88,11 +90,11 @@ const removeSchoolSubject = async (req, res) => {
   const response = {
     messages: {
       message: [],
-      error: []
+      error: [],
     },
   };
 
-  const { nameOfSubject } = req.body;
+  const nameOfSubject = req.body.nameOfSchoolSubject;
 
   let dataFromAuth;
 
@@ -118,22 +120,22 @@ const removeSchoolSubject = async (req, res) => {
 
   try {
     if (dataFromAuth.name === process.env.S3_ADMIN_PERMISSIONS) {
-      const checkSchoolSubjectExist =
-      await checkTheSchoolSubjectExists(
+      const checkSchoolSubjectExist = await checkTheSchoolSubjectExists(
         Model.SchoolSubjects,
         nameOfSubject
       );
       if (checkSchoolSubjectExist !== false) {
-        const deleteSchoolSubject =
-        await removeSchoolSubjectFromDatabase(
+        const deleteSchoolSubject = await removeSchoolSubjectFromDatabase(
           res,
           Model.SchoolSubjects,
           Model.Chapters,
-          req.body.name_of_school_subject,
+          nameOfSubject,
           checkSchoolSubjectExist
         );
         if (deleteSchoolSubject === false) {
-          response.messages.error.push("Nie udało się usunąć przedmiotu szkolnego!");
+          response.messages.error.push(
+            "Nie udało się usunąć przedmiotu szkolnego!"
+          );
           return res.status(400).json(response);
         }
       } else {
@@ -161,11 +163,11 @@ const removeChapter = async (req, res) => {
   const response = {
     messages: {
       message: [],
-      error: []
+      error: [],
     },
   };
 
-  const { nameOfChapter } = req.body;
+  const chapter = req.body.nameOfChapter;
 
   let dataFromAuth;
 
@@ -191,16 +193,13 @@ const removeChapter = async (req, res) => {
 
   try {
     if (dataFromAuth.name === process.env.S3_ADMIN_PERMISSIONS) {
-      const checkChapter = await checkTheChapterExists(
-        Model.Chapters,
-        nameOfChapter
-      );
+      const checkChapter = await checkTheChapterExists(Model.Chapters, chapter);
       if (checkChapter !== false) {
         const deleteChapter = await removeChapterFromDatabase(
           res,
           Model.Chapters,
           Model.Topics,
-          req.body.name_of_chapter,
+          chapter,
           checkChapter
         );
         if (deleteChapter === false) {
@@ -210,9 +209,7 @@ const removeChapter = async (req, res) => {
           res.status(400).json(response);
         }
       } else {
-        response.messages.error.push(
-          "Rozdział nie istnieje!"
-        );
+        response.messages.error.push("Rozdział nie istnieje!");
         return res.status(400).json(response);
       }
     } else {
@@ -236,11 +233,11 @@ const removeTopic = async (req, res) => {
   const response = {
     messages: {
       message: [],
-      error: []
+      error: [],
     },
   };
 
-  const { nameOfTopic } = req.body;
+  const topic = req.body.nameOfTopic;
 
   let dataFromAuth;
 
@@ -266,26 +263,19 @@ const removeTopic = async (req, res) => {
 
   try {
     if (dataFromAuth.name === process.env.S3_ADMIN_PERMISSIONS) {
-      const checkTopic = await checkTheTopicExists(
-        Model.Topics,
-        nameOfTopic
-      );
+      const checkTopic = await checkTheTopicExists(Model.Topics, topic);
       if (checkTopic !== false) {
         const deleteTopic = await removeTopicFromDatabase(
           Model.Topics,
           checkTopic,
-          req.body.name_of_topic
+          topic
         );
         if (deleteTopic === false) {
-          response.messages.error.push(
-            "Nie udało się usunąć tematu!"
-          );
+          response.messages.error.push("Nie udało się usunąć tematu!");
           return res.status(400).json(response);
         }
       } else {
-        response.messages.error.push(
-          "Temat nie istnieje!"
-        );
+        response.messages.error.push("Temat nie istnieje!");
         return res.status(400).json(response);
       }
     } else {
@@ -350,15 +340,11 @@ const takeAllUsersToRemove = async (req, res) => {
         return res.status(400).json(response);
       }
     } else {
-      response.messages.message.push(
-        "Nie posiadasz uprawnień!"
-      );
+      response.messages.message.push("Nie posiadasz uprawnień!");
       return res.status(400).json(response);
     }
   } catch {
-    response.messages.message.push(
-      "Nie można pobrać listy użytkowników!"
-    );
+    response.messages.message.push("Nie można pobrać listy użytkowników!");
     return res.status(500).json(response);
   }
 
@@ -370,11 +356,11 @@ const daleteUserAccount = async (req, res) => {
   const response = {
     messages: {
       message: [],
-      error: []
+      error: [],
     },
   };
 
-  const { userId } = req.body;
+  const user = req.body.userId;
 
   let dataFromAuth;
 
@@ -400,25 +386,15 @@ const daleteUserAccount = async (req, res) => {
 
   try {
     if (dataFromAuth.name === process.env.S3_ADMIN_PERMISSIONS) {
-      const findUser = await findUserById(
-        Model.Users,
-        userId
-      );
+      const findUser = await findUserById(Model.Users, user);
       if (findUser !== false) {
-        const deleteUser = await deleteUserById(
-          Model.Users,
-          userId
-        );
+        const deleteUser = await deleteUserById(Model.Users, user);
         if (deleteUser === false) {
-          response.messages.error.push(
-            "Nie udało się usunąć użytkownika!"
-          );
+          response.messages.error.push("Nie udało się usunąć użytkownika!");
           return res.status(400).send(response);
         }
       } else {
-        response.messages.error.push(
-          "Wybrane konto użytkownika nie istnieje!"
-        );
+        response.messages.error.push("Wybrane konto użytkownika nie istnieje!");
         return res.status(400).send(response);
       }
     } else {
@@ -471,14 +447,9 @@ const takeAllUsers = async (req, res) => {
 
   try {
     if (dataFromAuth.name === process.env.S3_ADMIN_PERMISSIONS) {
-      const takeAdminRoleId = await findAdminRoleId(
-        Model.TypesOfUsersRoles
-      );
+      const takeAdminRoleId = await findAdminRoleId(Model.TypesOfUsersRoles);
       if (takeAdminRoleId !== false) {
-        const takeUsers = await takeListOfUsers(
-          Model.Users,
-          takeAdminRoleId
-        );
+        const takeUsers = await takeListOfUsers(Model.Users, takeAdminRoleId);
         if (takeUsers !== false) {
           listOfUsers = takeUsers;
         } else {
@@ -488,21 +459,15 @@ const takeAllUsers = async (req, res) => {
           return res.status(400).json(response);
         }
       } else {
-        response.messages.message.push(
-          "Nie odnaleziono roli użytkownika!"
-        );
+        response.messages.message.push("Nie odnaleziono roli użytkownika!");
         return res.status(400).json(response);
       }
     } else {
-      response.messages.message.push(
-        "Nie posiadasz uprawnień!"
-      );
+      response.messages.message.push("Nie posiadasz uprawnień!");
       return res.status(400).json(response);
     }
   } catch {
-    response.messages.message.push(
-      "Nie można pobrać listy użytkowników!"
-    );
+    response.messages.message.push("Nie można pobrać listy użytkowników!");
     return res.status(500).json(response);
   }
 
@@ -520,7 +485,7 @@ const assignTeacherPermissions = async (req, res) => {
 
   let dataFromAuth;
 
-  const { userId } = req.body;
+  const user = req.body.userId;
 
   try {
     jwt.verify(
@@ -544,20 +509,18 @@ const assignTeacherPermissions = async (req, res) => {
 
   try {
     if (dataFromAuth.name === process.env.S3_ADMIN_PERMISSIONS) {
-      const findUser = await findUserById(
-        Model.Users,
-        userId
-      );
+      const findUser = await findUserById(Model.Users, user);
       if (findUser !== false) {
         const findIdOfTeacher = await findIdOfTeacherPermission(
           Model.TypesOfUsersRoles
         );
         if (findIdOfTeacher !== false) {
-          const updatePermission = await updateUserPermissionToTeacherPermissions(
-            Model.Users,
-            findIdOfTeacher,
-            userId
-          );
+          const updatePermission =
+            await updateUserPermissionToTeacherPermissions(
+              Model.Users,
+              findIdOfTeacher,
+              user
+            );
           if (updatePermission === false) {
             response.messages.message.push(
               "Nie udało się zmienić uprawnień wybranemu użytkownikowi!"
@@ -571,15 +534,11 @@ const assignTeacherPermissions = async (req, res) => {
           return res.status(400).json(response);
         }
       } else {
-        response.messages.message.push(
-          "Użytkownik nie istnieje!"
-        );
+        response.messages.message.push("Użytkownik nie istnieje!");
         return res.status(400).json(response);
       }
     } else {
-      response.messages.message.push(
-        "Nie posiadasz uprawnień!"
-      );
+      response.messages.message.push("Nie posiadasz uprawnień!");
       return res.status(400).json(response);
     }
   } catch {
@@ -589,7 +548,9 @@ const assignTeacherPermissions = async (req, res) => {
     return res.status(500).json(response);
   }
 
-  response.messages.message.push("Pomyślnie zmieniono uprawnienia dla użytkownika!");
+  response.messages.message.push(
+    "Pomyślnie zmieniono uprawnienia dla użytkownika!"
+  );
   return res.status(200).json(response);
 };
 

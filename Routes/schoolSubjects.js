@@ -5,16 +5,64 @@ const schoolSubjectsControllers = require("../Controllers/schoolSubjects");
 
 const router = express.Router();
 
-router.get("/subjects", verifyToken, (req, res) => {
-  schoolSubjectsControllers.takesAllSubjects(req, res);
+router.get("/subjects", (req, res) => {
+  const response = {
+    messages: {
+      message: [],
+      error: [],
+    },
+  };
+
+  const headerValidationResults = verifyToken(req);
+
+  if (headerValidationResults === false) {
+    response.messages.error.push(
+      "Nie udało się przeprowadzić procesu uwierzytelniania!"
+    );
+    res.status(403).send(response);
+  } else {
+    schoolSubjectsControllers.takesAllSubjects(req, res);
+  }
 });
 
-router.get("/chapters", verifyToken, (req, res) => {
-  schoolSubjectsControllers.takesAllChapters(req, res);
+router.get("/chapters", (req, res) => {
+  const response = {
+    messages: {
+      message: [],
+      error: [],
+    },
+  };
+
+  const headerValidationResults = verifyToken(req);
+
+  if (headerValidationResults === false) {
+    response.messages.error.push(
+      "Nie udało się przeprowadzić procesu uwierzytelniania!"
+    );
+    res.status(403).send(response);
+  } else {
+    schoolSubjectsControllers.takesAllChapters(req, res);
+  }
 });
 
-router.get("/topics", verifyToken, (req, res) => {
-  schoolSubjectsControllers.takesAllTopics(req, res);
+router.get("/topics", (req, res) => {
+  const response = {
+    messages: {
+      message: [],
+      error: [],
+    },
+  };
+
+  const headerValidationResults = verifyToken(req);
+
+  if (headerValidationResults === false) {
+    response.messages.error.push(
+      "Nie udało się przeprowadzić procesu uwierzytelniania!"
+    );
+    res.status(403).send(response);
+  } else {
+    schoolSubjectsControllers.takesAllTopics(req, res);
+  }
 });
 
 router.post(
@@ -59,18 +107,27 @@ router.post(
         }
       }),
   ],
-  verifyToken,
   (req, res) => {
-    const error = validationResult(req);
     const response = {
-      validationErrors: [],
+      messages: {
+        message: [],
+        error: [],
+      },
     };
+
+    const error = validationResult(req);
+    const validationHeaderResults = verifyToken(req);
 
     if (!error.isEmpty()) {
       response.validationErrors = error
         .array({ onlyFirstError: true })
         .map((err) => ({ [err.param]: err.msg }));
       res.status(400).json(response);
+    } else if (validationHeaderResults === false) {
+      response.messages.error.push(
+        "Nie udało się przeprowadzić procesu uwierzytelniania!"
+      );
+      res.status(403).send(response);
     } else {
       schoolSubjectsControllers.createsNewChapter(req, res);
     }
@@ -119,18 +176,27 @@ router.post(
         }
       }),
   ],
-  verifyToken,
   (req, res) => {
-    const error = validationResult(req);
     const response = {
-      validationErrors: [],
+      messages: {
+        message: [],
+        error: [],
+      },
     };
+
+    const error = validationResult(req);
+    const validationHeaderResults = verifyToken(req);
 
     if (!error.isEmpty()) {
       response.validationErrors = error
         .array({ onlyFirstError: true })
         .map((err) => ({ [err.param]: err.msg }));
       res.status(400).json(response);
+    } else if (validationHeaderResults === false) {
+      response.messages.error.push(
+        "Nie udało się przeprowadzić procesu uwierzytelniania!"
+      );
+      res.status(403).send(response);
     } else {
       schoolSubjectsControllers.createsNewTopic(req, res);
     }
@@ -160,19 +226,27 @@ router.patch(
         }
       }),
   ],
-  verifyToken,
   (req, res) => {
-    const error = validationResult(req);
     const response = {
-      messages: {},
-      validationErrors: [],
+      messages: {
+        message: [],
+        error: [],
+      },
     };
+
+    const error = validationResult(req);
+    const validationHeaderResults = verifyToken(req);
 
     if (!error.isEmpty()) {
       response.validationErrors = error
         .array({ onlyFirstError: true })
         .map((err) => ({ [err.param]: err.msg }));
       res.status(400).json(response);
+    } else if (validationHeaderResults === false) {
+      response.messages.error.push(
+        "Nie udało się przeprowadzić procesu uwierzytelniania!"
+      );
+      res.status(403).send(response);
     } else {
       schoolSubjectsControllers.removeChapter(req, res);
     }
@@ -202,19 +276,27 @@ router.patch(
         }
       }),
   ],
-  verifyToken,
   (req, res) => {
-    const error = validationResult(req);
     const response = {
-      messages: {},
-      validationErrors: [],
+      messages: {
+        message: [],
+        error: [],
+      },
     };
+
+    const error = validationResult(req);
+    const validationHeaderResults = verifyToken(req);
 
     if (!error.isEmpty()) {
       response.validationErrors = error
         .array({ onlyFirstError: true })
         .map((err) => ({ [err.param]: err.msg }));
       res.status(400).json(response);
+    } else if (validationHeaderResults === false) {
+      response.messages.error.push(
+        "Nie udało się przeprowadzić procesu uwierzytelniania!"
+      );
+      res.status(403).send(response);
     } else {
       schoolSubjectsControllers.removeTopic(req, res);
     }

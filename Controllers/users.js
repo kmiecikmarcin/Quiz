@@ -19,6 +19,7 @@ const registration = async (req, res) => {
   const { userEmail, userPassword, userGender } = req.body;
 
   let checkUniqueEmail;
+
   try {
     checkUniqueEmail = await checkThatEmailIsUnique(Model.Users, userEmail);
   } catch (err) {
