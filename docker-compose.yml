@@ -1,0 +1,38 @@
+version: "3.3"
+services:
+  
+  app:
+    build: .
+    working_dir: /usr/src/app/
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
+    environment:
+      S3_SECRETKEY: "${S3_SECRETKEY}"
+      S3_DATABASE_USER: "${S3_DATABASE_USER}"
+      S3_DATABASE_PASSWORD: "${S3_DATABASE_PASSWORD}"
+      S3_DATABASE_NAME: "${S3_DATABASE_NAME}"
+      S3_DATABASE_HOST: "${S3_DATABASE_HOST}"
+    command: npm run nodemon-start
+    networks:
+      - backend
+
+  db:
+    image: postgres
+    volumes:
+      - db-storage:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: "${S3_DATABASE_USER}"
+      POSTGRES_DB: "${S3_DATABASE_NAME}"
+      POSTGRES_PASSWORD: "${S3_DATABASE_PASSWORD}"
+    networks:
+      - tools
+      - backend
+
+volumes:
+  db-storage:
+  node_modules:
+
+networks:
+  backend:
+  tools:
