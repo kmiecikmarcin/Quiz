@@ -494,7 +494,7 @@
                 }
             }
         },
-        "/quiz/administration/usersToRemove": {
+        "/quiz/administration/users-to-remove": {
             "get": {
                 "tags": [
                     "Administration"
@@ -518,7 +518,7 @@
                 }
             }
         },
-        "/quiz/administration/schoolSubject": {
+        "/quiz/administration/school-subject": {
             "post": {
                 "tags": [
                     "Administration"

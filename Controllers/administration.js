@@ -14,6 +14,7 @@ const takeListOfUsers = require("../Functions/Users/takeAllUsers");
 const findAdminRoleId = require("../Functions/Users/findAdminRoleId");
 const findIdOfTeacherPermission = require("../Functions/Users/findIdOfTeacherPermission");
 const updateUserPermissionToTeacherPermissions = require("../Functions/Users/updateUserPermissionToTeacherPermissions");
+const takeAllChaptersWchichWereAssignedAsToRemove = require("../Functions/SchoolSubjects/takeAllChaptersWchichWereAssignedAsToRemove");
 
 const createSchoolSubject = async (req, res) => {
   const response = {
@@ -554,6 +555,63 @@ const assignTeacherPermissions = async (req, res) => {
   return res.status(200).json(response);
 };
 
+const takeAllChaptersWhichAreToRemove = async (req, res) => {
+  const response = {
+    messages: {
+      message: [],
+      error: [],
+      chapters: [],
+    },
+  };
+
+  let dataFromAuth;
+
+  try {
+    jwt.verify(
+      req.token,
+      process.env.S3_SECRETKEY,
+      async (jwtError, authData) => {
+        if (jwtError) {
+          response.messages.error.push("Błąd uwierzytelniania!");
+          return res.status(403).json(response);
+        } else {
+          dataFromAuth = authData;
+        }
+      }
+    );
+  } catch (err) {
+    response.messages.error.push(
+      "Nie udało się przeprowadzić procesu uwierzytelniania!"
+    );
+    return res.status(500).send(response);
+  }
+
+  try {
+    if (dataFromAuth.name === process.env.S3_ADMIN_PERMISSIONS) {
+      const takeChapters = await takeAllChaptersWchichWereAssignedAsToRemove(
+        Model.Chapters
+      );
+      if (takeChapters !== false) {
+        listOfChapters = takeChapters;
+      } else {
+        response.messages.message.push(
+          "Nie udało się pobrać listy rozdziałów!"
+        );
+        return res.status(400).json(response);
+      }
+    } else {
+      response.messages.message.push("Nie posiadasz uprawnień!");
+      return res.status(400).json(response);
+    }
+  } catch {
+    response.messages.message.push("Nie można pobrać listy rozdziałów!");
+    return res.status(500).json(response);
+  }
+
+  response.messages.chapters.push(listOfChapters);
+  return res.status(200).json(response);
+};
+
 exports.createSchoolSubject = createSchoolSubject;
 exports.removeSchoolSubject = removeSchoolSubject;
 exports.removeChapter = removeChapter;
@@ -562,3 +620,4 @@ exports.takeAllUsersToRemove = takeAllUsersToRemove;
 exports.daleteUserAccount = daleteUserAccount;
 exports.takeAllUsers = takeAllUsers;
 exports.assignTeacherPermissions = assignTeacherPermissions;
+exports.takeAllChaptersWhichAreToRemove = takeAllChaptersWhichAreToRemove;
