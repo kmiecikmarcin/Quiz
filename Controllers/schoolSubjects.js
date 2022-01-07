@@ -1,4 +1,3 @@
-const jwt = require("jsonwebtoken");
 const Model = require("../Functions/Others/takeModels");
 const checkThatAccountWithEnteredEmailExists = require("../Functions/Users/checkThatAccountWithEnteredEmailExists");
 const takeDataAboutSchoolSubjects = require("../Functions/SchoolSubjects/takeDataAboutSchoolSubjects");
@@ -8,7 +7,7 @@ const checkExistsOfChapter = require("../Functions/SchoolSubjects/checkExistsOfC
 const checkExistsOfTopic = require("../Functions/SchoolSubjects/checkExistsOfTopic");
 const checkThatChapterIsAssignToTopic = require("../Functions/SchoolSubjects/checkThatChapterIsAssignToTopic");
 
-const takesAllSubjects = async (req, res) => {
+const takesAllSubjects = async (res, dataFromAuth) => {
   const response = {
     messages: {
       message: [],
@@ -17,28 +16,7 @@ const takesAllSubjects = async (req, res) => {
     },
   };
 
-  let dataFromAuth;
   let listOfSchoolSubjects;
-
-  try {
-    jwt.verify(
-      req.token,
-      process.env.S3_SECRETKEY,
-      async (jwtError, authData) => {
-        if (jwtError) {
-          response.messages.error.push("Błąd uwierzytelniania!");
-          res.status(403).json(response);
-        } else {
-          dataFromAuth = authData;
-        }
-      }
-    );
-  } catch (err) {
-    response.messages.error.push(
-      "Nie udało się przeprowadzić procesu uwierzytelniania!"
-    );
-    return res.status(500).send(response);
-  }
 
   try {
     const findUserAccount = await checkThatAccountWithEnteredEmailExists(
@@ -52,8 +30,8 @@ const takesAllSubjects = async (req, res) => {
       if (takeListOfSubjects !== false) {
         listOfSchoolSubjects = takeListOfSubjects;
       } else {
-        response.messages.error.push("Nie udało się pobrać listy przedmiotów!");
-        return res.status(500).send(response);
+        response.messages.error.push("Brak przedmiotów!");
+        return res.status(404).send(response);
       }
     } else {
       response.messages.error.push("Użytkownik nie istnieje!");
@@ -61,7 +39,7 @@ const takesAllSubjects = async (req, res) => {
     }
   } catch (err) {
     response.messages.error.push(
-      "Nie udało się pobrać listy przedmiotów szkolnych!"
+      "Coś poszło nie tak - nie udało się pobrać listy przedmiotów szkolnych!"
     );
     return res.status(500).send(response);
   }
@@ -70,7 +48,7 @@ const takesAllSubjects = async (req, res) => {
   return res.status(200).json(response);
 };
 
-const takesAllChapters = async (req, res) => {
+const takesAllChapters = async (res, dataFromAuth) => {
   const response = {
     messages: {
       message: [],
@@ -79,28 +57,7 @@ const takesAllChapters = async (req, res) => {
     },
   };
 
-  let dataFromAuth;
   let listOfChapters;
-
-  try {
-    jwt.verify(
-      req.token,
-      process.env.S3_SECRETKEY,
-      async (jwtError, authData) => {
-        if (jwtError) {
-          response.messages.error.push("Błąd uwierzytelniania!");
-          res.status(403).json(response);
-        } else {
-          dataFromAuth = authData;
-        }
-      }
-    );
-  } catch (err) {
-    response.messages.error.push(
-      "Nie udało się przeprowadzić procesu uwierzytelniania!"
-    );
-    return res.status(500).send(response);
-  }
 
   try {
     const findUserAccount = await checkThatAccountWithEnteredEmailExists(
@@ -114,15 +71,17 @@ const takesAllChapters = async (req, res) => {
       if (takeListOfChapters !== false) {
         listOfChapters = takeListOfChapters;
       } else {
-        response.messages.error.push("Nie udało się pobrać listy rozdziałów!");
-        return res.status(500).send(response);
+        response.messages.error.push("Brak rodziałów!");
+        return res.status(404).send(response);
       }
     } else {
       response.messages.error.push("Użytkownik nie istnieje!");
       return res.status(400).send(response);
     }
   } catch (err) {
-    response.messages.error.push("Nie udało się pobrać listy rozdziałów!");
+    response.messages.error.push(
+      "Coś poszło nie tak - nie udało się pobrać listy rozdziałów!"
+    );
     return res.status(500).send(response);
   }
 
@@ -130,7 +89,7 @@ const takesAllChapters = async (req, res) => {
   return res.status(200).json(response);
 };
 
-const takesAllTopics = async (req, res) => {
+const takesAllTopics = async (res, dataFromAuth) => {
   const response = {
     messages: {
       message: [],
@@ -139,28 +98,7 @@ const takesAllTopics = async (req, res) => {
     },
   };
 
-  let dataFromAuth;
   let listOfTopics;
-
-  try {
-    jwt.verify(
-      req.token,
-      process.env.S3_SECRETKEY,
-      async (jwtError, authData) => {
-        if (jwtError) {
-          response.messages.error.push("Błąd uwierzytelniania!");
-          res.status(403).json(response);
-        } else {
-          dataFromAuth = authData;
-        }
-      }
-    );
-  } catch (err) {
-    response.messages.error.push(
-      "Nie udało się przeprowadzić procesu uwierzytelniania!"
-    );
-    return res.status(500).send(response);
-  }
 
   try {
     const findUserAccount = await checkThatAccountWithEnteredEmailExists(
@@ -174,15 +112,17 @@ const takesAllTopics = async (req, res) => {
       if (takeListOfTopics !== false) {
         listOfTopics = takeListOfTopics;
       } else {
-        response.messages.error.push("Nie udało się pobrać listy tematów!");
-        return res.status(500).send(response);
+        response.messages.error.push("Brak tematów!");
+        return res.status(404).send(response);
       }
     } else {
       response.messages.error.push("Użytkownik nie istnieje!");
       return res.status(400).send(response);
     }
   } catch (err) {
-    response.messages.error.push("Nie udało się pobrać listy tematów!");
+    response.messages.error.push(
+      "Coś poszło nie tak - nie udało się pobrać listy tematów!"
+    );
     return res.status(500).send(response);
   }
 
@@ -190,7 +130,7 @@ const takesAllTopics = async (req, res) => {
   return res.status(200).json(response);
 };
 
-const createsNewChapter = async (req, res) => {
+const createsNewChapter = async (req, res, dataFromAuth) => {
   const response = {
     messages: {
       message: [],
@@ -199,28 +139,6 @@ const createsNewChapter = async (req, res) => {
   };
 
   const { nameOfSubject, nameOfChapter } = req.body;
-
-  let dataFromAuth;
-
-  try {
-    jwt.verify(
-      req.token,
-      process.env.S3_SECRETKEY,
-      async (jwtError, authData) => {
-        if (jwtError) {
-          response.messages.error.push("Błąd uwierzytelniania!");
-          res.status(403).json(response);
-        } else {
-          dataFromAuth = authData;
-        }
-      }
-    );
-  } catch (err) {
-    response.messages.error.push(
-      "Nie udało się przeprowadzić procesu uwierzytelniania!"
-    );
-    return res.status(500).send(response);
-  }
 
   try {
     if (
@@ -274,7 +192,7 @@ const createsNewChapter = async (req, res) => {
   return res.status(200).json(response);
 };
 
-const createsNewTopic = async (req, res) => {
+const createsNewTopic = async (req, res, dataFromAuth) => {
   const response = {
     messages: {
       message: [],
@@ -283,28 +201,6 @@ const createsNewTopic = async (req, res) => {
   };
 
   const { nameOfChapter, nameOfTopic } = req.body;
-
-  let dataFromAuth;
-
-  try {
-    jwt.verify(
-      req.token,
-      process.env.S3_SECRETKEY,
-      async (jwtError, authData) => {
-        if (jwtError) {
-          response.messages.error.push("Błąd uwierzytelniania!");
-          res.status(403).json(response);
-        } else {
-          dataFromAuth = authData;
-        }
-      }
-    );
-  } catch (err) {
-    response.messages.error.push(
-      "Nie udało się przeprowadzić procesu uwierzytelniania!"
-    );
-    return res.status(500).send(response);
-  }
 
   try {
     if (
@@ -358,7 +254,7 @@ const createsNewTopic = async (req, res) => {
   return res.status(200).json(response);
 };
 
-const removeChapter = async (req, res) => {
+const removeChapter = async (req, res, dataFromAuth) => {
   const response = {
     messages: {
       message: [],
@@ -366,27 +262,7 @@ const removeChapter = async (req, res) => {
     },
   };
 
-  const { nameOfChapter } = req.body;
-
-  try {
-    jwt.verify(
-      req.token,
-      process.env.S3_SECRETKEY,
-      async (jwtError, authData) => {
-        if (jwtError) {
-          response.messages.error.push("Błąd uwierzytelniania!");
-          res.status(403).json(response);
-        } else {
-          dataFromAuth = authData;
-        }
-      }
-    );
-  } catch (err) {
-    response.messages.error.push(
-      "Nie udało się przeprowadzić procesu uwierzytelniania!"
-    );
-    return res.status(500).send(response);
-  }
+  const chapter = req.body.nameOfChapter;
 
   try {
     if (
@@ -395,7 +271,7 @@ const removeChapter = async (req, res) => {
     ) {
       const resultAboutChapterExist = await checkExistsOfChapter(
         Model.Chapters,
-        nameOfChapter
+        chapter
       );
       if (resultAboutChapterExist !== false) {
         const resultAboutAssignChapterToTopic =
@@ -441,7 +317,7 @@ const removeChapter = async (req, res) => {
   return res.status(200).json(response);
 };
 
-const removeTopic = async (req, res) => {
+const removeTopic = async (req, res, dataFromAuth) => {
   const response = {
     messages: {
       message: [],
@@ -449,27 +325,7 @@ const removeTopic = async (req, res) => {
     },
   };
 
-  const { nameOfTopic } = req.body;
-
-  try {
-    jwt.verify(
-      req.token,
-      process.env.S3_SECRETKEY,
-      async (jwtError, authData) => {
-        if (jwtError) {
-          response.messages.error.push("Błąd uwierzytelniania!");
-          res.status(403).json(response);
-        } else {
-          dataFromAuth = authData;
-        }
-      }
-    );
-  } catch (err) {
-    response.messages.error.push(
-      "Nie udało się przeprowadzić procesu uwierzytelniania!"
-    );
-    return res.status(500).send(response);
-  }
+  const topic = req.body.nameOfTopic;
 
   try {
     if (
@@ -478,7 +334,7 @@ const removeTopic = async (req, res) => {
     ) {
       const resultAboutTopicExist = await checkExistsOfTopic(
         Model.Topics,
-        nameOfTopic
+        topic
       );
       if (resultAboutTopicExist !== false) {
         const resultAboutUpdateToRemoveField = await Model.Topics.update(

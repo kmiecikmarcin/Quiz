@@ -2,7 +2,7 @@ const express = require("express");
 const { check, validationResult } = require("express-validator");
 const verifyToken = require("../Functions/Others/verifyToken");
 const administrationsControllers = require("../Controllers/administration");
-
+const jwt = require("jsonwebtoken");
 const router = express.Router();
 
 router.post(
@@ -50,7 +50,18 @@ router.post(
       );
       res.status(403).send(response);
     } else {
-      administrationsControllers.createSchoolSubject(req, res);
+      jwt.verify(
+        req.token,
+        process.env.S3_SECRETKEY,
+        async (jwtError, authData) => {
+          if (jwtError) {
+            response.messages.error.push("Błąd uwierzytelniania!");
+            return res.status(403).json(response);
+          } else {
+            administrationsControllers.createSchoolSubject(req, res, authData);
+          }
+        }
+      );
     }
   }
 );
@@ -87,7 +98,18 @@ router.delete(
       );
       res.status(403).send(response);
     } else {
-      administrationsControllers.removeSchoolSubject(req, res);
+      jwt.verify(
+        req.token,
+        process.env.S3_SECRETKEY,
+        async (jwtError, authData) => {
+          if (jwtError) {
+            response.messages.error.push("Błąd uwierzytelniania!");
+            return res.status(403).json(response);
+          } else {
+            administrationsControllers.removeSchoolSubject(req, res, authData);
+          }
+        }
+      );
     }
   }
 );
@@ -124,7 +146,18 @@ router.delete(
       );
       res.status(403).send(response);
     } else {
-      administrationsControllers.removeChapter(req, res);
+      jwt.verify(
+        req.token,
+        process.env.S3_SECRETKEY,
+        async (jwtError, authData) => {
+          if (jwtError) {
+            response.messages.error.push("Błąd uwierzytelniania!");
+            return res.status(403).json(response);
+          } else {
+            administrationsControllers.removeChapter(req, res, authData);
+          }
+        }
+      );
     }
   }
 );
@@ -162,7 +195,18 @@ router.delete(
       );
       res.status(403).send(response);
     } else {
-      administrationsControllers.removeTopic(req, res);
+      jwt.verify(
+        req.token,
+        process.env.S3_SECRETKEY,
+        async (jwtError, authData) => {
+          if (jwtError) {
+            response.messages.error.push("Błąd uwierzytelniania!");
+            return res.status(403).json(response);
+          } else {
+            administrationsControllers.removeTopic(req, res, authData);
+          }
+        }
+      );
     }
   }
 );
@@ -183,7 +227,18 @@ router.get("/users-to-remove", (req, res) => {
     );
     res.status(403).send(response);
   } else {
-    administrationsControllers.takeAllUsersToRemove(req, res);
+    jwt.verify(
+      req.token,
+      process.env.S3_SECRETKEY,
+      async (jwtError, authData) => {
+        if (jwtError) {
+          response.messages.error.push("Błąd uwierzytelniania!");
+          return res.status(403).json(response);
+        } else {
+          administrationsControllers.takeAllUsersToRemove(res, authData);
+        }
+      }
+    );
   }
 });
 
@@ -218,7 +273,18 @@ router.delete(
       );
       res.status(403).send(response);
     } else {
-      administrationsControllers.daleteUserAccount(req, res);
+      jwt.verify(
+        req.token,
+        process.env.S3_SECRETKEY,
+        async (jwtError, authData) => {
+          if (jwtError) {
+            response.messages.error.push("Błąd uwierzytelniania!");
+            return res.status(403).json(response);
+          } else {
+            administrationsControllers.daleteUserAccount(req, res, authData);
+          }
+        }
+      );
     }
   }
 );
@@ -239,7 +305,18 @@ router.get("/users", (req, res) => {
     );
     res.status(403).send(response);
   } else {
-    administrationsControllers.takeAllUsers(req, res);
+    jwt.verify(
+      req.token,
+      process.env.S3_SECRETKEY,
+      async (jwtError, authData) => {
+        if (jwtError) {
+          response.messages.error.push("Błąd uwierzytelniania!");
+          return res.status(403).json(response);
+        } else {
+          administrationsControllers.takeAllUsers(res, authData);
+        }
+      }
+    );
   }
 });
 
@@ -274,7 +351,22 @@ router.patch(
       );
       res.status(403).send(response);
     } else {
-      administrationsControllers.assignTeacherPermissions(req, res);
+      jwt.verify(
+        req.token,
+        process.env.S3_SECRETKEY,
+        async (jwtError, authData) => {
+          if (jwtError) {
+            response.messages.error.push("Błąd uwierzytelniania!");
+            return res.status(403).json(response);
+          } else {
+            administrationsControllers.assignTeacherPermissions(
+              req,
+              res,
+              authData
+            );
+          }
+        }
+      );
     }
   }
 );
@@ -290,12 +382,24 @@ router.get("/chapters-to-remove", (req, res) => {
   const headerValidationResults = verifyToken(req);
 
   if (headerValidationResults === false) {
-    response.messages.error.push(
-      "Nie udało się przeprowadzić procesu uwierzytelniania!"
-    );
-    res.status(403).send(response);
+    response.messages.error.push("Błędna wartość uwierzytelniania!");
+    res.status(400).send(response);
   } else {
-    administrationsControllers.takeAllChaptersWhichAreToRemove(req, res);
+    jwt.verify(
+      req.token,
+      process.env.S3_SECRETKEY,
+      async (jwtError, authData) => {
+        if (jwtError) {
+          response.messages.error.push("Błąd uwierzytelniania!");
+          return res.status(403).json(response);
+        } else {
+          administrationsControllers.takeAllChaptersWhichAreToRemove(
+            res,
+            authData
+          );
+        }
+      }
+    );
   }
 });
 

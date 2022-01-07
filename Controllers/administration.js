@@ -1,4 +1,3 @@
-const jwt = require("jsonwebtoken");
 const Model = require("../Functions/Others/takeModels");
 const checkTheSchoolSubjectExists = require("../Functions/SchoolSubjects/checkTheSchoolSubjectExists");
 const createNewSchoolSubject = require("../Functions/SchoolSubjects/createNewSchoolSubject");
@@ -16,7 +15,7 @@ const findIdOfTeacherPermission = require("../Functions/Users/findIdOfTeacherPer
 const updateUserPermissionToTeacherPermissions = require("../Functions/Users/updateUserPermissionToTeacherPermissions");
 const takeAllChaptersWchichWereAssignedAsToRemove = require("../Functions/SchoolSubjects/takeAllChaptersWchichWereAssignedAsToRemove");
 
-const createSchoolSubject = async (req, res) => {
+const createSchoolSubject = async (req, res, dataFromAuth) => {
   const response = {
     messages: {
       message: [],
@@ -25,28 +24,6 @@ const createSchoolSubject = async (req, res) => {
   };
 
   const nameOfSubject = req.body.nameOfSchoolSubject;
-
-  let dataFromAuth;
-
-  try {
-    jwt.verify(
-      req.token,
-      process.env.S3_SECRETKEY,
-      async (jwtError, authData) => {
-        if (jwtError) {
-          response.messages.error.push("Błąd uwierzytelniania!");
-          res.status(403).json(response);
-        } else {
-          dataFromAuth = authData;
-        }
-      }
-    );
-  } catch (err) {
-    response.messages.error.push(
-      "Nie udało się przeprowadzić procesu uwierzytelniania!"
-    );
-    return res.status(500).send(response);
-  }
 
   try {
     if (dataFromAuth.name === process.env.S3_ADMIN_PERMISSIONS) {
@@ -87,7 +64,7 @@ const createSchoolSubject = async (req, res) => {
   return res.status(200).json(response);
 };
 
-const removeSchoolSubject = async (req, res) => {
+const removeSchoolSubject = async (req, res, dataFromAuth) => {
   const response = {
     messages: {
       message: [],
@@ -96,28 +73,6 @@ const removeSchoolSubject = async (req, res) => {
   };
 
   const nameOfSubject = req.body.nameOfSchoolSubject;
-
-  let dataFromAuth;
-
-  try {
-    jwt.verify(
-      req.token,
-      process.env.S3_SECRETKEY,
-      async (jwtError, authData) => {
-        if (jwtError) {
-          response.messages.error.push("Błąd uwierzytelniania!");
-          res.status(403).json(response);
-        } else {
-          dataFromAuth = authData;
-        }
-      }
-    );
-  } catch (err) {
-    response.messages.error.push(
-      "Nie udało się przeprowadzić procesu uwierzytelniania!"
-    );
-    return res.status(500).send(response);
-  }
 
   try {
     if (dataFromAuth.name === process.env.S3_ADMIN_PERMISSIONS) {
@@ -160,7 +115,7 @@ const removeSchoolSubject = async (req, res) => {
   return res.status(200).json(response);
 };
 
-const removeChapter = async (req, res) => {
+const removeChapter = async (req, res, dataFromAuth) => {
   const response = {
     messages: {
       message: [],
@@ -169,28 +124,6 @@ const removeChapter = async (req, res) => {
   };
 
   const chapter = req.body.nameOfChapter;
-
-  let dataFromAuth;
-
-  try {
-    jwt.verify(
-      req.token,
-      process.env.S3_SECRETKEY,
-      async (jwtError, authData) => {
-        if (jwtError) {
-          response.messages.error.push("Błąd uwierzytelniania!");
-          res.status(403).json(response);
-        } else {
-          dataFromAuth = authData;
-        }
-      }
-    );
-  } catch (err) {
-    response.messages.error.push(
-      "Nie udało się przeprowadzić procesu uwierzytelniania!"
-    );
-    return res.status(500).send(response);
-  }
 
   try {
     if (dataFromAuth.name === process.env.S3_ADMIN_PERMISSIONS) {
@@ -230,7 +163,7 @@ const removeChapter = async (req, res) => {
   return res.status(200).json(response);
 };
 
-const removeTopic = async (req, res) => {
+const removeTopic = async (req, res, dataFromAuth) => {
   const response = {
     messages: {
       message: [],
@@ -239,28 +172,6 @@ const removeTopic = async (req, res) => {
   };
 
   const topic = req.body.nameOfTopic;
-
-  let dataFromAuth;
-
-  try {
-    jwt.verify(
-      req.token,
-      process.env.S3_SECRETKEY,
-      async (jwtError, authData) => {
-        if (jwtError) {
-          response.messages.error.push("Błąd uwierzytelniania!");
-          res.status(403).json(response);
-        } else {
-          dataFromAuth = authData;
-        }
-      }
-    );
-  } catch (err) {
-    response.messages.error.push(
-      "Nie udało się przeprowadzić procesu uwierzytelniania!"
-    );
-    return res.status(500).send(response);
-  }
 
   try {
     if (dataFromAuth.name === process.env.S3_ADMIN_PERMISSIONS) {
@@ -296,7 +207,7 @@ const removeTopic = async (req, res) => {
   return res.status(200).json(response);
 };
 
-const takeAllUsersToRemove = async (req, res) => {
+const takeAllUsersToRemove = async (res, dataFromAuth) => {
   const response = {
     messages: {
       message: [],
@@ -304,28 +215,6 @@ const takeAllUsersToRemove = async (req, res) => {
       users: [],
     },
   };
-
-  let dataFromAuth;
-
-  try {
-    jwt.verify(
-      req.token,
-      process.env.S3_SECRETKEY,
-      async (jwtError, authData) => {
-        if (jwtError) {
-          response.messages.error.push("Błąd uwierzytelniania!");
-          res.status(403).json(response);
-        } else {
-          dataFromAuth = authData;
-        }
-      }
-    );
-  } catch (err) {
-    response.messages.error.push(
-      "Nie udało się przeprowadzić procesu uwierzytelniania!"
-    );
-    return res.status(500).send(response);
-  }
 
   try {
     if (dataFromAuth.name === process.env.S3_ADMIN_PERMISSIONS) {
@@ -335,10 +224,8 @@ const takeAllUsersToRemove = async (req, res) => {
       if (takeListOfUsers !== false) {
         listOfUsersToRemove = takeListOfUsers;
       } else {
-        response.messages.message.push(
-          "Nie udało się pobrać listy użytkowników!"
-        );
-        return res.status(400).json(response);
+        response.messages.message.push("Lista użytkowników jest pusta!");
+        return res.status(404).json(response);
       }
     } else {
       response.messages.message.push("Nie posiadasz uprawnień!");
@@ -353,7 +240,7 @@ const takeAllUsersToRemove = async (req, res) => {
   return res.status(200).json(response);
 };
 
-const daleteUserAccount = async (req, res) => {
+const daleteUserAccount = async (req, res, dataFromAuth) => {
   const response = {
     messages: {
       message: [],
@@ -362,28 +249,6 @@ const daleteUserAccount = async (req, res) => {
   };
 
   const user = req.body.userId;
-
-  let dataFromAuth;
-
-  try {
-    jwt.verify(
-      req.token,
-      process.env.S3_SECRETKEY,
-      async (jwtError, authData) => {
-        if (jwtError) {
-          response.messages.error.push("Błąd uwierzytelniania!");
-          res.status(403).json(response);
-        } else {
-          dataFromAuth = authData;
-        }
-      }
-    );
-  } catch (err) {
-    response.messages.error.push(
-      "Nie udało się przeprowadzić procesu uwierzytelniania!"
-    );
-    return res.status(500).send(response);
-  }
 
   try {
     if (dataFromAuth.name === process.env.S3_ADMIN_PERMISSIONS) {
@@ -415,7 +280,7 @@ const daleteUserAccount = async (req, res) => {
   return res.status(200).json(response);
 };
 
-const takeAllUsers = async (req, res) => {
+const takeAllUsers = async (res, dataFromAuth) => {
   const response = {
     messages: {
       message: [],
@@ -423,28 +288,6 @@ const takeAllUsers = async (req, res) => {
       users: [],
     },
   };
-
-  let dataFromAuth;
-
-  try {
-    jwt.verify(
-      req.token,
-      process.env.S3_SECRETKEY,
-      async (jwtError, authData) => {
-        if (jwtError) {
-          response.messages.error.push("Błąd uwierzytelniania!");
-          res.status(403).json(response);
-        } else {
-          dataFromAuth = authData;
-        }
-      }
-    );
-  } catch (err) {
-    response.messages.error.push(
-      "Nie udało się przeprowadzić procesu uwierzytelniania!"
-    );
-    return res.status(500).send(response);
-  }
 
   try {
     if (dataFromAuth.name === process.env.S3_ADMIN_PERMISSIONS) {
@@ -454,10 +297,8 @@ const takeAllUsers = async (req, res) => {
         if (takeUsers !== false) {
           listOfUsers = takeUsers;
         } else {
-          response.messages.message.push(
-            "Nie udało się pobrać listy użytkowników!"
-          );
-          return res.status(400).json(response);
+          response.messages.message.push("Lista użytkowników jest pusta!");
+          return res.status(404).json(response);
         }
       } else {
         response.messages.message.push("Nie odnaleziono roli użytkownika!");
@@ -476,37 +317,13 @@ const takeAllUsers = async (req, res) => {
   return res.status(200).json(response);
 };
 
-const assignTeacherPermissions = async (req, res) => {
+const assignTeacherPermissions = async (req, res, dataFromAuth) => {
   const response = {
     messages: {
       message: [],
       error: [],
     },
   };
-
-  let dataFromAuth;
-
-  const user = req.body.userId;
-
-  try {
-    jwt.verify(
-      req.token,
-      process.env.S3_SECRETKEY,
-      async (jwtError, authData) => {
-        if (jwtError) {
-          response.messages.error.push("Błąd uwierzytelniania!");
-          res.status(403).json(response);
-        } else {
-          dataFromAuth = authData;
-        }
-      }
-    );
-  } catch (err) {
-    response.messages.error.push(
-      "Nie udało się przeprowadzić procesu uwierzytelniania!"
-    );
-    return res.status(500).send(response);
-  }
 
   try {
     if (dataFromAuth.name === process.env.S3_ADMIN_PERMISSIONS) {
@@ -555,7 +372,7 @@ const assignTeacherPermissions = async (req, res) => {
   return res.status(200).json(response);
 };
 
-const takeAllChaptersWhichAreToRemove = async (req, res) => {
+const takeAllChaptersWhichAreToRemove = async (res, dataFromAuth) => {
   const response = {
     messages: {
       message: [],
@@ -563,28 +380,6 @@ const takeAllChaptersWhichAreToRemove = async (req, res) => {
       chapters: [],
     },
   };
-
-  let dataFromAuth;
-
-  try {
-    jwt.verify(
-      req.token,
-      process.env.S3_SECRETKEY,
-      async (jwtError, authData) => {
-        if (jwtError) {
-          response.messages.error.push("Błąd uwierzytelniania!");
-          return res.status(403).json(response);
-        } else {
-          dataFromAuth = authData;
-        }
-      }
-    );
-  } catch (err) {
-    response.messages.error.push(
-      "Nie udało się przeprowadzić procesu uwierzytelniania!"
-    );
-    return res.status(500).send(response);
-  }
 
   try {
     if (dataFromAuth.name === process.env.S3_ADMIN_PERMISSIONS) {
@@ -594,10 +389,8 @@ const takeAllChaptersWhichAreToRemove = async (req, res) => {
       if (takeChapters !== false) {
         listOfChapters = takeChapters;
       } else {
-        response.messages.message.push(
-          "Nie udało się pobrać listy rozdziałów!"
-        );
-        return res.status(400).json(response);
+        response.messages.message.push("Lista rozdziałów jest pusta!");
+        return res.status(404).json(response);
       }
     } else {
       response.messages.message.push("Nie posiadasz uprawnień!");
