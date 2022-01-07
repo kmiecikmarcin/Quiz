@@ -60,7 +60,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n    \"userEmail\": \"{{user_email}}\",\r\n    \"userPassword\": \"{{user_password}}\",\r\n    \"confirmPassword\": \"{{user_password}}\",\r\n    \"userGender\": \"{{user_gender}}\",\r\n    \"userVerification\": true\r\n}",
+									"raw": "{\r\n    \"userEmail\": \"admin@example.com\",\r\n    \"userPassword\": \"admin@\",\r\n    \"confirmPassword\": \"admin@\",\r\n    \"userGender\": \"{{user_gender}}\",\r\n    \"userVerification\": true\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -1788,6 +1788,36 @@
 								"quiz",
 								"administration",
 								"permissions"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Take chapters to remove",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{adminToken}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:3000/quiz/administration/chapters-to-remove",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"quiz",
+								"administration",
+								"chapters-to-remove"
 							]
 						}
 					},
