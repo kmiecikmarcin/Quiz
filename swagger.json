@@ -50,7 +50,7 @@
                     }
                 },
                 "responses": {
-                    "201": {
+                    "200": {
                         "description": "Successfully registered"
                     },
                     "400": {
@@ -313,6 +313,9 @@
                     "400": {
                         "description": "Error about entered data"
                     },
+                    "404": {
+                        "description": "Data not found"
+                    },
                     "403": {
                         "description": "Forbidden"
                     },
@@ -353,11 +356,14 @@
                     }
                 },
                 "responses": {
-                    "201": {
+                    "200": {
                         "description": "New chapter added successfully"
                     },
                     "400": {
                         "description": "Error about entered data"
+                    },
+                    "404": {
+                        "description": "Data not found"
                     },
                     "403": {
                         "description": "Forbidden"
@@ -396,11 +402,14 @@
                     }
                 },
                 "responses": {
-                    "201": {
+                    "200": {
                         "description": "New topic added successfully"
                     },
                     "400": {
                         "description": "Error about entered data"
+                    },
+                    "404": {
+                        "description": "Data not found"
                     },
                     "403": {
                         "description": "Forbidden"
@@ -436,7 +445,7 @@
                     }
                 },
                 "responses": {
-                    "201": {
+                    "200": {
                         "description": "Successfully completed"
                     },
                     "400": {
@@ -479,7 +488,7 @@
                     }
                 },
                 "responses": {
-                    "201": {
+                    "200": {
                         "description": "Successfully completed"
                     },
                     "400": {
@@ -511,6 +520,9 @@
                     },
                     "400": {
                         "description": "Error about data"
+                    },
+                    "404": {
+                        "description": "Data not found"
                     },
                     "403": {
                         "description": "Forbidden"
@@ -546,7 +558,7 @@
                     }
                 },
                 "responses": {
-                    "201": {
+                    "200": {
                         "description": "Successfully completed"
                     },
                     "400": {
@@ -699,6 +711,9 @@
                     "400": {
                         "description": "Error about entered data"
                     },
+                    "404": {
+                        "description": "Data not found"
+                    },
                     "403": {
                         "description": "Forbidden"
                     }
@@ -744,6 +759,33 @@
                     },
                     "404": {
                         "description": "Not Found"
+                    }
+                }
+            }
+        },
+        "/quiz/administration/chapters-to-remove": {
+            "get": {
+                "tags": [
+                    "Administration"
+                ],
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "summary": "Admin can take list of chapters which are to remove",
+                "responses": {
+                    "200": {
+                        "description": "Successfully completed"
+                    },
+                    "400": {
+                        "description": "Error about entered data"
+                    },
+                    "404": {
+                        "description": "Data not found"
+                    },
+                    "403": {
+                        "description": "Forbidden"
                     }
                 }
             }

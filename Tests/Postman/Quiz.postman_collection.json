@@ -20,7 +20,7 @@
 										"exec": [
 											"pm.test(\"Response is correct\", function () {\r",
 											"    var jsonData = pm.response.json();\r",
-											"    pm.expect(jsonData.messages.message).to.eql(\"Rejestracja przebiegła pomyślnie!\");\r",
+											"    pm.expect(jsonData.messages.message).to.eql([\"Rejestracja przebiegła pomyślnie!\"]);\r",
 											"});\r",
 											"pm.test(\"Successful POST request\", function () {\r",
 											"    pm.expect(pm.response.code).to.be.oneOf([201]);\r",
@@ -60,7 +60,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n    \"userEmail\": \"admin@example.com\",\r\n    \"userPassword\": \"admin@\",\r\n    \"confirmPassword\": \"admin@\",\r\n    \"userGender\": \"{{user_gender}}\",\r\n    \"userVerification\": true\r\n}",
+									"raw": "{\r\n    \"userEmail\": \"{{user_email}}\",\r\n    \"userPassword\": \"{{user_password}}\",\r\n    \"confirmPassword\": \"{{user_password}}\",\r\n    \"userGender\": \"{{user_gender}}\",\r\n    \"userVerification\": true\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -224,7 +224,7 @@
 									"listen": "test",
 									"script": {
 										"exec": [
-											"pm.test(\"Successful PUT request\", function () {\r",
+											"pm.test(\"Successful PATCH request\", function () {\r",
 											"    pm.expect(pm.response.code).to.be.oneOf([200]);\r",
 											"});\r",
 											"\r",
@@ -285,13 +285,13 @@
 									"listen": "test",
 									"script": {
 										"exec": [
-											"pm.test(\"Successful PUT request\", function () {\r",
-											"    pm.expect(pm.response.code).to.be.oneOf([400]);\r",
+											"pm.test(\"Successful PATCH request\", function () {\r",
+											"    pm.expect(pm.response.code).to.be.oneOf([200]);\r",
 											"});\r",
 											"\r",
 											"pm.test(\"Response is correct\", function () {\r",
 											"    var jsonData = pm.response.json();\r",
-											"    pm.expect(jsonData.messages.error).to.eql(\"Coś poszło nie tak. Sprawdź wprowadzone dane!\");\r",
+											"    pm.expect(jsonData.messages.message).to.eql([\"Konto zostało dezaktywowane!\"]);\r",
 											"});"
 										],
 										"type": "text/javascript"
@@ -322,7 +322,7 @@
 								"header": [],
 								"body": {
 									"mode": "raw",
-									"raw": "{\r\n    \"userPassword\": \"{{new_user_password}}\",\r\n    \"confirmPassword\": \"{{new_user_password}}\"\r\n}",
+									"raw": "{\r\n    \"userPassword\": \"{{user_password}}\",\r\n    \"confirmPassword\": \"{{user_password}}\"\r\n}",
 									"options": {
 										"raw": {
 											"language": "json"
@@ -349,6 +349,127 @@
 				{
 					"name": "School subjects scenario",
 					"item": [
+						{
+							"name": "Register",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Response is correct\", function () {\r",
+											"    var jsonData = pm.response.json();\r",
+											"    pm.expect(jsonData.messages.message).to.eql([\"Rejestracja przebiegła pomyślnie!\"]);\r",
+											"});\r",
+											"pm.test(\"Successful POST request\", function () {\r",
+											"    pm.expect(pm.response.code).to.be.oneOf([201]);\r",
+											"});"
+										],
+										"type": "text/javascript"
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"exec": [
+											"const random_number = _.random(1000, 9000);\r",
+											"const user_email = \"user\" + random_number + \"@example.com\";\r",
+											"\r",
+											"const random_password = _.random(100000,9000000);\r",
+											"const user_password = random_password + \"@\";\r",
+											"\r",
+											"pm.environment.set(\"user_email\", user_email);\r",
+											"pm.environment.set(\"user_password\", user_password);\r",
+											"\r",
+											"let genders_array = [\"Kobieta\", \"Mężczyzna\" ]; \r",
+											"const random_gender = _.random(0, 1)\r",
+											"const user_gender = genders_array[random_gender]\r",
+											"\r",
+											"pm.environment.set(\"user_gender\", user_gender);"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"protocolProfileBehavior": {
+								"disabledSystemHeaders": {}
+							},
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"userEmail\": \"{{user_email}}\",\r\n    \"userPassword\": \"{{user_password}}\",\r\n    \"confirmPassword\": \"{{user_password}}\",\r\n    \"userGender\": \"{{user_gender}}\",\r\n    \"userVerification\": true\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "localhost:3000/quiz/users/register",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"quiz",
+										"users",
+										"register"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Login",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"pm.test(\"Response is correct\", function () {\r",
+											"    var jsonData = pm.response.json();\r",
+											"    pm.expect(jsonData.messages.message).not.eql(null);\r",
+											"});\r",
+											"pm.test(\"Successful POST request\", function () {\r",
+											"    pm.expect(pm.response.code).to.be.oneOf([200]);\r",
+											"});\r",
+											"\r",
+											"let bodyData = JSON.parse(responseBody);\r",
+											"const token = bodyData.messages.token;\r",
+											"pm.environment.set(\"token\", token);"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"userEmail\": \"{{user_email}}\",\r\n    \"userPassword\": \"{{user_password}}\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "localhost:3000/quiz/users/login",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"quiz",
+										"users",
+										"login"
+									]
+								}
+							},
+							"response": []
+						},
 						{
 							"name": "All school subjects",
 							"event": [
@@ -499,7 +620,7 @@
 										"exec": [
 											"pm.test(\"Response is correct\", function () {\r",
 											"    var jsonData = pm.response.json();\r",
-											"    pm.expect(jsonData.messages.error).to.eql(\"Nie posiadasz uprawnień, by móc dodać nowy rodział!\");\r",
+											"    pm.expect(jsonData.messages.error).to.eql([\"Nie posiadasz uprawnień, by móc dodać nowy rodział!\"]);\r",
 											"});\r",
 											"pm.test(\"Successful POST request\", function () {\r",
 											"    pm.expect(pm.response.code).to.be.oneOf([400]);\r",
@@ -649,7 +770,7 @@
 									"bearer": [
 										{
 											"key": "token",
-											"value": "",
+											"value": "{{teacherToken}}",
 											"type": "string"
 										}
 									]
@@ -777,7 +898,7 @@
 											"    pm.expect(jsonData.Message).not.eql(null);\r",
 											"});\r",
 											"pm.test(\"Successful POST request\", function () {\r",
-											"    pm.expect(pm.response.code).to.be.oneOf([201]);\r",
+											"    pm.expect(pm.response.code).to.be.oneOf([200]);\r",
 											"});"
 										],
 										"type": "text/javascript"
@@ -846,7 +967,7 @@
 											"    pm.expect(jsonData.Message).not.eql(null);\r",
 											"});\r",
 											"pm.test(\"Successful POST request\", function () {\r",
-											"    pm.expect(pm.response.code).to.be.oneOf([201]);\r",
+											"    pm.expect(pm.response.code).to.be.oneOf([200]);\r",
 											"});"
 										],
 										"type": "text/javascript"
@@ -913,7 +1034,7 @@
 											"    pm.expect(jsonData.Message).not.eql(null);\r",
 											"});\r",
 											"pm.test(\"Successful PUT request\", function () {\r",
-											"    pm.expect(pm.response.code).to.be.oneOf([400]);\r",
+											"    pm.expect(pm.response.code).to.be.oneOf([200]);\r",
 											"});"
 										],
 										"type": "text/javascript"
@@ -966,7 +1087,7 @@
 										"exec": [
 											"pm.test(\"Response is correct\", function () {\r",
 											"    var jsonData = pm.response.json();\r",
-											"    pm.expect(jsonData.messages.message).to.eql(\"Pomyślnie usunięto temat!\");\r",
+											"    pm.expect(jsonData.messages.message).to.eql([\"Pomyślnie usunięto temat!\"]);\r",
 											"});\r",
 											"pm.test(\"Successful PUT request\", function () {\r",
 											"    pm.expect(pm.response.code).to.be.oneOf([200]);\r",
@@ -1171,7 +1292,7 @@
 											"    pm.expect(jsonData.Message).not.eql(null);\r",
 											"});\r",
 											"pm.test(\"Successful POST request\", function () {\r",
-											"    pm.expect(pm.response.code).to.be.oneOf([201]);\r",
+											"    pm.expect(pm.response.code).to.be.oneOf([200]);\r",
 											"});"
 										],
 										"type": "text/javascript"
@@ -1366,7 +1487,7 @@
 									"    pm.expect(jsonData.Message).not.eql(null);\r",
 									"});\r",
 									"pm.test(\"Successful POST request\", function () {\r",
-									"    pm.expect(pm.response.code).to.be.oneOf([201]);\r",
+									"    pm.expect(pm.response.code).to.be.oneOf([200]);\r",
 									"});"
 								],
 								"type": "text/javascript"
@@ -1407,7 +1528,7 @@
 							}
 						},
 						"url": {
-							"raw": "localhost:3000/quiz/administration/schoolSubject",
+							"raw": "localhost:3000/quiz/administration/school-subject",
 							"host": [
 								"localhost"
 							],
@@ -1415,7 +1536,7 @@
 							"path": [
 								"quiz",
 								"administration",
-								"schoolSubject"
+								"school-subject"
 							]
 						}
 					},
@@ -1598,14 +1719,14 @@
 								"exec": [
 									"pm.test(\"Response is correct\", function () {\r",
 									"    var jsonData = pm.response.json();\r",
-									"    pm.expect(jsonData.listOfUsers).not.eql(null);\r",
+									"    pm.expect(jsonData.messages.users).not.eql(null);\r",
 									"});\r",
 									"pm.test(\"Successful GET request\", function () {\r",
 									"    pm.expect(pm.response.code).to.be.oneOf([200]);\r",
 									"});\r",
 									"\r",
 									"let bodyData = JSON.parse(responseBody);\r",
-									"const user_id = bodyData.listOfUsers[0].id;\r",
+									"const user_id = bodyData.messages.users[0].id;\r",
 									"pm.environment.set(\"user_id\", user_id);"
 								],
 								"type": "text/javascript"
@@ -1705,7 +1826,7 @@
 								"exec": [
 									"pm.test(\"Response is correct\", function () {\r",
 									"    var jsonData = pm.response.json();\r",
-									"    pm.expect(jsonData.listOfUsers).not.eql(null);\r",
+									"    pm.expect(jsonData.messages.users).not.eql(null);\r",
 									"});\r",
 									"pm.test(\"Successful GET request\", function () {\r",
 									"    pm.expect(pm.response.code).to.be.oneOf([200]);\r",
@@ -1713,9 +1834,10 @@
 									"\r",
 									"let bodyData = JSON.parse(responseBody);\r",
 									"var user_id_for_put_permissions;\r",
-									"for(var i = 0; i < bodyData.listOfUsers.length; i++) {\r",
-									"    if(bodyData.listOfUsers[i].accountToBeDeleted === false) {\r",
-									"        user_id_for_put_permissions = bodyData.listOfUsers[i].id;\r",
+									"\r",
+									"for(var i = 0; i < bodyData.messages.users.length; i++) {\r",
+									"    if(bodyData.messages.users[i].accountToBeDeleted === false) {\r",
+									"        user_id_for_put_permissions = bodyData.messages.users[i].id;\r",
 									"        break;\r",
 									"    }\r",
 									"}\r",
@@ -1795,6 +1917,24 @@
 				},
 				{
 					"name": "Take chapters to remove",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Response is correct\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.expect(jsonData.messages.chapters).not.eql(null);\r",
+									"});\r",
+									"pm.test(\"Successful GET request\", function () {\r",
+									"    pm.expect(pm.response.code).to.be.oneOf([200]);\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
 					"request": {
 						"auth": {
 							"type": "bearer",

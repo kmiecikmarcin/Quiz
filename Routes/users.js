@@ -1,6 +1,7 @@
 const express = require("express");
 const { check, validationResult } = require("express-validator");
 const userControllers = require("../Controllers/users");
+const jwt = require("jsonwebtoken");
 const checkPasswordAboutOneSpecialKey = require("../Functions/Others/checkPasswordAboutOneSpecialKey");
 const checkEnteredGender = require("../Functions/Others/checkEnteredGender");
 const checkUserVerification = require("../Functions/Others/checkUserVerification");
@@ -159,20 +160,37 @@ router.patch(
       .isLength({ max: 32 })
       .withMessage("Hasło jest za długie!"),
   ],
-  verifyToken,
   (req, res) => {
-    const error = validationResult(req);
     const response = {
       validationErrors: [],
     };
+
+    const error = validationResult(req);
+    const validationHeaderResults = verifyToken(req);
 
     if (!error.isEmpty()) {
       response.validationErrors = error
         .array({ onlyFirstError: true })
         .map((err) => ({ [err.param]: err.msg }));
       res.status(400).json(response);
+    } else if (validationHeaderResults === false) {
+      response.messages.error.push(
+        "Nie udało się przeprowadzić procesu uwierzytelniania!"
+      );
+      res.status(403).send(response);
     } else {
-      userControllers.email(req, res);
+      jwt.verify(
+        req.token,
+        process.env.S3_SECRETKEY,
+        async (jwtError, authData) => {
+          if (jwtError) {
+            response.messages.error.push("Błąd uwierzytelniania!");
+            return res.status(403).json(response);
+          } else {
+            userControllers.email(req, res, authData);
+          }
+        }
+      );
     }
   }
 );
@@ -205,21 +223,38 @@ router.patch(
       .isLength({ max: 32 })
       .withMessage("Hasło jest za długie!"),
   ],
-  verifyToken,
   (req, res) => {
-    const error = validationResult(req);
     const response = {
       messages: {},
       validationErrors: [],
     };
+
+    const error = validationResult(req);
+    const validationHeaderResults = verifyToken(req);
 
     if (!error.isEmpty()) {
       response.validationErrors = error
         .array({ onlyFirstError: true })
         .map((err) => ({ [err.param]: err.msg }));
       res.status(400).json(response);
+    } else if (validationHeaderResults === false) {
+      response.messages.error.push(
+        "Nie udało się przeprowadzić procesu uwierzytelniania!"
+      );
+      res.status(403).send(response);
     } else {
-      userControllers.password(req, res);
+      jwt.verify(
+        req.token,
+        process.env.S3_SECRETKEY,
+        async (jwtError, authData) => {
+          if (jwtError) {
+            response.messages.error.push("Błąd uwierzytelniania!");
+            return res.status(403).json(response);
+          } else {
+            userControllers.password(req, res, authData);
+          }
+        }
+      );
     }
   }
 );
@@ -246,21 +281,38 @@ router.patch(
         }
       }),
   ],
-  verifyToken,
   (req, res) => {
-    const error = validationResult(req);
     const response = {
       messages: {},
       validationErrors: [],
     };
 
+    const error = validationResult(req);
+    const validationHeaderResults = verifyToken(req);
+
     if (!error.isEmpty()) {
-      response.Error = error
+      response.validationErrors = error
         .array({ onlyFirstError: true })
         .map((err) => ({ [err.param]: err.msg }));
       res.status(400).json(response);
+    } else if (validationHeaderResults === false) {
+      response.messages.error.push(
+        "Nie udało się przeprowadzić procesu uwierzytelniania!"
+      );
+      res.status(403).send(response);
     } else {
-      userControllers.accountToDelete(req, res);
+      jwt.verify(
+        req.token,
+        process.env.S3_SECRETKEY,
+        async (jwtError, authData) => {
+          if (jwtError) {
+            response.messages.error.push("Błąd uwierzytelniania!");
+            return res.status(403).json(response);
+          } else {
+            userControllers.accountToDelete(req, res, authData);
+          }
+        }
+      );
     }
   }
 );

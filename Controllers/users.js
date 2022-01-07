@@ -1,5 +1,4 @@
 const bcrypt = require("bcrypt");
-const jwt = require("jsonwebtoken");
 const Model = require("../Functions/Others/takeModels");
 const checkThatEmailIsUnique = require("../Functions/Users/checkThatEmailIsUnique");
 const findGenderID = require("../Functions/Users/findGenderID");
@@ -139,7 +138,7 @@ const login = async (req, res) => {
   return res.status(200).json(response);
 };
 
-const email = async (req, res) => {
+const email = async (req, res, dataFromAuth) => {
   const response = {
     messages: {
       token: [],
@@ -148,29 +147,8 @@ const email = async (req, res) => {
   };
 
   let newToken;
-  let dataFromAuth;
 
   const { newUserEmail, userPassword } = req.body;
-
-  try {
-    jwt.verify(
-      req.token,
-      process.env.S3_SECRETKEY,
-      async (jwtError, authData) => {
-        if (jwtError) {
-          response.messages.error.push("Błąd uwierzytelniania!");
-          res.status(403).json(response);
-        } else {
-          dataFromAuth = authData;
-        }
-      }
-    );
-  } catch (err) {
-    response.messages.error.push(
-      "Nie udało się przeprowadzić procesu uwierzytelniania!"
-    );
-    return res.status(500).send(response);
-  }
 
   try {
     const checkUserAccount = await checkThatAccountWithEnteredEmailExists(
@@ -218,7 +196,7 @@ const email = async (req, res) => {
   return res.status(200).json(response);
 };
 
-const password = async (req, res) => {
+const password = async (req, res, dataFromAuth) => {
   const response = {
     messages: {
       token: [],
@@ -227,29 +205,8 @@ const password = async (req, res) => {
   };
 
   let newToken;
-  let dataFromAuth;
 
   const { newUserPassword, userPassword } = req.body;
-
-  try {
-    jwt.verify(
-      req.token,
-      process.env.S3_SECRETKEY,
-      async (jwtError, authData) => {
-        if (jwtError) {
-          response.messages.error.push("Błąd uwierzytelniania!");
-          res.status(403).json(response);
-        } else {
-          dataFromAuth = authData;
-        }
-      }
-    );
-  } catch (err) {
-    response.messages.error.push(
-      "Nie udało się przeprowadzić procesu uwierzytelniania!"
-    );
-    return res.status(500).send(response);
-  }
 
   try {
     const checkUserAccount = await checkThatAccountWithEnteredEmailExists(
@@ -299,7 +256,7 @@ const password = async (req, res) => {
   return res.status(200).json(response);
 };
 
-const accountToDelete = async (req, res) => {
+const accountToDelete = async (req, res, dataFromAuth) => {
   const response = {
     messages: {
       message: [],
@@ -307,29 +264,7 @@ const accountToDelete = async (req, res) => {
     },
   };
 
-  let dataFromAuth;
-
-  const { userPassword } = req.body;
-
-  try {
-    jwt.verify(
-      req.token,
-      process.env.S3_SECRETKEY,
-      async (jwtError, authData) => {
-        if (jwtError) {
-          response.messages.error.push("Błąd uwierzytelniania!");
-          res.status(403).json(response);
-        } else {
-          dataFromAuth = authData;
-        }
-      }
-    );
-  } catch (err) {
-    response.messages.error.push(
-      "Nie udało się przeprowadzić procesu uwierzytelniania!"
-    );
-    return res.status(500).send(response);
-  }
+  const userPassword = req.body.userPassword;
 
   try {
     const checkUserAccount = await checkThatAccountWithEnteredEmailExists(
@@ -341,10 +276,14 @@ const accountToDelete = async (req, res) => {
       if (takeUserData !== false) {
         const match = await bcrypt.compare(userPassword, takeUserData.password);
         if (match) {
-          await Model.Users.update(
+          const accountToDelete = await Model.Users.update(
             { accountToBeDeleted: true },
-            { where: { id: takeUserData.id, password: userPassword } }
+            { where: { id: takeUserData.id, password: takeUserData.password } }
           );
+          if (!accountToDelete.includes(1)) {
+            response.messages.error.push("Nie udało się dezaktywować konta!");
+            return res.status(400).send(response);
+          }
         } else {
           response.messages.error.push("Wprowadzone hasło jest nieprawidłowe!");
           return res.status(400).send(response);
