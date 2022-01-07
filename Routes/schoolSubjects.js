@@ -1,6 +1,7 @@
 const express = require("express");
 const { check, validationResult } = require("express-validator");
 const verifyToken = require("../Functions/Others/verifyToken");
+const jwt = require("jsonwebtoken");
 const schoolSubjectsControllers = require("../Controllers/schoolSubjects");
 
 const router = express.Router();
@@ -21,7 +22,18 @@ router.get("/subjects", (req, res) => {
     );
     res.status(403).send(response);
   } else {
-    schoolSubjectsControllers.takesAllSubjects(req, res);
+    jwt.verify(
+      req.token,
+      process.env.S3_SECRETKEY,
+      async (jwtError, authData) => {
+        if (jwtError) {
+          response.messages.error.push("Błąd uwierzytelniania!");
+          return res.status(403).json(response);
+        } else {
+          schoolSubjectsControllers.takesAllSubjects(res, authData);
+        }
+      }
+    );
   }
 });
 
@@ -41,7 +53,18 @@ router.get("/chapters", (req, res) => {
     );
     res.status(403).send(response);
   } else {
-    schoolSubjectsControllers.takesAllChapters(req, res);
+    jwt.verify(
+      req.token,
+      process.env.S3_SECRETKEY,
+      async (jwtError, authData) => {
+        if (jwtError) {
+          response.messages.error.push("Błąd uwierzytelniania!");
+          return res.status(403).json(response);
+        } else {
+          schoolSubjectsControllers.takesAllChapters(res, authData);
+        }
+      }
+    );
   }
 });
 
@@ -61,7 +84,18 @@ router.get("/topics", (req, res) => {
     );
     res.status(403).send(response);
   } else {
-    schoolSubjectsControllers.takesAllTopics(req, res);
+    jwt.verify(
+      req.token,
+      process.env.S3_SECRETKEY,
+      async (jwtError, authData) => {
+        if (jwtError) {
+          response.messages.error.push("Błąd uwierzytelniania!");
+          return res.status(403).json(response);
+        } else {
+          schoolSubjectsControllers.takesAllTopics(res, authData);
+        }
+      }
+    );
   }
 });
 
@@ -129,7 +163,18 @@ router.post(
       );
       res.status(403).send(response);
     } else {
-      schoolSubjectsControllers.createsNewChapter(req, res);
+      jwt.verify(
+        req.token,
+        process.env.S3_SECRETKEY,
+        async (jwtError, authData) => {
+          if (jwtError) {
+            response.messages.error.push("Błąd uwierzytelniania!");
+            return res.status(403).json(response);
+          } else {
+            schoolSubjectsControllers.createsNewChapter(req, res, authData);
+          }
+        }
+      );
     }
   }
 );
@@ -198,7 +243,18 @@ router.post(
       );
       res.status(403).send(response);
     } else {
-      schoolSubjectsControllers.createsNewTopic(req, res);
+      jwt.verify(
+        req.token,
+        process.env.S3_SECRETKEY,
+        async (jwtError, authData) => {
+          if (jwtError) {
+            response.messages.error.push("Błąd uwierzytelniania!");
+            return res.status(403).json(response);
+          } else {
+            schoolSubjectsControllers.createsNewTopic(req, res, authData);
+          }
+        }
+      );
     }
   }
 );
@@ -248,7 +304,18 @@ router.patch(
       );
       res.status(403).send(response);
     } else {
-      schoolSubjectsControllers.removeChapter(req, res);
+      jwt.verify(
+        req.token,
+        process.env.S3_SECRETKEY,
+        async (jwtError, authData) => {
+          if (jwtError) {
+            response.messages.error.push("Błąd uwierzytelniania!");
+            return res.status(403).json(response);
+          } else {
+            schoolSubjectsControllers.removeChapter(req, res, authData);
+          }
+        }
+      );
     }
   }
 );
@@ -298,7 +365,18 @@ router.patch(
       );
       res.status(403).send(response);
     } else {
-      schoolSubjectsControllers.removeTopic(req, res);
+      jwt.verify(
+        req.token,
+        process.env.S3_SECRETKEY,
+        async (jwtError, authData) => {
+          if (jwtError) {
+            response.messages.error.push("Błąd uwierzytelniania!");
+            return res.status(403).json(response);
+          } else {
+            schoolSubjectsControllers.removeTopic(req, res, authData);
+          }
+        }
+      );
     }
   }
 );
