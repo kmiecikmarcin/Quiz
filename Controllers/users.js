@@ -82,7 +82,7 @@ const registration = async (req, res) => {
   }
 
   return res
-    .status(201)
+    .status(200)
     .json(Response.returnMessage("Rejestracja przebiegła pomyślnie!"));
 };
 

@@ -320,7 +320,7 @@ const takeAllUsers = async (res, dataFromAuth) => {
 const assignTeacherPermissions = async (req, res, dataFromAuth) => {
   try {
     if (dataFromAuth.name === process.env.S3_ADMIN_PERMISSIONS) {
-      const findUser = await findUserById(Model.Users, user);
+      const findUser = await findUserById(Model.Users, dataFromAuth.id);
       if (findUser !== false) {
         const findIdOfTeacher = await findIdOfTeacherPermission(
           Model.TypesOfUsersRoles
@@ -330,7 +330,7 @@ const assignTeacherPermissions = async (req, res, dataFromAuth) => {
             await updateUserPermissionToTeacherPermissions(
               Model.Users,
               findIdOfTeacher,
-              user
+              dataFromAuth.id
             );
           if (updatePermission === false) {
             return res
