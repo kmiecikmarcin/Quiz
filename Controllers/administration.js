@@ -15,15 +15,9 @@ const findIdOfTeacherPermission = require("../Functions/Users/findIdOfTeacherPer
 const updateUserPermissionToTeacherPermissions = require("../Functions/Users/updateUserPermissionToTeacherPermissions");
 const takeAllChaptersWchichWereAssignedAsToRemove = require("../Functions/SchoolSubjects/takeAllChaptersWchichWereAssignedAsToRemove");
 const takeAllTopicsWchichWereAssignedAsToRemove = require("../Functions/SchoolSubjects/takeAllTopicsWchichWereAssignedAsToRemove");
+const Response = require("../Class/Response");
 
 const createSchoolSubject = async (req, res, dataFromAuth) => {
-  const response = {
-    messages: {
-      message: [],
-      error: [],
-    },
-  };
-
   const nameOfSubject = req.body.nameOfSchoolSubject;
 
   try {
@@ -38,41 +32,44 @@ const createSchoolSubject = async (req, res, dataFromAuth) => {
           nameOfSubject
         );
         if (newSchoolSubject === false) {
-          response.messages.error.push(
-            "Nie udało się utworzyć nowego przedmiotu szkolnego!"
-          );
-          return res.status(400).json(response);
+          return res
+            .status(400)
+            .json(
+              Response.returnError(
+                "Nie udało się utworzyć nowego przedmiotu szkolnego!"
+              )
+            );
         }
       } else {
-        response.messages.error.push("Przedmiot szkolny już istnieje!");
-        return res.status(400).json(response);
+        return res
+          .status(400)
+          .json(Response.returnError("Przedmiot szkolny już istnieje!"));
       }
     } else {
-      response.messages.error.push(
-        "Nie posiadasz uprawnień, by móc dodać nowy rodział!"
-      );
-      return res.status(400).json(response);
+      return res
+        .status(400)
+        .json(
+          Response.returnError(
+            "Nie posiadasz uprawnień, by móc dodać nowy rodział!"
+          )
+        );
     }
   } catch (err) {
-    console.log(err);
-    response.messages.error.push(
-      "Nie można przeprowadzić procesu dodawania nowego przedmiotu szkolnego!"
-    );
-    return res.status(500).json(response);
+    return res
+      .status(500)
+      .json(
+        Response.returnError(
+          "Nie można przeprowadzić procesu dodawania nowego przedmiotu szkolnego!"
+        )
+      );
   }
 
-  response.messages.message.push("Pomyślnie dodano nowy przedmiot szkolny!");
-  return res.status(200).json(response);
+  return res
+    .status(200)
+    .json(Response.returnMessage("Pomyślnie dodano nowy przedmiot szkolny!"));
 };
 
 const removeSchoolSubject = async (req, res, dataFromAuth) => {
-  const response = {
-    messages: {
-      message: [],
-      error: [],
-    },
-  };
-
   const nameOfSubject = req.body.nameOfSchoolSubject;
 
   try {
@@ -90,40 +87,42 @@ const removeSchoolSubject = async (req, res, dataFromAuth) => {
           checkSchoolSubjectExist
         );
         if (deleteSchoolSubject === false) {
-          response.messages.error.push(
-            "Nie udało się usunąć przedmiotu szkolnego!"
-          );
-          return res.status(400).json(response);
+          return res
+            .status(400)
+            .json(
+              Response.returnError("Nie udało się usunąć przedmiotu szkolnego!")
+            );
         }
       } else {
-        response.messages.error.push("Przedmiot szkolny nie istnieje!");
-        return res.status(400).json(response);
+        return res
+          .status(400)
+          .json(Response.returnError("Przedmiot szkolny nie istnieje!"));
       }
     } else {
-      response.messages.error.push(
-        "Nie posiadasz uprawnień, by móc dodać nowy rodział!"
-      );
-      return res.status(400).json(response);
+      return res
+        .status(400)
+        .json(
+          Response.returnError(
+            "Nie posiadasz uprawnień, by móc dodać nowy rodział!"
+          )
+        );
     }
   } catch {
-    response.messages.message.push(
-      "Nie można przeprowadzić procesu usuwania przedmiotu szkolnego!"
-    );
-    return res.status(500).json(response);
+    return res
+      .status(500)
+      .json(
+        Response.returnError(
+          "Nie można przeprowadzić procesu usuwania przedmiotu szkolnego!"
+        )
+      );
   }
 
-  response.messages.message.push("Pomyślnie usunięto przedmiot szkolny!");
-  return res.status(200).json(response);
+  return res
+    .status(200)
+    .json(Response.returnMessage("Pomyślnie usunięto przedmiot szkolny!"));
 };
 
 const removeChapter = async (req, res, dataFromAuth) => {
-  const response = {
-    messages: {
-      message: [],
-      error: [],
-    },
-  };
-
   const chapter = req.body.nameOfChapter;
 
   try {
@@ -138,40 +137,40 @@ const removeChapter = async (req, res, dataFromAuth) => {
           checkChapter
         );
         if (deleteChapter === false) {
-          response.messages = {
-            error: "Nie udało się usunąć rozdziału!",
-          };
-          res.status(400).json(response);
+          res
+            .status(400)
+            .json(Response.returnError("Nie udało się usunąć rozdziału!"));
         }
       } else {
-        response.messages.error.push("Rozdział nie istnieje!");
-        return res.status(400).json(response);
+        return res
+          .status(400)
+          .json(Response.returnError("Rozdział nie istnieje!"));
       }
     } else {
-      response.messages.error.push(
-        "Nie posiadasz uprawnień, by móc dodać nowy rodział!"
-      );
-      return res.status(400).json(response);
+      return res
+        .status(400)
+        .json(
+          Response.returnError(
+            "Nie posiadasz uprawnień, by móc dodać nowy rodział!"
+          )
+        );
     }
   } catch {
-    response.messages.message.push(
-      "Nie można przeprowadzić procesu usuwania rozdziału!"
-    );
-    return res.status(500).json(response);
+    return res
+      .status(500)
+      .json(
+        Response.returnError(
+          "Nie można przeprowadzić procesu usuwania rozdziału!"
+        )
+      );
   }
 
-  response.messages.message.push("Pomyślnie usunięto rozdział!");
-  return res.status(200).json(response);
+  return res
+    .status(200)
+    .json(Response.returnMessage("Pomyślnie usunięto rozdział!"));
 };
 
 const removeTopic = async (req, res, dataFromAuth) => {
-  const response = {
-    messages: {
-      message: [],
-      error: [],
-    },
-  };
-
   const topic = req.body.nameOfTopic;
 
   try {
@@ -184,39 +183,38 @@ const removeTopic = async (req, res, dataFromAuth) => {
           topic
         );
         if (deleteTopic === false) {
-          response.messages.error.push("Nie udało się usunąć tematu!");
-          return res.status(400).json(response);
+          return res
+            .status(400)
+            .json(Response.returnError("Nie udało się usunąć tematu!"));
         }
       } else {
-        response.messages.error.push("Temat nie istnieje!");
-        return res.status(400).json(response);
+        return res
+          .status(400)
+          .json(Response.returnError("Temat nie istnieje!"));
       }
     } else {
-      response.messages.error.push(
-        "Nie posiadasz uprawnień, by móc dodać nowy rodział!"
-      );
-      return res.status(400).json(response);
+      return res
+        .status(400)
+        .json(
+          Response.returnError(
+            "Nie posiadasz uprawnień, by móc dodać nowy rodział!"
+          )
+        );
     }
   } catch {
-    response.messages.message.push(
-      "Nie można przeprowadzić procesu usuwania tematu!"
-    );
-    return res.status(500).json(response);
+    return res
+      .status(500)
+      .json(
+        Response.returnError("Nie można przeprowadzić procesu usuwania tematu!")
+      );
   }
 
-  response.messages.message.push("Pomyślnie usunięto temat!");
-  return res.status(200).json(response);
+  return res
+    .status(200)
+    .json(Response.returnMessage("Pomyślnie usunięto temat!"));
 };
 
 const takeAllUsersToRemove = async (res, dataFromAuth) => {
-  const response = {
-    messages: {
-      message: [],
-      error: [],
-      users: [],
-    },
-  };
-
   try {
     if (dataFromAuth.name === process.env.S3_ADMIN_PERMISSIONS) {
       const takeListOfUsers = await takeListOfUsersWhichAreToRemove(
@@ -225,30 +223,25 @@ const takeAllUsersToRemove = async (res, dataFromAuth) => {
       if (takeListOfUsers !== false) {
         listOfUsersToRemove = takeListOfUsers;
       } else {
-        response.messages.message.push("Lista użytkowników jest pusta!");
-        return res.status(404).json(response);
+        return res
+          .status(404)
+          .json(Response.returnError("Lista użytkowników jest pusta!"));
       }
     } else {
-      response.messages.message.push("Nie posiadasz uprawnień!");
-      return res.status(400).json(response);
+      return res
+        .status(400)
+        .json(Response.returnError("Nie posiadasz uprawnień!"));
     }
   } catch {
-    response.messages.message.push("Nie można pobrać listy użytkowników!");
-    return res.status(500).json(response);
+    return res
+      .status(500)
+      .json(Response.returnError("Nie można pobrać listy użytkowników!"));
   }
 
-  response.messages.users.push(listOfUsersToRemove);
-  return res.status(200).json(response);
+  return res.status(200).json(Response.returnUsers(listOfUsersToRemove));
 };
 
 const daleteUserAccount = async (req, res, dataFromAuth) => {
-  const response = {
-    messages: {
-      message: [],
-      error: [],
-    },
-  };
-
   const user = req.body.userId;
 
   try {
@@ -257,39 +250,42 @@ const daleteUserAccount = async (req, res, dataFromAuth) => {
       if (findUser !== false) {
         const deleteUser = await deleteUserById(Model.Users, user);
         if (deleteUser === false) {
-          response.messages.error.push("Nie udało się usunąć użytkownika!");
-          return res.status(400).send(response);
+          return res
+            .status(400)
+            .send(Response.returnError("Nie udało się usunąć użytkownika!"));
         }
       } else {
-        response.messages.error.push("Wybrane konto użytkownika nie istnieje!");
-        return res.status(400).send(response);
+        return res
+          .status(400)
+          .send(
+            Response.returnError("Wybrane konto użytkownika nie istnieje!")
+          );
       }
     } else {
-      response.messages.error.push(
-        "Nie posiadasz uprawnień, aby móc usunąć użytkownika!"
-      );
-      return res.status(400).send(response);
+      return res
+        .status(400)
+        .send(
+          Response.returnError(
+            "Nie posiadasz uprawnień, aby móc usunąć użytkownika!"
+          )
+        );
     }
   } catch {
-    response.messages.error.push(
-      "Nie udało się przeprowadzić procesu usuwania konta użytkownika!"
-    );
-    return res.status(500).send(response);
+    return res
+      .status(500)
+      .send(
+        Response.returnError(
+          "Nie udało się przeprowadzić procesu usuwania konta użytkownika!"
+        )
+      );
   }
 
-  response.messages.message.push("Pomyślnie usunięto konto użytkownika!");
-  return res.status(200).json(response);
+  return res
+    .status(200)
+    .json(Response.returnMessage("Pomyślnie usunięto konto użytkownika!"));
 };
 
 const takeAllUsers = async (res, dataFromAuth) => {
-  const response = {
-    messages: {
-      message: [],
-      error: [],
-      users: [],
-    },
-  };
-
   try {
     if (dataFromAuth.name === process.env.S3_ADMIN_PERMISSIONS) {
       const takeAdminRoleId = await findAdminRoleId(Model.TypesOfUsersRoles);
@@ -298,34 +294,30 @@ const takeAllUsers = async (res, dataFromAuth) => {
         if (takeUsers !== false) {
           listOfUsers = takeUsers;
         } else {
-          response.messages.message.push("Lista użytkowników jest pusta!");
-          return res.status(404).json(response);
+          return res
+            .status(404)
+            .json(Response.returnError("Lista użytkowników jest pusta!"));
         }
       } else {
-        response.messages.message.push("Nie odnaleziono roli użytkownika!");
-        return res.status(400).json(response);
+        return res
+          .status(400)
+          .json(Response.returnError("Nie odnaleziono roli użytkownika!"));
       }
     } else {
-      response.messages.message.push("Nie posiadasz uprawnień!");
-      return res.status(400).json(response);
+      return res
+        .status(400)
+        .json(Response.returnError("Nie posiadasz uprawnień!"));
     }
   } catch {
-    response.messages.message.push("Nie można pobrać listy użytkowników!");
-    return res.status(500).json(response);
+    return res
+      .status(500)
+      .json(Response.returnError("Nie można pobrać listy użytkowników!"));
   }
 
-  response.messages.users.push(listOfUsers);
-  return res.status(200).json(response);
+  return res.status(200).json(Response.returnUsers(listOfUsers));
 };
 
 const assignTeacherPermissions = async (req, res, dataFromAuth) => {
-  const response = {
-    messages: {
-      message: [],
-      error: [],
-    },
-  };
-
   try {
     if (dataFromAuth.name === process.env.S3_ADMIN_PERMISSIONS) {
       const findUser = await findUserById(Model.Users, user);
@@ -341,47 +333,51 @@ const assignTeacherPermissions = async (req, res, dataFromAuth) => {
               user
             );
           if (updatePermission === false) {
-            response.messages.message.push(
-              "Nie udało się zmienić uprawnień wybranemu użytkownikowi!"
-            );
-            return res.status(400).json(response);
+            return res
+              .status(400)
+              .json(
+                Response.returnError(
+                  "Nie udało się zmienić uprawnień wybranemu użytkownikowi!"
+                )
+              );
           }
         } else {
-          response.messages.message.push(
-            "Rola użytkownika - Nauczyciel - nie istnieje!"
-          );
-          return res.status(400).json(response);
+          return res
+            .status(400)
+            .json(
+              Response.returnError(
+                "Rola użytkownika - Nauczyciel - nie istnieje!"
+              )
+            );
         }
       } else {
-        response.messages.message.push("Użytkownik nie istnieje!");
-        return res.status(400).json(response);
+        return res
+          .status(400)
+          .json(Response.returnError("Użytkownik nie istnieje!"));
       }
     } else {
-      response.messages.message.push("Nie posiadasz uprawnień!");
-      return res.status(400).json(response);
+      return res
+        .status(400)
+        .json(Response.returnError("Nie posiadasz uprawnień!"));
     }
   } catch {
-    response.messages.message.push(
-      "Nie można nadać uprawnień nauczyciela wybranemu użytkownikowi!"
-    );
-    return res.status(500).json(response);
+    return res
+      .status(500)
+      .json(
+        Response.returnError(
+          "Nie można nadać uprawnień nauczyciela wybranemu użytkownikowi!"
+        )
+      );
   }
 
-  response.messages.message.push(
-    "Pomyślnie zmieniono uprawnienia dla użytkownika!"
-  );
-  return res.status(200).json(response);
+  return res
+    .status(200)
+    .json(
+      Response.returnMessage("Pomyślnie zmieniono uprawnienia dla użytkownika!")
+    );
 };
 
 const takeAllChaptersWhichAreToRemove = async (res, dataFromAuth) => {
-  const response = {
-    messages: {
-      message: [],
-      error: [],
-      chapters: [],
-    },
-  };
-
   try {
     if (dataFromAuth.name === process.env.S3_ADMIN_PERMISSIONS) {
       const takeChapters = await takeAllChaptersWchichWereAssignedAsToRemove(
@@ -390,31 +386,25 @@ const takeAllChaptersWhichAreToRemove = async (res, dataFromAuth) => {
       if (takeChapters !== false) {
         listOfChapters = takeChapters;
       } else {
-        response.messages.error.push("Lista rozdziałów jest pusta!");
-        return res.status(404).json(response);
+        return res
+          .status(404)
+          .json(Response.returnError("Lista rozdziałów jest pusta!"));
       }
     } else {
-      response.messages.error.push("Nie posiadasz uprawnień!");
-      return res.status(400).json(response);
+      return res
+        .status(400)
+        .json(Response.returnError("Nie posiadasz uprawnień!"));
     }
   } catch {
-    response.messages.error.push("Nie można pobrać listy rozdziałów!");
-    return res.status(500).json(response);
+    return res
+      .status(500)
+      .json(Response.returnError("Nie można pobrać listy rozdziałów!"));
   }
 
-  response.messages.chapters.push(listOfChapters);
-  return res.status(200).json(response);
+  return res.status(200).json(Response.returnChapters(listOfChapters));
 };
 
 const takeAllTopicsWhichAreToRemove = async (res, dataFromAuth) => {
-  const response = {
-    messages: {
-      message: [],
-      error: [],
-      topics: [],
-    },
-  };
-
   try {
     if (dataFromAuth.name === process.env.S3_ADMIN_PERMISSIONS) {
       const takeTopics = await takeAllTopicsWchichWereAssignedAsToRemove(
@@ -423,20 +413,22 @@ const takeAllTopicsWhichAreToRemove = async (res, dataFromAuth) => {
       if (takeTopics !== false) {
         listOfTopics = takeTopics;
       } else {
-        response.messages.error.push("Lista tematów jest pusta!");
-        return res.status(404).json(response);
+        return res
+          .status(404)
+          .json(Response.returnError("Lista tematów jest pusta!"));
       }
     } else {
-      response.messages.error.push("Nie posiadasz uprawnień!");
-      return res.status(400).json(response);
+      return res
+        .status(400)
+        .json(Response.returnError("Nie posiadasz uprawnień!"));
     }
   } catch {
-    response.messages.error.push("Nie można pobrać listy tematów!");
-    return res.status(500).json(response);
+    return res
+      .status(500)
+      .json(Response.returnError("Nie można pobrać listy tematów!"));
   }
 
-  response.messages.topics.push(listOfTopics);
-  return res.status(200).json(response);
+  return res.status(200).json(Response.returnTopics(listOfTopics));
 };
 
 exports.createSchoolSubject = createSchoolSubject;

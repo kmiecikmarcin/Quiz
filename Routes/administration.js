@@ -4,6 +4,7 @@ const verifyToken = require("../Functions/Others/verifyToken");
 const administrationsControllers = require("../Controllers/administration");
 const jwt = require("jsonwebtoken");
 const router = express.Router();
+const Response = require("../Class/Response");
 
 router.post(
   "/school-subject",
@@ -29,34 +30,31 @@ router.post(
       }),
   ],
   (req, res) => {
-    const response = {
-      messages: {
-        message: [],
-        error: [],
-      },
-    };
-
     const error = validationResult(req);
     const validationHeaderResults = verifyToken(req);
 
     if (!error.isEmpty()) {
-      response.validationErrors = error
+      const response = error
         .array({ onlyFirstError: true })
         .map((err) => ({ [err.param]: err.msg }));
-      res.status(400).json(response);
+      res.status(400).json(Response.returnValidationError(response));
     } else if (validationHeaderResults === false) {
-      response.messages.error.push(
-        "Nie udało się przeprowadzić procesu uwierzytelniania!"
-      );
-      res.status(403).send(response);
+      res
+        .status(403)
+        .send(
+          Response.returnError(
+            "Nie udało się przeprowadzić procesu uwierzytelniania!"
+          )
+        );
     } else {
       jwt.verify(
         req.token,
         process.env.S3_SECRETKEY,
         async (jwtError, authData) => {
           if (jwtError) {
-            response.messages.error.push("Błąd uwierzytelniania!");
-            return res.status(403).json(response);
+            return res
+              .status(403)
+              .json(Response.returnError("Błąd uwierzytelniania!"));
           } else {
             administrationsControllers.createSchoolSubject(req, res, authData);
           }
@@ -77,34 +75,31 @@ router.delete(
       .isLength({ max: 24 }),
   ],
   (req, res) => {
-    const response = {
-      messages: {
-        message: [],
-        error: [],
-      },
-    };
-
     const error = validationResult(req);
     const validationHeaderResults = verifyToken(req);
 
     if (!error.isEmpty()) {
-      response.validationErrors = error
+      const response = error
         .array({ onlyFirstError: true })
         .map((err) => ({ [err.param]: err.msg }));
-      res.status(400).json(response);
+      res.status(400).json(Response.returnValidationError(response));
     } else if (validationHeaderResults === false) {
-      response.messages.error.push(
-        "Nie udało się przeprowadzić procesu uwierzytelniania!"
-      );
-      res.status(403).send(response);
+      res
+        .status(403)
+        .send(
+          Response.returnError(
+            "Nie udało się przeprowadzić procesu uwierzytelniania!"
+          )
+        );
     } else {
       jwt.verify(
         req.token,
         process.env.S3_SECRETKEY,
         async (jwtError, authData) => {
           if (jwtError) {
-            response.messages.error.push("Błąd uwierzytelniania!");
-            return res.status(403).json(response);
+            return res
+              .status(403)
+              .json(Response.returnError("Błąd uwierzytelniania!"));
           } else {
             administrationsControllers.removeSchoolSubject(req, res, authData);
           }
@@ -125,34 +120,31 @@ router.delete(
       .isLength({ max: 64 }),
   ],
   (req, res) => {
-    const response = {
-      messages: {
-        message: [],
-        error: [],
-      },
-    };
-
     const error = validationResult(req);
     const validationHeaderResults = verifyToken(req);
 
     if (!error.isEmpty()) {
-      response.validationErrors = error
+      const response = error
         .array({ onlyFirstError: true })
         .map((err) => ({ [err.param]: err.msg }));
-      res.status(400).json(response);
+      res.status(400).json(Response.returnValidationError(response));
     } else if (validationHeaderResults === false) {
-      response.messages.error.push(
-        "Nie udało się przeprowadzić procesu uwierzytelniania!"
-      );
-      res.status(403).send(response);
+      res
+        .status(403)
+        .send(
+          Response.returnError(
+            "Nie udało się przeprowadzić procesu uwierzytelniania!"
+          )
+        );
     } else {
       jwt.verify(
         req.token,
         process.env.S3_SECRETKEY,
         async (jwtError, authData) => {
           if (jwtError) {
-            response.messages.error.push("Błąd uwierzytelniania!");
-            return res.status(403).json(response);
+            return res
+              .status(403)
+              .json(Response.returnError("Błąd uwierzytelniania!"));
           } else {
             administrationsControllers.removeChapter(req, res, authData);
           }
@@ -174,34 +166,31 @@ router.delete(
       .withMessage("Wprowadzony nazwa jest za długa!"),
   ],
   (req, res) => {
-    const response = {
-      messages: {
-        message: [],
-        error: [],
-      },
-    };
-
     const error = validationResult(req);
     const validationHeaderResults = verifyToken(req);
 
     if (!error.isEmpty()) {
-      response.validationErrors = error
+      const response = error
         .array({ onlyFirstError: true })
         .map((err) => ({ [err.param]: err.msg }));
-      res.status(400).json(response);
+      res.status(400).json(Response.returnValidationError(response));
     } else if (validationHeaderResults === false) {
-      response.messages.error.push(
-        "Nie udało się przeprowadzić procesu uwierzytelniania!"
-      );
-      res.status(403).send(response);
+      res
+        .status(403)
+        .send(
+          Response.returnError(
+            "Nie udało się przeprowadzić procesu uwierzytelniania!"
+          )
+        );
     } else {
       jwt.verify(
         req.token,
         process.env.S3_SECRETKEY,
         async (jwtError, authData) => {
           if (jwtError) {
-            response.messages.error.push("Błąd uwierzytelniania!");
-            return res.status(403).json(response);
+            return res
+              .status(403)
+              .json(Response.returnError("Błąd uwierzytelniania!"));
           } else {
             administrationsControllers.removeTopic(req, res, authData);
           }
@@ -212,28 +201,25 @@ router.delete(
 );
 
 router.get("/users-to-remove", (req, res) => {
-  const response = {
-    messages: {
-      message: [],
-      error: [],
-    },
-  };
-
   const headerValidationResults = verifyToken(req);
 
   if (headerValidationResults === false) {
-    response.messages.error.push(
-      "Nie udało się przeprowadzić procesu uwierzytelniania!"
-    );
-    res.status(403).send(response);
+    res
+      .status(403)
+      .send(
+        Response.returnError(
+          "Nie udało się przeprowadzić procesu uwierzytelniania!"
+        )
+      );
   } else {
     jwt.verify(
       req.token,
       process.env.S3_SECRETKEY,
       async (jwtError, authData) => {
         if (jwtError) {
-          response.messages.error.push("Błąd uwierzytelniania!");
-          return res.status(403).json(response);
+          return res
+            .status(403)
+            .json(Response.returnError("Błąd uwierzytelniania!"));
         } else {
           administrationsControllers.takeAllUsersToRemove(res, authData);
         }
@@ -252,34 +238,31 @@ router.delete(
       .withMessage("Niepoprawny format id użytkownika"),
   ],
   (req, res) => {
-    const response = {
-      messages: {
-        message: [],
-        error: [],
-      },
-    };
-
     const error = validationResult(req);
     const validationHeaderResults = verifyToken(req);
 
     if (!error.isEmpty()) {
-      response.validationErrors = error
+      const response = error
         .array({ onlyFirstError: true })
         .map((err) => ({ [err.param]: err.msg }));
-      res.status(400).json(response);
+      res.status(400).json(Response.returnValidationError(response));
     } else if (validationHeaderResults === false) {
-      response.messages.error.push(
-        "Nie udało się przeprowadzić procesu uwierzytelniania!"
-      );
-      res.status(403).send(response);
+      res
+        .status(403)
+        .send(
+          Response.returnError(
+            "Nie udało się przeprowadzić procesu uwierzytelniania!"
+          )
+        );
     } else {
       jwt.verify(
         req.token,
         process.env.S3_SECRETKEY,
         async (jwtError, authData) => {
           if (jwtError) {
-            response.messages.error.push("Błąd uwierzytelniania!");
-            return res.status(403).json(response);
+            return res
+              .status(403)
+              .json(Response.returnError("Błąd uwierzytelniania!"));
           } else {
             administrationsControllers.daleteUserAccount(req, res, authData);
           }
@@ -290,28 +273,25 @@ router.delete(
 );
 
 router.get("/users", (req, res) => {
-  const response = {
-    messages: {
-      message: [],
-      error: [],
-    },
-  };
-
   const headerValidationResults = verifyToken(req);
 
   if (headerValidationResults === false) {
-    response.messages.error.push(
-      "Nie udało się przeprowadzić procesu uwierzytelniania!"
-    );
-    res.status(403).send(response);
+    res
+      .status(403)
+      .send(
+        Response.returnError(
+          "Nie udało się przeprowadzić procesu uwierzytelniania!"
+        )
+      );
   } else {
     jwt.verify(
       req.token,
       process.env.S3_SECRETKEY,
       async (jwtError, authData) => {
         if (jwtError) {
-          response.messages.error.push("Błąd uwierzytelniania!");
-          return res.status(403).json(response);
+          return res
+            .status(403)
+            .json(Response.returnError("Błąd uwierzytelniania!"));
         } else {
           administrationsControllers.takeAllUsers(res, authData);
         }
@@ -330,34 +310,31 @@ router.patch(
       .withMessage("Niepoprawny format id użytkownika"),
   ],
   (req, res) => {
-    const response = {
-      messages: {
-        message: [],
-        error: [],
-      },
-    };
-
     const error = validationResult(req);
     const validationHeaderResults = verifyToken(req);
 
     if (!error.isEmpty()) {
-      response.validationErrors = error
+      const response = error
         .array({ onlyFirstError: true })
         .map((err) => ({ [err.param]: err.msg }));
-      res.status(400).json(response);
+      res.status(400).json(Response.returnValidationError(response));
     } else if (validationHeaderResults === false) {
-      response.messages.error.push(
-        "Nie udało się przeprowadzić procesu uwierzytelniania!"
-      );
-      res.status(403).send(response);
+      res
+        .status(403)
+        .send(
+          Response.returnError(
+            "Nie udało się przeprowadzić procesu uwierzytelniania!"
+          )
+        );
     } else {
       jwt.verify(
         req.token,
         process.env.S3_SECRETKEY,
         async (jwtError, authData) => {
           if (jwtError) {
-            response.messages.error.push("Błąd uwierzytelniania!");
-            return res.status(403).json(response);
+            return res
+              .status(403)
+              .json(Response.returnError("Błąd uwierzytelniania!"));
           } else {
             administrationsControllers.assignTeacherPermissions(
               req,
@@ -372,26 +349,21 @@ router.patch(
 );
 
 router.get("/chapters-to-remove", (req, res) => {
-  const response = {
-    messages: {
-      message: [],
-      error: [],
-    },
-  };
-
   const headerValidationResults = verifyToken(req);
 
   if (headerValidationResults === false) {
-    response.messages.error.push("Błędna wartość uwierzytelniania!");
-    res.status(400).send(response);
+    res
+      .status(400)
+      .send(Response.returnError("Błędna wartość uwierzytelniania!"));
   } else {
     jwt.verify(
       req.token,
       process.env.S3_SECRETKEY,
       async (jwtError, authData) => {
         if (jwtError) {
-          response.messages.error.push("Błąd uwierzytelniania!");
-          return res.status(403).json(response);
+          return res
+            .status(403)
+            .json(Response.returnError("Błąd uwierzytelniania!"));
         } else {
           administrationsControllers.takeAllChaptersWhichAreToRemove(
             res,
@@ -404,26 +376,21 @@ router.get("/chapters-to-remove", (req, res) => {
 });
 
 router.get("/topics-to-remove", (req, res) => {
-  const response = {
-    messages: {
-      message: [],
-      error: [],
-    },
-  };
-
   const headerValidationResults = verifyToken(req);
 
   if (headerValidationResults === false) {
-    response.messages.error.push("Błędna wartość uwierzytelniania!");
-    res.status(400).send(response);
+    res
+      .status(400)
+      .send(Response.returnError("Błędna wartość uwierzytelniania!"));
   } else {
     jwt.verify(
       req.token,
       process.env.S3_SECRETKEY,
       async (jwtError, authData) => {
         if (jwtError) {
-          response.messages.error.push("Błąd uwierzytelniania!");
-          return res.status(403).json(response);
+          return res
+            .status(403)
+            .json(Response.returnError("Błąd uwierzytelniania!"));
         } else {
           administrationsControllers.takeAllTopicsWhichAreToRemove(
             res,

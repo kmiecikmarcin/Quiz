@@ -6,6 +6,7 @@ const checkPasswordAboutOneSpecialKey = require("../Functions/Others/checkPasswo
 const checkEnteredGender = require("../Functions/Others/checkEnteredGender");
 const checkUserVerification = require("../Functions/Others/checkUserVerification");
 const verifyToken = require("../Functions/Others/verifyToken");
+const Response = require("../Class/Response");
 
 const router = express.Router();
 
@@ -90,15 +91,12 @@ router.post(
   ],
   (req, res) => {
     const error = validationResult(req);
-    const response = {
-      validationErrors: [],
-    };
 
     if (!error.isEmpty()) {
-      response.validationErrors = error
+      const response = error
         .array({ onlyFirstError: true })
         .map((err) => ({ [err.param]: err.msg }));
-      res.status(400).json(response);
+      res.status(400).json(Response.returnValidationError(response));
     } else {
       userControllers.registration(req, res);
     }
@@ -126,15 +124,12 @@ router.post(
   ],
   (req, res) => {
     const error = validationResult(req);
-    const response = {
-      validationErrors: [],
-    };
 
     if (!error.isEmpty()) {
-      response.validationErrors = error
+      const response = error
         .array({ onlyFirstError: true })
         .map((err) => ({ [err.param]: err.msg }));
-      res.status(400).json(response);
+      res.status(400).json(Response.returnValidationError(response));
     } else {
       userControllers.login(req, res);
     }
@@ -161,31 +156,31 @@ router.patch(
       .withMessage("Hasło jest za długie!"),
   ],
   (req, res) => {
-    const response = {
-      validationErrors: [],
-    };
-
     const error = validationResult(req);
     const validationHeaderResults = verifyToken(req);
 
     if (!error.isEmpty()) {
-      response.validationErrors = error
+      const response = error
         .array({ onlyFirstError: true })
         .map((err) => ({ [err.param]: err.msg }));
-      res.status(400).json(response);
+      res.status(400).json(Response.returnValidationError(response));
     } else if (validationHeaderResults === false) {
-      response.messages.error.push(
-        "Nie udało się przeprowadzić procesu uwierzytelniania!"
-      );
-      res.status(403).send(response);
+      res
+        .status(403)
+        .send(
+          Response.returnError(
+            "Nie udało się przeprowadzić procesu uwierzytelniania!"
+          )
+        );
     } else {
       jwt.verify(
         req.token,
         process.env.S3_SECRETKEY,
         async (jwtError, authData) => {
           if (jwtError) {
-            response.messages.error.push("Błąd uwierzytelniania!");
-            return res.status(403).json(response);
+            return res
+              .status(403)
+              .json(Response.returnError("Błąd uwierzytelniania!"));
           } else {
             userControllers.email(req, res, authData);
           }
@@ -233,23 +228,27 @@ router.patch(
     const validationHeaderResults = verifyToken(req);
 
     if (!error.isEmpty()) {
-      response.validationErrors = error
+      const response = error
         .array({ onlyFirstError: true })
         .map((err) => ({ [err.param]: err.msg }));
-      res.status(400).json(response);
+      res.status(400).json(Response.returnValidationError(response));
     } else if (validationHeaderResults === false) {
-      response.messages.error.push(
-        "Nie udało się przeprowadzić procesu uwierzytelniania!"
-      );
-      res.status(403).send(response);
+      res
+        .status(403)
+        .send(
+          Response.returnError(
+            "Nie udało się przeprowadzić procesu uwierzytelniania!"
+          )
+        );
     } else {
       jwt.verify(
         req.token,
         process.env.S3_SECRETKEY,
         async (jwtError, authData) => {
           if (jwtError) {
-            response.messages.error.push("Błąd uwierzytelniania!");
-            return res.status(403).json(response);
+            return res
+              .status(403)
+              .json(Response.returnError("Błąd uwierzytelniania!"));
           } else {
             userControllers.password(req, res, authData);
           }
@@ -282,32 +281,31 @@ router.patch(
       }),
   ],
   (req, res) => {
-    const response = {
-      messages: {},
-      validationErrors: [],
-    };
-
     const error = validationResult(req);
     const validationHeaderResults = verifyToken(req);
 
     if (!error.isEmpty()) {
-      response.validationErrors = error
+      const response = error
         .array({ onlyFirstError: true })
         .map((err) => ({ [err.param]: err.msg }));
-      res.status(400).json(response);
+      res.status(400).json(Response.returnValidationError(response));
     } else if (validationHeaderResults === false) {
-      response.messages.error.push(
-        "Nie udało się przeprowadzić procesu uwierzytelniania!"
-      );
-      res.status(403).send(response);
+      res
+        .status(403)
+        .send(
+          Response.returnError(
+            "Nie udało się przeprowadzić procesu uwierzytelniania!"
+          )
+        );
     } else {
       jwt.verify(
         req.token,
         process.env.S3_SECRETKEY,
         async (jwtError, authData) => {
           if (jwtError) {
-            response.messages.error.push("Błąd uwierzytelniania!");
-            return res.status(403).json(response);
+            return res
+              .status(403)
+              .json(Response.returnError("Błąd uwierzytelniania!"));
           } else {
             userControllers.accountToDelete(req, res, authData);
           }
