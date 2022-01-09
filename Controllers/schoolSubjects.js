@@ -292,7 +292,7 @@ const removeChapter = async (req, res, dataFromAuth) => {
             .status(400)
             .json(
               Response.returnError(
-                "Rozdział o wprowadzonej nazwie już istnieje!"
+                "Rozdział posiada przypisany do siebie temat!"
               )
             );
         }
