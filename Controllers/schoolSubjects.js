@@ -6,16 +6,9 @@ const checkExistsOfSubject = require("../Functions/SchoolSubjects/checkExistsOfS
 const checkExistsOfChapter = require("../Functions/SchoolSubjects/checkExistsOfChapter");
 const checkExistsOfTopic = require("../Functions/SchoolSubjects/checkExistsOfTopic");
 const checkThatChapterIsAssignToTopic = require("../Functions/SchoolSubjects/checkThatChapterIsAssignToTopic");
+const Response = require("../Class/Response");
 
 const takesAllSubjects = async (res, dataFromAuth) => {
-  const response = {
-    messages: {
-      message: [],
-      error: [],
-      schoolSubjects: [],
-    },
-  };
-
   let listOfSchoolSubjects;
 
   try {
@@ -30,33 +23,31 @@ const takesAllSubjects = async (res, dataFromAuth) => {
       if (takeListOfSubjects !== false) {
         listOfSchoolSubjects = takeListOfSubjects;
       } else {
-        response.messages.error.push("Brak przedmiotów!");
-        return res.status(404).send(response);
+        return res
+          .status(404)
+          .send(Response.returnError("Brak przedmiotów szkolnych!"));
       }
     } else {
-      response.messages.error.push("Użytkownik nie istnieje!");
-      return res.status(400).send(response);
+      return res
+        .status(400)
+        .send(Response.returnError("Użytkownik nie istnieje!"));
     }
   } catch (err) {
-    response.messages.error.push(
-      "Coś poszło nie tak - nie udało się pobrać listy przedmiotów szkolnych!"
-    );
-    return res.status(500).send(response);
+    return res
+      .status(500)
+      .send(
+        Response.returnError(
+          "Coś poszło nie tak - nie udało się pobrać listy przedmiotów szkolnych!"
+        )
+      );
   }
 
-  response.messages.schoolSubjects.push(listOfSchoolSubjects);
-  return res.status(200).json(response);
+  return res
+    .status(200)
+    .json(Response.returnSchoolSubjects(listOfSchoolSubjects));
 };
 
 const takesAllChapters = async (res, dataFromAuth) => {
-  const response = {
-    messages: {
-      message: [],
-      error: [],
-      chapters: [],
-    },
-  };
-
   let listOfChapters;
 
   try {
@@ -71,33 +62,27 @@ const takesAllChapters = async (res, dataFromAuth) => {
       if (takeListOfChapters !== false) {
         listOfChapters = takeListOfChapters;
       } else {
-        response.messages.error.push("Brak rodziałów!");
-        return res.status(404).send(response);
+        return res.status(404).send(Response.returnError("Brak rodziałów!"));
       }
     } else {
-      response.messages.error.push("Użytkownik nie istnieje!");
-      return res.status(400).send(response);
+      return res
+        .status(400)
+        .send(Response.returnError("Użytkownik nie istnieje!"));
     }
   } catch (err) {
-    response.messages.error.push(
-      "Coś poszło nie tak - nie udało się pobrać listy rozdziałów!"
-    );
-    return res.status(500).send(response);
+    return res
+      .status(500)
+      .send(
+        Response.returnError(
+          "Coś poszło nie tak - nie udało się pobrać listy rozdziałów!"
+        )
+      );
   }
 
-  response.messages.chapters.push(listOfChapters);
-  return res.status(200).json(response);
+  return res.status(200).json(Response.returnChapters(listOfChapters));
 };
 
 const takesAllTopics = async (res, dataFromAuth) => {
-  const response = {
-    messages: {
-      message: [],
-      error: [],
-      topics: [],
-    },
-  };
-
   let listOfTopics;
 
   try {
@@ -112,32 +97,27 @@ const takesAllTopics = async (res, dataFromAuth) => {
       if (takeListOfTopics !== false) {
         listOfTopics = takeListOfTopics;
       } else {
-        response.messages.error.push("Brak tematów!");
-        return res.status(404).send(response);
+        return res.status(404).send(Response.returnError("Brak tematów!"));
       }
     } else {
-      response.messages.error.push("Użytkownik nie istnieje!");
-      return res.status(400).send(response);
+      return res
+        .status(400)
+        .send(Response.returnError("Użytkownik nie istnieje!"));
     }
   } catch (err) {
-    response.messages.error.push(
-      "Coś poszło nie tak - nie udało się pobrać listy tematów!"
-    );
-    return res.status(500).send(response);
+    return res
+      .status(500)
+      .send(
+        Response.returnError(
+          "Coś poszło nie tak - nie udało się pobrać listy tematów!"
+        )
+      );
   }
 
-  response.messages.topics.push(listOfTopics);
-  return res.status(200).json(response);
+  return res.status(200).json(Response.returnTopics(listOfTopics));
 };
 
 const createsNewChapter = async (req, res, dataFromAuth) => {
-  const response = {
-    messages: {
-      message: [],
-      error: [],
-    },
-  };
-
   const { nameOfSubject, nameOfChapter } = req.body;
 
   try {
@@ -160,46 +140,55 @@ const createsNewChapter = async (req, res, dataFromAuth) => {
             SchoolSubjectId: resultAboutSubjectExist,
           });
           if (resultAboutCreateNewChapter === null) {
-            response.messages.error.push(
-              "Nie udało się dodać nowego rodziału! Sprawdź wprowadzone dane!"
-            );
-            return res.status(400).json(response);
+            return res
+              .status(400)
+              .json(
+                Response.returnError(
+                  "Nie udało się dodać nowego rodziału! Sprawdź wprowadzone dane!"
+                )
+              );
           }
         } else {
-          response.messages.error.push(
-            "Rozdział o wprowadzonej nazwie już istnieje!"
-          );
-          return res.status(400).json(response);
+          return res
+            .status(400)
+            .json(
+              Response.returnError(
+                "Rozdział o wprowadzonej nazwie już istnieje!"
+              )
+            );
         }
       } else {
-        response.messages.error.push("Wybrany przedmiot szkolny nie istnieje!");
-        return res.status(404).json(response);
+        return res
+          .status(404)
+          .json(
+            Response.returnError("Wybrany przedmiot szkolny nie istnieje!")
+          );
       }
     } else {
-      response.messages.error.push(
-        "Nie posiadasz uprawnień, by móc dodać nowy rodział!"
-      );
-      return res.status(400).json(response);
+      return res
+        .status(400)
+        .json(
+          Response.returnError(
+            "Nie posiadasz uprawnień, by móc dodać nowy rodział!"
+          )
+        );
     }
   } catch (err) {
-    response.messages.message.push(
-      "Nie można przeprowadzić procesu dodawania nowego rozdziału!"
-    );
-    return res.status(500).json(response);
+    return res
+      .status(500)
+      .json(
+        Response.returnError(
+          "Nie można przeprowadzić procesu dodawania nowego rozdziału!"
+        )
+      );
   }
 
-  response.messages.message.push("Pomyślnie dodano nowy rozdział!");
-  return res.status(200).json(response);
+  return res
+    .status(200)
+    .json(Response.returnMessage("Pomyślnie dodano nowy rozdział!"));
 };
 
 const createsNewTopic = async (req, res, dataFromAuth) => {
-  const response = {
-    messages: {
-      message: [],
-      error: [],
-    },
-  };
-
   const { nameOfChapter, nameOfTopic } = req.body;
 
   try {
@@ -222,46 +211,51 @@ const createsNewTopic = async (req, res, dataFromAuth) => {
             ChapterId: resultAboutChapterExist,
           });
           if (resultAboutCreateNewTopic === null) {
-            response.messages.error.push(
-              "Nie udało się dodać nowego tematu! Sprawdź wprowadzone dane!"
-            );
-            return res.status(400).json(response);
+            return res
+              .status(400)
+              .json(
+                Response.returnError(
+                  "Nie udało się dodać nowego tematu! Sprawdź wprowadzone dane!"
+                )
+              );
           }
         } else {
-          response.messages.error.push(
-            "Temat o wprowadzonej nazwie już istnieje!"
-          );
-          return res.status(400).json(response);
+          return res
+            .status(400)
+            .json(
+              Response.returnError("Temat o wprowadzonej nazwie już istnieje!")
+            );
         }
       } else {
-        response.messages.error.push("Wybrany rozdział nie istnieje!");
-        return res.status(404).json(response);
+        return res
+          .status(404)
+          .json(Response.returnError("Wybrany rozdział nie istnieje!"));
       }
     } else {
-      response.messages.error.push(
-        "Nie posiadasz uprawnień, by móc dodać nowy temat!"
-      );
-      return res.status(400).json(response);
+      return res
+        .status(400)
+        .json(
+          Response.returnError(
+            "Nie posiadasz uprawnień, by móc dodać nowy temat!"
+          )
+        );
     }
   } catch (err) {
-    response.messages.message.push(
-      "Nie można przeprowadzić procesu dodawania nowego tematu!"
-    );
-    return res.status(500).json(response);
+    return res
+      .status(500)
+      .json(
+        Response.returnError(
+          "Nie można przeprowadzić procesu dodawania nowego tematu!"
+        )
+      );
   }
 
-  response.messages.message.push("Pomyślnie dodano nowy temat!");
-  return res.status(200).json(response);
+  return res
+    .status(200)
+    .json(Response.returnMessage("Pomyślnie dodano nowy temat!"));
 };
 
 const removeChapter = async (req, res, dataFromAuth) => {
-  const response = {
-    messages: {
-      message: [],
-      error: [],
-    },
-  };
-
   const chapter = req.body.nameOfChapter;
 
   try {
@@ -285,46 +279,53 @@ const removeChapter = async (req, res, dataFromAuth) => {
             { where: { id: resultAboutChapterExist } }
           );
           if (!resultAboutUpdateToRemoveField.includes(1)) {
-            response.messages.error.push(
-              "Nie udało się usunąć wybranego rozdziału!"
-            );
-            return res.status(400).json(response);
+            return res
+              .status(400)
+              .json(
+                Response.returnError(
+                  "Nie udało się usunąć wybranego rozdziału!"
+                )
+              );
           }
         } else {
-          response.messages.error.push(
-            "Rozdział o wprowadzonej nazwie już istnieje!"
-          );
-          return res.status(400).json(response);
+          return res
+            .status(400)
+            .json(
+              Response.returnError(
+                "Rozdział posiada przypisany do siebie temat!"
+              )
+            );
         }
       } else {
-        response.messages.error.push("Wybrany rozdział nie istnieje!");
-        return res.status(404).json(response);
+        return res
+          .status(404)
+          .json(Response.returnError("Wybrany rozdział nie istnieje!"));
       }
     } else {
-      response.messages.error.push(
-        "Nie posiadasz uprawnień, by móc usunąć wybrany rozdział!"
-      );
-      return res.status(400).json(response);
+      return res
+        .status(400)
+        .json(
+          Response.returnError(
+            "Nie posiadasz uprawnień, by móc usunąć wybrany rozdział!"
+          )
+        );
     }
   } catch (err) {
-    response.messages.message.push(
-      "Nie można przeprowadzić procesu usuwania rozdziału!"
-    );
-    return res.status(500).json(response);
+    return res
+      .status(500)
+      .json(
+        Response.returnError(
+          "Nie można przeprowadzić procesu usuwania rozdziału!"
+        )
+      );
   }
 
-  response.messages.message.push("Pomyślnie usunięto wybrany rozdział!");
-  return res.status(200).json(response);
+  return res
+    .status(200)
+    .json(Response.returnMessage("Pomyślnie usunięto wybrany rozdział!"));
 };
 
 const removeTopic = async (req, res, dataFromAuth) => {
-  const response = {
-    messages: {
-      message: [],
-      error: [],
-    },
-  };
-
   const topic = req.body.nameOfTopic;
 
   try {
@@ -342,30 +343,37 @@ const removeTopic = async (req, res, dataFromAuth) => {
           { where: { id: resultAboutTopicExist } }
         );
         if (!resultAboutUpdateToRemoveField.includes(1)) {
-          response.messages.error.push(
-            "Nie udało się usunąć wybranego tematu!"
-          );
-          return res.status(400).json(response);
+          return res
+            .status(400)
+            .json(
+              Response.returnError("Nie udało się usunąć wybranego tematu!")
+            );
         }
       } else {
-        response.messages.error.push("Wybrany temat nie istnieje!");
-        return res.status(404).json(response);
+        return res
+          .status(404)
+          .json(Response.returnError("Wybrany temat nie istnieje!"));
       }
     } else {
-      response.messages.error.push(
-        "Nie posiadasz uprawnień, by móc dodać nowy temat!"
-      );
-      return res.status(400).json(response);
+      return res
+        .status(400)
+        .json(
+          Response.returnError(
+            "Nie posiadasz uprawnień, by móc dodać nowy temat!"
+          )
+        );
     }
   } catch (err) {
-    response.messages.message.push(
-      "Nie można przeprowadzić procesu usuwania tematu!"
-    );
-    return res.status(500).json(response);
+    return res
+      .status(500)
+      .json(
+        Response.returnError("Nie można przeprowadzić procesu usuwania tematu!")
+      );
   }
 
-  response.messages.message.push("Pomyślnie usunięto wybrany temat!");
-  return res.status(200).json(response);
+  return res
+    .status(200)
+    .json(Response.returnMessage("Pomyślnie usunięto wybrany temat!"));
 };
 
 exports.takesAllSubjects = takesAllSubjects;
