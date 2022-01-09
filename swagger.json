@@ -789,6 +789,33 @@
                     }
                 }
             }
+        },
+        "/quiz/administration/topics-to-remove": {
+            "get": {
+                "tags": [
+                    "Administration"
+                ],
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "summary": "Admin can take list of topics which are to remove",
+                "responses": {
+                    "200": {
+                        "description": "Successfully completed"
+                    },
+                    "400": {
+                        "description": "Error about entered data"
+                    },
+                    "404": {
+                        "description": "Data not found"
+                    },
+                    "403": {
+                        "description": "Forbidden"
+                    }
+                }
+            }
         }
     }
 }
