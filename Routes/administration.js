@@ -403,4 +403,36 @@ router.get("/chapters-to-remove", (req, res) => {
   }
 });
 
+router.get("/topics-to-remove", (req, res) => {
+  const response = {
+    messages: {
+      message: [],
+      error: [],
+    },
+  };
+
+  const headerValidationResults = verifyToken(req);
+
+  if (headerValidationResults === false) {
+    response.messages.error.push("Błędna wartość uwierzytelniania!");
+    res.status(400).send(response);
+  } else {
+    jwt.verify(
+      req.token,
+      process.env.S3_SECRETKEY,
+      async (jwtError, authData) => {
+        if (jwtError) {
+          response.messages.error.push("Błąd uwierzytelniania!");
+          return res.status(403).json(response);
+        } else {
+          administrationsControllers.takeAllTopicsWhichAreToRemove(
+            res,
+            authData
+          );
+        }
+      }
+    );
+  }
+});
+
 module.exports = router;

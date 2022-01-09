@@ -12,4 +12,4 @@ COPY . .
 
 EXPOSE 3000
 
-CMD [ "nodemon", "nodemon-start -L" ]
+CMD [ "nodemon", "nodemon-start" ]
