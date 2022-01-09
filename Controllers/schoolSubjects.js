@@ -157,7 +157,7 @@ const createsNewChapter = async (req, res, dataFromAuth) => {
         if (resultAboutChapterExist === false) {
           const resultAboutCreateNewChapter = await Model.Chapters.create({
             name: nameOfChapter,
-            SchoolSubjectId: resultAboutSubjectExist.id,
+            SchoolSubjectId: resultAboutSubjectExist,
           });
           if (resultAboutCreateNewChapter === null) {
             response.messages.error.push(
@@ -219,7 +219,7 @@ const createsNewTopic = async (req, res, dataFromAuth) => {
         if (resultAboutTopicExist === false) {
           const resultAboutCreateNewTopic = await Model.Topics.create({
             name: nameOfTopic,
-            ChapterId: resultAboutChapterExist.id,
+            ChapterId: resultAboutChapterExist,
           });
           if (resultAboutCreateNewTopic === null) {
             response.messages.error.push(

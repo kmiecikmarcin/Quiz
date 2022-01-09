@@ -13,7 +13,7 @@ services:
       S3_DATABASE_PASSWORD: "${S3_DATABASE_PASSWORD}"
       S3_DATABASE_NAME: "${S3_DATABASE_NAME}"
       S3_DATABASE_HOST: "${S3_DATABASE_HOST}"
-    command: ["nodemon", "nodemon-start -L"]
+    command: ["nodemon", "nodemon-start"]
     ports: 
       - 3000:3000
     networks:

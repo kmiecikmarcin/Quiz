@@ -14,6 +14,7 @@ const findAdminRoleId = require("../Functions/Users/findAdminRoleId");
 const findIdOfTeacherPermission = require("../Functions/Users/findIdOfTeacherPermission");
 const updateUserPermissionToTeacherPermissions = require("../Functions/Users/updateUserPermissionToTeacherPermissions");
 const takeAllChaptersWchichWereAssignedAsToRemove = require("../Functions/SchoolSubjects/takeAllChaptersWchichWereAssignedAsToRemove");
+const takeAllTopicsWchichWereAssignedAsToRemove = require("../Functions/SchoolSubjects/takeAllTopicsWchichWereAssignedAsToRemove");
 
 const createSchoolSubject = async (req, res, dataFromAuth) => {
   const response = {
@@ -389,19 +390,52 @@ const takeAllChaptersWhichAreToRemove = async (res, dataFromAuth) => {
       if (takeChapters !== false) {
         listOfChapters = takeChapters;
       } else {
-        response.messages.message.push("Lista rozdziałów jest pusta!");
+        response.messages.error.push("Lista rozdziałów jest pusta!");
         return res.status(404).json(response);
       }
     } else {
-      response.messages.message.push("Nie posiadasz uprawnień!");
+      response.messages.error.push("Nie posiadasz uprawnień!");
       return res.status(400).json(response);
     }
   } catch {
-    response.messages.message.push("Nie można pobrać listy rozdziałów!");
+    response.messages.error.push("Nie można pobrać listy rozdziałów!");
     return res.status(500).json(response);
   }
 
   response.messages.chapters.push(listOfChapters);
+  return res.status(200).json(response);
+};
+
+const takeAllTopicsWhichAreToRemove = async (res, dataFromAuth) => {
+  const response = {
+    messages: {
+      message: [],
+      error: [],
+      topics: [],
+    },
+  };
+
+  try {
+    if (dataFromAuth.name === process.env.S3_ADMIN_PERMISSIONS) {
+      const takeTopics = await takeAllTopicsWchichWereAssignedAsToRemove(
+        Model.Topics
+      );
+      if (takeTopics !== false) {
+        listOfTopics = takeTopics;
+      } else {
+        response.messages.error.push("Lista tematów jest pusta!");
+        return res.status(404).json(response);
+      }
+    } else {
+      response.messages.error.push("Nie posiadasz uprawnień!");
+      return res.status(400).json(response);
+    }
+  } catch {
+    response.messages.error.push("Nie można pobrać listy tematów!");
+    return res.status(500).json(response);
+  }
+
+  response.messages.topics.push(listOfTopics);
   return res.status(200).json(response);
 };
 
@@ -414,3 +448,4 @@ exports.daleteUserAccount = daleteUserAccount;
 exports.takeAllUsers = takeAllUsers;
 exports.assignTeacherPermissions = assignTeacherPermissions;
 exports.takeAllChaptersWhichAreToRemove = takeAllChaptersWhichAreToRemove;
+exports.takeAllTopicsWhichAreToRemove = takeAllTopicsWhichAreToRemove;
