@@ -7,14 +7,9 @@ const checkThatAccountWithEnteredEmailExists = require("../Functions/Users/check
 const findNameOfUserEntitlement = require("../Functions/Users/findNameOfUserEntitlement");
 const userData = require("../Functions/Users/userData");
 const generateToken = require("../Functions/Users/generateToken");
+const Response = require("../Class/Response");
 
 const registration = async (req, res) => {
-  const response = {
-    messages: {
-      message: [],
-      error: [],
-    },
-  };
   const { userEmail, userPassword, userGender } = req.body;
 
   let checkUniqueEmail;
@@ -22,24 +17,30 @@ const registration = async (req, res) => {
   try {
     checkUniqueEmail = await checkThatEmailIsUnique(Model.Users, userEmail);
   } catch (err) {
-    response.messages.error.push("Rejestracja nie powiodła się!");
-    return res.status(500).send(response).end();
+    return res
+      .status(500)
+      .send(Response.returnError("Rejestracja nie powiodła się!"))
+      .end();
   }
 
   let genderID;
   try {
     genderID = await findGenderID(Model.Genders, userGender);
   } catch (err) {
-    response.messages.error.push("Rejestracja nie powiodła się!");
-    return res.status(500).send(response).end();
+    return res
+      .status(500)
+      .send(Response.returnError("Rejestracja nie powiodła się!"))
+      .end();
   }
 
   let entitlementID;
   try {
     entitlementID = await findBasicEntitlementID(Model.TypesOfUsersRoles);
   } catch (err) {
-    response.messages.error.push("Rejestracja nie powiodła się!");
-    return res.status(500).send(response).end();
+    return res
+      .status(500)
+      .send(Response.returnError("Rejestracja nie powiodła się!"))
+      .end();
   }
 
   if (checkUniqueEmail === true) {
@@ -56,33 +57,36 @@ const registration = async (req, res) => {
             GenderId: genderID,
           });
         } catch (err) {
-          response.messages.error.push("Rejestracja nie powiodła się!");
-          return res.status(500).send(response).end();
+          return res
+            .status(500)
+            .send(Response.returnError("Rejestracja nie powiodła się!"))
+            .end();
         }
       } else {
-        response.messages.error.push("Nie odnaleziono roli dla użytkownika!");
-        return res.status(500).send(response).end();
+        return res
+          .status(500)
+          .send(Response.returnError("Nie odnaleziono roli dla użytkownika!"))
+          .end();
       }
     } else {
-      response.messages.error.push("Wprowadzona płeć jest niepoprawna!");
-      return res.status(400).send(response).end();
+      return res
+        .status(400)
+        .send(Response.returnError("Wprowadzona płeć jest niepoprawna!"))
+        .end();
     }
   } else {
-    response.messages.error.push("Email jest już przypisany do innego konta!");
-    return res.status(400).send(response).end();
+    return res
+      .status(400)
+      .send(Response.returnError("Email jest już przypisany do innego konta!"))
+      .end();
   }
 
-  response.messages.message.push("Rejestracja przebiegła pomyślnie!");
-  return res.status(201).json(response);
+  return res
+    .status(200)
+    .json(Response.returnMessage("Rejestracja przebiegła pomyślnie!"));
 };
 
 const login = async (req, res) => {
-  const response = {
-    messages: {
-      token: [],
-      error: [],
-    },
-  };
   const { userEmail, userPassword } = req.body;
   let token;
 
@@ -110,42 +114,39 @@ const login = async (req, res) => {
             nameOfEntitlement
           );
           if (token === false) {
-            response.messages.error.push("Hasło jest nieprawidłowe!");
-            return res.status(400).send(response);
+            return res
+              .status(400)
+              .send(Response.returnError("Hasło jest nieprawidłowe!"));
           }
         } else {
-          response.messages.error.push(
-            "Nie udało się pobrać danych użytkownika!"
-          );
-          return res.status(400).send(response);
+          return res
+            .status(400)
+            .send(
+              Response.returnError("Nie udało się pobrać danych użytkownika!")
+            );
         }
       } else {
-        response.messages.error.push(
-          "Konto użytkownika posiada nieprawidłowe uprawnienia!"
-        );
-        return res.status(400).send(response);
+        return res
+          .status(400)
+          .send(
+            Response.returnError(
+              "Konto użytkownika posiada nieprawidłowe uprawnienia!"
+            )
+          );
       }
     } else {
-      response.messages.error.push("Wprowadzony email nie istnieje!");
-      return res.status(400).send(response);
+      return res
+        .status(400)
+        .send(Response.returnError("Wprowadzony email nie istnieje!"));
     }
   } catch (err) {
-    response.messages.error.push("Błąd logowania!");
-    return res.status(500).send(response).end();
+    return res.status(500).send(Response.returnError("Błąd logowania!")).end();
   }
 
-  response.messages.token.push(token);
-  return res.status(200).json(response);
+  return res.status(200).json(Response.returnToken(token));
 };
 
 const email = async (req, res, dataFromAuth) => {
-  const response = {
-    messages: {
-      token: [],
-      error: [],
-    },
-  };
-
   let newToken;
 
   const { newUserEmail, userPassword } = req.body;
@@ -174,36 +175,33 @@ const email = async (req, res, dataFromAuth) => {
             );
           }
         } else {
-          response.messages.error.push("Wprowadzone hasło jest nieprawidłowe!");
-          return res.status(400).send(response);
+          return res
+            .status(400)
+            .send(
+              Response.returnError("Wprowadzone hasło jest nieprawidłowe!")
+            );
         }
       } else {
-        response.messages.error.push(
-          "Nie udało się pobrać danych użytkownika!"
-        );
-        return res.status(500).send(response);
+        return res
+          .status(500)
+          .send(
+            Response.returnError("Nie udało się pobrać danych użytkownika!")
+          );
       }
     } else {
-      response.messages.error.push("Konto nie istnieje!");
-      return res.status(500).send(response);
+      return res.status(500).send(Response.returnError("Konto nie istnieje!"));
     }
   } catch (err) {
-    response.messages.error.push("Nie udało się zmienić adresu e-mail!");
-    return res.status(500).send(response).end();
+    return res
+      .status(500)
+      .send(Response.returnError("Nie udało się zmienić adresu e-mail!"))
+      .end();
   }
 
-  response.messages.token.push(newToken);
-  return res.status(200).json(response);
+  return res.status(200).json(Response.returnToken(newToken));
 };
 
 const password = async (req, res, dataFromAuth) => {
-  const response = {
-    messages: {
-      token: [],
-      error: [],
-    },
-  };
-
   let newToken;
 
   const { newUserPassword, userPassword } = req.body;
@@ -233,37 +231,33 @@ const password = async (req, res, dataFromAuth) => {
             );
           }
         } else {
-          response.messages.error.push("Wprowadzone hasło jest nieprawidłowe!");
-          return res.status(400).send(response);
+          return res
+            .status(400)
+            .send(
+              Response.returnError("Wprowadzone hasło jest nieprawidłowe!")
+            );
         }
       } else {
-        response.messages.error.push(
-          "Nie udało się pobrać danych użytkownika!"
-        );
-
-        return res.status(500).send(response);
+        return res
+          .status(500)
+          .send(
+            Response.returnError("Nie udało się pobrać danych użytkownika!")
+          );
       }
     } else {
-      response.messages.error.push("Konto nie istnieje!");
-      return res.status(500).send(response);
+      return res.status(500).send(Response.returnError("Konto nie istnieje!"));
     }
   } catch (err) {
-    response.messages.error.push("Nie udało się zmienić hasła!");
-    return res.status(500).send(response).end();
+    return res
+      .status(500)
+      .send(Response.returnError("Nie udało się zmienić hasła!"))
+      .end();
   }
 
-  response.messages.token.push(newToken);
-  return res.status(200).json(response);
+  return res.status(200).json(Response.returnToken(newToken));
 };
 
 const accountToDelete = async (req, res, dataFromAuth) => {
-  const response = {
-    messages: {
-      message: [],
-      error: [],
-    },
-  };
-
   const userPassword = req.body.userPassword;
 
   try {
@@ -281,31 +275,37 @@ const accountToDelete = async (req, res, dataFromAuth) => {
             { where: { id: takeUserData.id, password: takeUserData.password } }
           );
           if (!accountToDelete.includes(1)) {
-            response.messages.error.push("Nie udało się dezaktywować konta!");
-            return res.status(400).send(response);
+            return res
+              .status(400)
+              .send(Response.returnError("Nie udało się dezaktywować konta!"));
           }
         } else {
-          response.messages.error.push("Wprowadzone hasło jest nieprawidłowe!");
-          return res.status(400).send(response);
+          return res
+            .status(400)
+            .send(
+              Response.returnError("Wprowadzone hasło jest nieprawidłowe!")
+            );
         }
       } else {
-        response.messages.error.push(
-          "Nie udało się pobrać danych użytkownika!"
-        );
-
-        return res.status(500).send(response);
+        return res
+          .status(500)
+          .send(
+            Response.returnError("Nie udało się pobrać danych użytkownika!")
+          );
       }
     } else {
-      response.messages.error.push("Konto nie istnieje!");
-      return res.status(500).send(response);
+      return res.status(500).send(Response.returnError("Konto nie istnieje!"));
     }
   } catch (err) {
-    response.messages.error.push("Usunięcie konta nie powiodło się!");
-    return res.status(500).send(response).end();
+    return res
+      .status(500)
+      .send(Response.returnError("Usunięcie konta nie powiodło się!"))
+      .end();
   }
 
-  response.messages.message.push("Konto zostało dezaktywowane!");
-  return res.status(200).json(response);
+  return res
+    .status(200)
+    .json(Response.returnMessage("Konto zostało dezaktywowane!"));
 };
 
 exports.registration = registration;
