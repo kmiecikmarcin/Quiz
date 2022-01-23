@@ -156,7 +156,7 @@ const email = async (req, res, dataFromAuth) => {
       Model.Users,
       dataFromAuth.email
     );
-    if (checkUserAccount !== false) {
+    if (checkUserAccount === false) {
       const takeUserData = await userData(Model.Users, dataFromAuth.id);
       if (takeUserData !== false) {
         const match = await bcrypt.compare(userPassword, takeUserData.password);
@@ -189,7 +189,9 @@ const email = async (req, res, dataFromAuth) => {
           );
       }
     } else {
-      return res.status(500).send(Response.returnError("Konto nie istnieje!"));
+      return res
+        .status(400)
+        .send(Response.returnError("Wprowadzony email już istnieje!"));
     }
   } catch (err) {
     return res
