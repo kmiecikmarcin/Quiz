@@ -154,7 +154,7 @@ const email = async (req, res, dataFromAuth) => {
   try {
     const checkUserAccount = await checkThatAccountWithEnteredEmailExists(
       Model.Users,
-      dataFromAuth.email
+      newUserEmail
     );
     if (checkUserAccount === false) {
       const takeUserData = await userData(Model.Users, dataFromAuth.id);
