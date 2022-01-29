@@ -54,7 +54,9 @@ router.post(
       .withMessage("Brak wymaganych danych!")
       .custom((value, { req }) => {
         if (value !== req.body.userPassword) {
-          throw new Error("Hasła sa różne!");
+          throw new Error("Hasła są różne!");
+        } else if (value.length == 0) {
+          throw new Error("Wartość jest pusta!");
         } else {
           return value;
         }
@@ -199,13 +201,36 @@ router.patch(
       .isLength({ min: 6 })
       .withMessage("Hasło jest za krótkie!")
       .isLength({ max: 32 })
-      .withMessage("Hasło jest za długie!"),
+      .withMessage("Hasło jest za długie!")
+      .custom((value) => {
+        if (checkPasswordAboutOneSpecialKey(value) === false) {
+          throw new Error(
+            "Hasło nie zawiera minimum jednego znaku specjalnego!"
+          );
+        } else {
+          return value;
+        }
+      })
+      .custom((value) => {
+        // eslint-disable-next-line no-useless-escape
+        const badSpecialKeys = /[\,\+\=\.\<\>\{\}\[\]\:\;\'\"\|\~\`\_\-]/.test(
+          value
+        );
+        if (badSpecialKeys === true) {
+          throw new Error("Hasło zawiera nieprawidłowy znak!");
+        } else {
+          return value;
+        }
+      }),
     check("confirmNewUserPassword")
       .exists()
       .withMessage("Brak wymaganych danych!")
       .custom((value, { req }) => {
         if (value !== req.body.newUserPassword) {
-          throw new Error("Hasła sa różne!");
+          throw new Error("Hasła są różne!");
+        }
+        if (value.length == 0) {
+          throw new Error("Wartość jest pusta!");
         } else {
           return value;
         }
