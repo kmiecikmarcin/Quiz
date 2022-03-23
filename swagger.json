@@ -1,60 +1,41 @@
 {
     "openapi": "3.0.3",
     "info": {
-        "description": "API for easy study new things from school",
+        "description": "API which should help studends with learning",
         "version": "0.3.4",
-        "title": "Learn and test knowledge - API"
-    },
-    "components": {
-        "securitySchemes": {
-            "bearerAuth": {
-                "type": "http",
-                "scheme": "bearer",
-                "bearerFormat": "JWT"
-            }
-        }
+        "title": "Quiz API"
     },
     "paths": {
         "/quiz/users/register": {
             "post": {
                 "tags": [
-                    "Users"
+                    "Accounts"
                 ],
-                "summary": "Registration in system",
+                "summary": "Users is able to create a new account",
                 "requestBody": {
-                    "description": "User data",
+                    "description": "Required data which user should send in request",
                     "required": true,
                     "content": {
                         "application/json": {
                             "schema": {
-                                "type": "object",
-                                "properties": {
-                                    "userEmail": {
-                                        "type": "string"
-                                    },
-                                    "userPassword": {
-                                        "type": "string"
-                                    },
-                                    "confirmPassword": {
-                                        "type": "string"
-                                    },
-                                    "userGender": {
-                                        "type": "string"
-                                    },
-                                    "userVerification": {
-                                        "type": "boolean"
-                                    }
-                                }
+                                "$ref": "#/components/schemas/User"
                             }
                         }
                     }
                 },
                 "responses": {
                     "200": {
-                        "description": "Successfully registered"
+                        "description": "Successfully registered",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/PositiveResponse"
+                                }
+                            }
+                        }
                     },
                     "400": {
-                        "description": "Error about entered data"
+                        "description": "Error about validation"
                     },
                     "500": {
                         "description": "System error - user role doesn't exist"
@@ -65,11 +46,11 @@
         "/quiz/users/login": {
             "post": {
                 "tags": [
-                    "Users"
+                    "Accounts"
                 ],
-                "summary": "Sign In",
+                "summary": "User should be able to login if user has active account",
                 "requestBody": {
-                    "description": "User data",
+                    "description": "Required data which user should send in request",
                     "required": true,
                     "content": {
                         "application/json": {
@@ -89,10 +70,17 @@
                 },
                 "responses": {
                     "200": {
-                        "description": "System will return token"
+                        "description": "System will return token",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/PositiveResponse"
+                                }
+                            }
+                        }
                     },
                     "400": {
-                        "description": "Error about entered data"
+                        "description": "Error about validation"
                     },
                     "404": {
                         "description": "Data not found"
@@ -103,16 +91,16 @@
         "/quiz/users/email": {
             "patch": {
                 "tags": [
-                    "Users"
+                    "Accounts"
                 ],
                 "security": [
                     {
                         "bearerAuth": []
                     }
                 ],
-                "summary": "User can change e-mail",
+                "summary": "User should be able to change his e-mail",
                 "requestBody": {
-                    "description": "User data",
+                    "description": "Required data which user should send in request",
                     "required": true,
                     "content": {
                         "application/json": {
@@ -132,13 +120,20 @@
                 },
                 "responses": {
                     "200": {
-                        "description": "Data changed successfully"
+                        "description": "Data changed successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/PositiveResponse"
+                                }
+                            }
+                        }
                     },
                     "400": {
-                        "description": "Error about entered data"
+                        "description": "Error about validation"
                     },
                     "403": {
-                        "description": "Forbidden"
+                        "description": "User doesn't have permissions"
                     },
                     "404": {
                         "description": "Data not found"
@@ -149,16 +144,16 @@
         "/quiz/users/password": {
             "patch": {
                 "tags": [
-                    "Users"
+                    "Accounts"
                 ],
                 "security": [
                     {
                         "bearerAuth": []
                     }
                 ],
-                "summary": "User can change password",
+                "summary": "User should be able to change his password",
                 "requestBody": {
-                    "description": "User data",
+                    "description": "Required data which user should send in request",
                     "required": true,
                     "content": {
                         "application/json": {
@@ -181,13 +176,20 @@
                 },
                 "responses": {
                     "200": {
-                        "description": "Data changed successfully"
+                        "description": "Data changed successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/PositiveResponse"
+                                }
+                            }
+                        }
                     },
                     "400": {
-                        "description": "Error about entered data"
+                        "description": "Error about validation"
                     },
                     "403": {
-                        "description": "Forbidden"
+                        "description": "User doesn't have permissions"
                     },
                     "404": {
                         "description": "Data not found"
@@ -198,16 +200,16 @@
         "/quiz/users/delete": {
             "patch": {
                 "tags": [
-                    "Users"
+                    "Accounts"
                 ],
                 "security": [
                     {
                         "bearerAuth": []
                     }
                 ],
-                "summary": "User can delete account",
+                "summary": "User should be able to delete his active account",
                 "requestBody": {
-                    "description": "User data",
+                    "description": "Required data which user should send in request",
                     "required": true,
                     "content": {
                         "application/json": {
@@ -227,13 +229,20 @@
                 },
                 "responses": {
                     "200": {
-                        "description": "Successful"
+                        "description": "Successful moved to remove",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/PositiveResponse"
+                                }
+                            }
+                        }
                     },
                     "400": {
-                        "description": "Error about entered data"
+                        "description": "Error about validation"
                     },
                     "403": {
-                        "description": "Forbidden"
+                        "description": "User doesn't have permissions"
                     },
                     "404": {
                         "description": "Data not found"
@@ -251,19 +260,29 @@
                         "bearerAuth": []
                     }
                 ],
-                "summary": "Interface can take all subjects",
+                "summary": "It should be able to take list of school subjects",
                 "responses": {
                     "200": {
-                        "description": "List of school subjects"
+                        "description": "List of school subjects",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ListOfData"
+                                }
+                            }
+                        }
                     },
                     "400": {
-                        "description": "Error about entered data"
+                        "description": "User account doesn't exist"
                     },
                     "403": {
-                        "description": "Forbidden"
+                        "description": "User doesn't have permissions to take this list"
                     },
-                    "501": {
-                        "description": "System error - subjects doesn't exist"
+                    "404": {
+                        "description": "Subjects don't exist"
+                    },
+                    "500": {
+                        "description": "System error"
                     }
                 }
             }
@@ -278,19 +297,29 @@
                         "bearerAuth": []
                     }
                 ],
-                "summary": "Interface can take all chapters",
+                "summary": "It should be able to take list of all chapters",
                 "responses": {
                     "200": {
-                        "description": "List of chapters"
+                        "description": "List of chapters",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ListOfData"
+                                }
+                            }
+                        }
                     },
                     "400": {
-                        "description": "Error about entered data"
+                        "description": "User account doesn't exist"
                     },
                     "403": {
-                        "description": "Forbidden"
+                        "description": "User doesn't have permissions to take this list"
                     },
                     "404": {
-                        "description": "Not Found"
+                        "description": "Chapters don't exist"
+                    },
+                    "500": {
+                        "description": "System error"
                     }
                 }
             }
@@ -305,22 +334,29 @@
                         "bearerAuth": []
                     }
                 ],
-                "summary": "Interface can take all topics",
+                "summary": "It should be able to take list of all topics",
                 "responses": {
                     "200": {
-                        "description": "List of topics"
+                        "description": "List of topics",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ListOfData"
+                                }
+                            }
+                        }
                     },
                     "400": {
-                        "description": "Error about entered data"
-                    },
-                    "404": {
-                        "description": "Data not found"
+                        "description": "User account doesn't exist"
                     },
                     "403": {
-                        "description": "Forbidden"
+                        "description": "User doesn't have permissions to take this list"
                     },
                     "404": {
-                        "description": "Not Found"
+                        "description": "Topics don't exist"
+                    },
+                    "500": {
+                        "description": "System error"
                     }
                 }
             }
@@ -335,38 +371,40 @@
                         "bearerAuth": []
                     }
                 ],
-                "summary": "Teacher can add new chapter",
+                "summary": "User with 'Teacher' permissions should be able to create a new chapter",
                 "requestBody": {
-                    "description": "Chapter data",
+                    "description": "Required data to create a new chapter",
                     "required": true,
                     "content": {
                         "application/json": {
                             "schema": {
-                                "type": "object",
-                                "properties": {
-                                    "nameOfSubject": {
-                                        "type": "string"
-                                    },
-                                    "nameOfChapter": {
-                                        "type": "string"
-                                    }
-                                }
+                                "$ref": "#/components/schemas/Chapter"
                             }
                         }
                     }
                 },
                 "responses": {
                     "200": {
-                        "description": "New chapter added successfully"
+                        "description": "New chapter added successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/PositiveResponse"
+                                }
+                            }
+                        }
                     },
                     "400": {
-                        "description": "Error about entered data"
-                    },
-                    "404": {
-                        "description": "Data not found"
+                        "description": "Error about validation"
                     },
                     "403": {
-                        "description": "Forbidden"
+                        "description": "User doesn't have permissions to take this list"
+                    },
+                    "404": {
+                        "description": "School subject doesn't exist"
+                    },
+                    "500": {
+                        "description": "System error"
                     }
                 }
             }
@@ -381,38 +419,40 @@
                         "bearerAuth": []
                     }
                 ],
-                "summary": "Teacher can add new topic",
+                "summary": "User with 'Teacher' permissions should be able to create a new topic",
                 "requestBody": {
-                    "description": "Topic data",
+                    "description": "Required data to create a new topic",
                     "required": true,
                     "content": {
                         "application/json": {
                             "schema": {
-                                "type": "object",
-                                "properties": {
-                                    "nameOfChapter": {
-                                        "type": "string"
-                                    },
-                                    "nameOfTopic": {
-                                        "type": "string"
-                                    }
-                                }
+                                "$ref": "#/components/schemas/Topic"
                             }
                         }
                     }
                 },
                 "responses": {
                     "200": {
-                        "description": "New topic added successfully"
+                        "description": "New topic added successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/PositiveResponse"
+                                }
+                            }
+                        }
                     },
                     "400": {
-                        "description": "Error about entered data"
-                    },
-                    "404": {
-                        "description": "Data not found"
+                        "description": "Error about validation"
                     },
                     "403": {
-                        "description": "Forbidden"
+                        "description": "User doesn't have permissions to take this list"
+                    },
+                    "404": {
+                        "description": "Topic doesn't exist"
+                    },
+                    "500": {
+                        "description": "System error"
                     }
                 }
             }
@@ -427,9 +467,9 @@
                         "bearerAuth": []
                     }
                 ],
-                "summary": "Teacher can delete chapter",
+                "summary": "User with 'Teacher' permissions should be able to delete chapter",
                 "requestBody": {
-                    "description": "Chapter data",
+                    "description": "Required data to delete a chapter",
                     "required": true,
                     "content": {
                         "application/json": {
@@ -446,16 +486,26 @@
                 },
                 "responses": {
                     "200": {
-                        "description": "Successfully completed"
+                        "description": "Successfully deleted",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/PositiveResponse"
+                                }
+                            }
+                        }
                     },
                     "400": {
-                        "description": "Error about entered data"
+                        "description": "Error about validation"
                     },
                     "403": {
-                        "description": "Forbidden"
+                        "description": "User doesn't have permissions to take this list"
                     },
                     "404": {
-                        "description": "Not Found"
+                        "description": "Chapter doesn't exist"
+                    },
+                    "500": {
+                        "description": "System error"
                     }
                 }
             }
@@ -470,9 +520,9 @@
                         "bearerAuth": []
                     }
                 ],
-                "summary": "Teacher can delete topic",
+                "summary": "User with 'Teacher' permissions should be able to delete topic",
                 "requestBody": {
-                    "description": "Topic data",
+                    "description": "Required data to delete a topic",
                     "required": true,
                     "content": {
                         "application/json": {
@@ -489,16 +539,26 @@
                 },
                 "responses": {
                     "200": {
-                        "description": "Successfully completed"
+                        "description": "Successfully deleted",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/PositiveResponse"
+                                }
+                            }
+                        }
                     },
                     "400": {
-                        "description": "Error about entered data"
+                        "description": "Error about validation"
                     },
                     "403": {
-                        "description": "Forbidden"
+                        "description": "User doesn't have permissions to take this list"
                     },
                     "404": {
-                        "description": "Not Found"
+                        "description": "Topic doesn't exist"
+                    },
+                    "500": {
+                        "description": "System error"
                     }
                 }
             }
@@ -513,19 +573,26 @@
                         "bearerAuth": []
                     }
                 ],
-                "summary": "Admin takes list of users which has account to delete",
+                "summary": "Admin should be able to take list of users accounts which has status to remove",
                 "responses": {
                     "200": {
-                        "description": "List of users"
+                        "description": "List of users accounts",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ListOfData"
+                                }
+                            }
+                        }
                     },
                     "400": {
-                        "description": "Error about data"
-                    },
-                    "404": {
-                        "description": "Data not found"
+                        "description": "Error about validation"
                     },
                     "403": {
-                        "description": "Forbidden"
+                        "description": "User doesn't have permissions to take this list"
+                    },
+                    "500": {
+                        "description": "System error"
                     }
                 }
             }
@@ -540,9 +607,9 @@
                         "bearerAuth": []
                     }
                 ],
-                "summary": "Admin can create new school subject",
+                "summary": "Admin should be able to create a new school subject",
                 "requestBody": {
-                    "description": "School subject data",
+                    "description": "Required data to create a school subject",
                     "required": true,
                     "content": {
                         "application/json": {
@@ -559,13 +626,26 @@
                 },
                 "responses": {
                     "200": {
-                        "description": "Successfully completed"
+                        "description": "Successfully created",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/PositiveResponse"
+                                }
+                            }
+                        }
                     },
                     "400": {
-                        "description": "Error about entered data"
+                        "description": "Error about validation"
                     },
                     "403": {
-                        "description": "Forbidden"
+                        "description": "User doesn't have permissions"
+                    },
+                    "404": {
+                        "description": "Lists of users is empty"
+                    },
+                    "500": {
+                        "description": "System error"
                     }
                 }
             }
@@ -580,32 +660,40 @@
                         "bearerAuth": []
                     }
                 ],
-                "summary": "Admin can dalete school subject",
+                "summary": "Admin should be able to dalete a school subject",
                 "requestBody": {
-                    "description": "School subject data",
+                    "description": "Required data to delete school subject",
                     "required": true,
                     "content": {
                         "application/json": {
                             "schema": {
-                                "type": "object",
-                                "properties": {
-                                    "nameOfSchoolSubject": {
-                                        "type": "string"
-                                    }
-                                }
+                                "$ref": "#/components/schemas/SchoolSubject"
                             }
                         }
                     }
                 },
                 "responses": {
                     "200": {
-                        "description": "Successfully completed"
+                        "description": "Successfully deleted",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/PositiveResponse"
+                                }
+                            }
+                        }
                     },
                     "400": {
-                        "description": "Error about entered data"
+                        "description": "Error about validation"
                     },
                     "403": {
-                        "description": "Forbidden"
+                        "description": "User doesn't have permissions"
+                    },
+                    "404": {
+                        "description": "School subject doesn't exist"
+                    },
+                    "500": {
+                        "description": "System error"
                     }
                 }
             }
@@ -620,9 +708,9 @@
                         "bearerAuth": []
                     }
                 ],
-                "summary": "Admin can delete chapter",
+                "summary": "Admin should be able to dalete a chapter",
                 "requestBody": {
-                    "description": "Chapter data",
+                    "description": "Required data to delete chapter",
                     "required": true,
                     "content": {
                         "application/json": {
@@ -639,13 +727,23 @@
                 },
                 "responses": {
                     "200": {
-                        "description": "Successfully completed"
+                        "description": "Successfully completed",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/PositiveResponse"
+                                }
+                            }
+                        }
                     },
                     "400": {
-                        "description": "Error about entered data"
+                        "description": "Error about validation"
                     },
                     "403": {
-                        "description": "Forbidden"
+                        "description": "User doesn't have permissions"
+                    },
+                    "500": {
+                        "description": "System error"
                     }
                 }
             }
@@ -660,9 +758,9 @@
                         "bearerAuth": []
                     }
                 ],
-                "summary": "Admin can delete user",
+                "summary": "Admin should be able to delete a user account",
                 "requestBody": {
-                    "description": "Delete user by his id",
+                    "description": "Delete user bu ID account",
                     "required": true,
                     "content": {
                         "application/json": {
@@ -679,16 +777,26 @@
                 },
                 "responses": {
                     "200": {
-                        "description": "Successfully"
+                        "description": "Successfully deleted",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/PositiveResponse"
+                                }
+                            }
+                        }
                     },
                     "400": {
-                        "description": "Error about entered data"
+                        "description": "Error about validation"
                     },
                     "403": {
-                        "description": "Forbidden"
+                        "description": "User doesn't have permissions"
                     },
                     "404": {
-                        "description": "Not found"
+                        "description": "Account doesn't exist"
+                    },
+                    "500": {
+                        "description": "System error"
                     }
                 }
             }
@@ -703,19 +811,29 @@
                         "bearerAuth": []
                     }
                 ],
-                "summary": "Admin can take list of all users",
+                "summary": "Admin is able to take list of all users",
                 "responses": {
                     "200": {
-                        "description": "Successfully completed"
+                        "description": "List of users accounts",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ListOfData"
+                                }
+                            }
+                        }
                     },
                     "400": {
-                        "description": "Error about entered data"
+                        "description": "Error about validation"
                     },
                     "404": {
                         "description": "Data not found"
                     },
                     "403": {
-                        "description": "Forbidden"
+                        "description": "User doesn't have permissions"
+                    },
+                    "500": {
+                        "description": "System error"
                     }
                 }
             }
@@ -730,9 +848,9 @@
                         "bearerAuth": []
                     }
                 ],
-                "summary": "Admin can give teacher permissions",
+                "summary": "Admin is able to give 'Teacher' permissions for chosen account",
                 "requestBody": {
-                    "description": "Give teacher permissions for user",
+                    "description": "Account Id is required",
                     "required": true,
                     "content": {
                         "application/json": {
@@ -740,7 +858,7 @@
                                 "type": "object",
                                 "properties": {
                                     "userId": {
-                                        "type": "uuid"
+                                        "type": "integer"
                                     }
                                 }
                             }
@@ -749,16 +867,26 @@
                 },
                 "responses": {
                     "200": {
-                        "description": "Successfully completed"
+                        "description": "Successfully completed",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/PositiveResponse"
+                                }
+                            }
+                        }
                     },
                     "400": {
-                        "description": "Error about entered data"
+                        "description": "Error about validation"
                     },
                     "403": {
-                        "description": "Forbidden"
+                        "description": "User doesn't have permissions"
                     },
                     "404": {
-                        "description": "Not Found"
+                        "description": "User account doesn't exist"
+                    },
+                    "500": {
+                        "description": "System error"
                     }
                 }
             }
@@ -773,19 +901,29 @@
                         "bearerAuth": []
                     }
                 ],
-                "summary": "Admin can take list of chapters which are to remove",
+                "summary": "Admin is able to take list of chapters which were assigne as to remove",
                 "responses": {
                     "200": {
-                        "description": "Successfully completed"
+                        "description": "List of chapters",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ListOfData"
+                                }
+                            }
+                        }
                     },
                     "400": {
-                        "description": "Error about entered data"
-                    },
-                    "404": {
-                        "description": "Data not found"
+                        "description": "Error about validation"
                     },
                     "403": {
-                        "description": "Forbidden"
+                        "description": "User doesn't have permissions"
+                    },
+                    "404": {
+                        "description": "List is empty"
+                    },
+                    "500": {
+                        "description": "System error"
                     }
                 }
             }
@@ -800,22 +938,117 @@
                         "bearerAuth": []
                     }
                 ],
-                "summary": "Admin can take list of topics which are to remove",
+                "summary": "Admin is able to take list of topics which were assigned as to remove",
                 "responses": {
                     "200": {
-                        "description": "Successfully completed"
+                        "description": "List of topics",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ListOfData"
+                                }
+                            }
+                        }
                     },
                     "400": {
-                        "description": "Error about entered data"
-                    },
-                    "404": {
-                        "description": "Data not found"
+                        "description": "Error about validation"
                     },
                     "403": {
-                        "description": "Forbidden"
+                        "description": "User doesn't have permissions"
+                    },
+                    "404": {
+                        "description": "List is empty"
+                    },
+                    "500": {
+                        "description": "System error"
                     }
                 }
             }
         }
+    },
+    "components": {
+        "securitySchemes": {
+            "bearerAuth": {
+                "type": "http",
+                "scheme": "bearer",
+                "bearerFormat": "JWT"
+            }
+        },
+        "schemas": {
+            "User": {
+                "type": "object",
+                "properties": {
+                    "userEmail": {
+                        "type": "string"
+                    },
+                    "userPassword": {
+                        "type": "string"
+                    },
+                    "confirmPassword": {
+                        "type": "string"
+                    },
+                    "userGender": {
+                        "type": "string"
+                    },
+                    "userVerification": {
+                        "type": "boolean"
+                    }
+                }
+            },
+            "SchoolSubject": {
+                "type": "object",
+                "properties": {
+                    "nameOfSchoolSubject": {
+                        "type": "string"
+                    }
+                }
+            },
+            "Chapter": {
+                "type": "object",
+                "properties": {
+                    "nameOfSchoolSubject": {
+                        "type": "string"
+                    },
+                    "nameOfChapter": {
+                        "type": "string"
+                    }
+                }
+            },
+            "Topic": {
+                "type": "object",
+                "properties": {
+                    "nameOfChapter": {
+                        "type": "string"
+                    },
+                    "nameOfTopic": {
+                        "type": "string"
+                    }
+                }
+            },
+            "PositiveResponse": {
+                "type": "object",
+                "properties": {
+                    "message": {
+                        "type": "string",
+                        "example": "Data was successfully created/updated/deleted"
+                    }
+                }
+            },
+            "ListOfData": {
+                "type": "object",
+                "properties": {
+                    "list": {
+                        "type": "array",
+                        "items": {
+                            "properties": {
+                                "name": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        } 
     }
 }
