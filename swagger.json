@@ -5,15 +5,6 @@
         "version": "0.3.4",
         "title": "Quiz API"
     },
-    "components": {
-        "securitySchemes": {
-            "bearerAuth": {
-                "type": "http",
-                "scheme": "bearer",
-                "bearerFormat": "JWT"
-            }
-        }
-    },
     "paths": {
         "/quiz/users/register": {
             "post": {
@@ -27,24 +18,7 @@
                     "content": {
                         "application/json": {
                             "schema": {
-                                "type": "object",
-                                "properties": {
-                                    "userEmail": {
-                                        "type": "string"
-                                    },
-                                    "userPassword": {
-                                        "type": "string"
-                                    },
-                                    "confirmPassword": {
-                                        "type": "string"
-                                    },
-                                    "userGender": {
-                                        "type": "string"
-                                    },
-                                    "userVerification": {
-                                        "type": "boolean"
-                                    }
-                                }
+                                "$ref": "#/components/schemas/User"
                             }
                         }
                     }
@@ -55,13 +29,7 @@
                         "content": {
                             "application/json": {
                                 "schema": {
-                                    "type": "object",
-                                    "properties": {
-                                        "message": {
-                                            "type": "string",
-                                            "example": "Rejestracja przebiegła pomyślnie!"
-                                        }
-                                    }
+                                    "$ref": "#/components/schemas/PositiveResponse"
                                 }
                             }
                         }
@@ -102,7 +70,14 @@
                 },
                 "responses": {
                     "200": {
-                        "description": "System will return token"
+                        "description": "System will return token",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/PositiveResponse"
+                                }
+                            }
+                        }
                     },
                     "400": {
                         "description": "Error about validation"
@@ -145,7 +120,14 @@
                 },
                 "responses": {
                     "200": {
-                        "description": "Data changed successfully"
+                        "description": "Data changed successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/PositiveResponse"
+                                }
+                            }
+                        }
                     },
                     "400": {
                         "description": "Error about validation"
@@ -194,7 +176,14 @@
                 },
                 "responses": {
                     "200": {
-                        "description": "Data changed successfully"
+                        "description": "Data changed successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/PositiveResponse"
+                                }
+                            }
+                        }
                     },
                     "400": {
                         "description": "Error about validation"
@@ -240,7 +229,14 @@
                 },
                 "responses": {
                     "200": {
-                        "description": "Successful"
+                        "description": "Successful moved to remove",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/PositiveResponse"
+                                }
+                            }
+                        }
                     },
                     "400": {
                         "description": "Error about validation"
@@ -267,7 +263,14 @@
                 "summary": "It should be able to take list of school subjects",
                 "responses": {
                     "200": {
-                        "description": "List of school subjects"
+                        "description": "List of school subjects",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ListOfData"
+                                }
+                            }
+                        }
                     },
                     "400": {
                         "description": "User account doesn't exist"
@@ -297,7 +300,14 @@
                 "summary": "It should be able to take list of all chapters",
                 "responses": {
                     "200": {
-                        "description": "List of chapters"
+                        "description": "List of chapters",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ListOfData"
+                                }
+                            }
+                        }
                     },
                     "400": {
                         "description": "User account doesn't exist"
@@ -327,7 +337,14 @@
                 "summary": "It should be able to take list of all topics",
                 "responses": {
                     "200": {
-                        "description": "List of topics"
+                        "description": "List of topics",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ListOfData"
+                                }
+                            }
+                        }
                     },
                     "400": {
                         "description": "User account doesn't exist"
@@ -361,22 +378,21 @@
                     "content": {
                         "application/json": {
                             "schema": {
-                                "type": "object",
-                                "properties": {
-                                    "nameOfSubject": {
-                                        "type": "string"
-                                    },
-                                    "nameOfChapter": {
-                                        "type": "string"
-                                    }
-                                }
+                                "$ref": "#/components/schemas/Chapter"
                             }
                         }
                     }
                 },
                 "responses": {
                     "200": {
-                        "description": "New chapter added successfully"
+                        "description": "New chapter added successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/PositiveResponse"
+                                }
+                            }
+                        }
                     },
                     "400": {
                         "description": "Error about validation"
@@ -410,22 +426,21 @@
                     "content": {
                         "application/json": {
                             "schema": {
-                                "type": "object",
-                                "properties": {
-                                    "nameOfChapter": {
-                                        "type": "string"
-                                    },
-                                    "nameOfTopic": {
-                                        "type": "string"
-                                    }
-                                }
+                                "$ref": "#/components/schemas/Topic"
                             }
                         }
                     }
                 },
                 "responses": {
                     "200": {
-                        "description": "New topic added successfully"
+                        "description": "New topic added successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/PositiveResponse"
+                                }
+                            }
+                        }
                     },
                     "400": {
                         "description": "Error about validation"
@@ -471,7 +486,14 @@
                 },
                 "responses": {
                     "200": {
-                        "description": "Successfully deleted"
+                        "description": "Successfully deleted",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/PositiveResponse"
+                                }
+                            }
+                        }
                     },
                     "400": {
                         "description": "Error about validation"
@@ -517,7 +539,14 @@
                 },
                 "responses": {
                     "200": {
-                        "description": "Successfully deleted"
+                        "description": "Successfully deleted",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/PositiveResponse"
+                                }
+                            }
+                        }
                     },
                     "400": {
                         "description": "Error about validation"
@@ -547,7 +576,14 @@
                 "summary": "Admin should be able to take list of users accounts which has status to remove",
                 "responses": {
                     "200": {
-                        "description": "List of users accounts"
+                        "description": "List of users accounts",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ListOfData"
+                                }
+                            }
+                        }
                     },
                     "400": {
                         "description": "Error about validation"
@@ -590,7 +626,14 @@
                 },
                 "responses": {
                     "200": {
-                        "description": "Successfully created"
+                        "description": "Successfully created",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/PositiveResponse"
+                                }
+                            }
+                        }
                     },
                     "400": {
                         "description": "Error about validation"
@@ -624,19 +667,21 @@
                     "content": {
                         "application/json": {
                             "schema": {
-                                "type": "object",
-                                "properties": {
-                                    "nameOfSchoolSubject": {
-                                        "type": "string"
-                                    }
-                                }
+                                "$ref": "#/components/schemas/SchoolSubject"
                             }
                         }
                     }
                 },
                 "responses": {
                     "200": {
-                        "description": "Successfully deleted"
+                        "description": "Successfully deleted",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/PositiveResponse"
+                                }
+                            }
+                        }
                     },
                     "400": {
                         "description": "Error about validation"
@@ -682,7 +727,14 @@
                 },
                 "responses": {
                     "200": {
-                        "description": "Successfully completed"
+                        "description": "Successfully completed",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/PositiveResponse"
+                                }
+                            }
+                        }
                     },
                     "400": {
                         "description": "Error about validation"
@@ -725,7 +777,14 @@
                 },
                 "responses": {
                     "200": {
-                        "description": "Successfully deleted"
+                        "description": "Successfully deleted",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/PositiveResponse"
+                                }
+                            }
+                        }
                     },
                     "400": {
                         "description": "Error about validation"
@@ -755,7 +814,14 @@
                 "summary": "Admin is able to take list of all users",
                 "responses": {
                     "200": {
-                        "description": "List of users accounts"
+                        "description": "List of users accounts",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ListOfData"
+                                }
+                            }
+                        }
                     },
                     "400": {
                         "description": "Error about validation"
@@ -792,7 +858,7 @@
                                 "type": "object",
                                 "properties": {
                                     "userId": {
-                                        "type": "uuid"
+                                        "type": "integer"
                                     }
                                 }
                             }
@@ -801,7 +867,14 @@
                 },
                 "responses": {
                     "200": {
-                        "description": "Successfully completed"
+                        "description": "Successfully completed",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/PositiveResponse"
+                                }
+                            }
+                        }
                     },
                     "400": {
                         "description": "Error about validation"
@@ -831,7 +904,14 @@
                 "summary": "Admin is able to take list of chapters which were assigne as to remove",
                 "responses": {
                     "200": {
-                        "description": "List of chapters"
+                        "description": "List of chapters",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ListOfData"
+                                }
+                            }
+                        }
                     },
                     "400": {
                         "description": "Error about validation"
@@ -861,7 +941,14 @@
                 "summary": "Admin is able to take list of topics which were assigned as to remove",
                 "responses": {
                     "200": {
-                        "description": "List of topics"
+                        "description": "List of topics",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ListOfData"
+                                }
+                            }
+                        }
                     },
                     "400": {
                         "description": "Error about validation"
@@ -878,5 +965,90 @@
                 }
             }
         }
+    },
+    "components": {
+        "securitySchemes": {
+            "bearerAuth": {
+                "type": "http",
+                "scheme": "bearer",
+                "bearerFormat": "JWT"
+            }
+        },
+        "schemas": {
+            "User": {
+                "type": "object",
+                "properties": {
+                    "userEmail": {
+                        "type": "string"
+                    },
+                    "userPassword": {
+                        "type": "string"
+                    },
+                    "confirmPassword": {
+                        "type": "string"
+                    },
+                    "userGender": {
+                        "type": "string"
+                    },
+                    "userVerification": {
+                        "type": "boolean"
+                    }
+                }
+            },
+            "SchoolSubject": {
+                "type": "object",
+                "properties": {
+                    "nameOfSchoolSubject": {
+                        "type": "string"
+                    }
+                }
+            },
+            "Chapter": {
+                "type": "object",
+                "properties": {
+                    "nameOfSchoolSubject": {
+                        "type": "string"
+                    },
+                    "nameOfChapter": {
+                        "type": "string"
+                    }
+                }
+            },
+            "Topic": {
+                "type": "object",
+                "properties": {
+                    "nameOfChapter": {
+                        "type": "string"
+                    },
+                    "nameOfTopic": {
+                        "type": "string"
+                    }
+                }
+            },
+            "PositiveResponse": {
+                "type": "object",
+                "properties": {
+                    "message": {
+                        "type": "string",
+                        "example": "Data was successfully created/updated/deleted"
+                    }
+                }
+            },
+            "ListOfData": {
+                "type": "object",
+                "properties": {
+                    "list": {
+                        "type": "array",
+                        "items": {
+                            "properties": {
+                                "name": {
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        } 
     }
 }
