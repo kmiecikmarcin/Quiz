@@ -2,12 +2,14 @@
 Rest API created in Node.js.
 
 ### Documentation
-Documentation created with Swagger. [Check it out](https://learnandtest.herokuapp.com/api-docs/)
+API documentation created using [Swagger](https://learnandtest.herokuapp.com/api-docs/)
 
 ### Prerequisites
 * [Node.js](https://nodejs.org/en/) - you must have Node.js installed on your local system. Download the Node.js source code or a pre-built installer for your operating system.
 
 * [PostgreSQL](https://www.postgresql.org) - for database management.
+
+* [Docker](https://www.docker.com/) - to run project.
 
 * NPM install - for installation of packages.
 
@@ -32,12 +34,12 @@ Documentation created with Swagger. [Check it out](https://learnandtest.herokuap
     * [Sinon](https://www.npmjs.com/package/sinon)
     * [Sequelize-test-helpers](https://www.npmjs.com/package/sequelize-test-helpers)
 
-### Run with npm
+### Run with docker
 * At first in your folder with project run:
 ```
-npm install
+docker-compose build
 ```
-It installs package for project. 
+Create the file for environment variables: 
 * Create .env file
 * Update .env:
 
@@ -51,7 +53,31 @@ S3_USER_PERMISSIONS = Uczeń
 S3_TEACHER_PERMISSIONS = Nauczyciel
 S3_ADMIN_PERMISSIONS = Administrator
 ```
-* You can run:
+* If you want to run the API you should use the command like:
+```
+docker-compose up 
+```
+
+### Run with npm
+* At first in your folder with project run:
+```
+npm install
+```
+Create the file for environment variables: 
+* Create .env file
+* Update .env:
+
+```
+S3_DATABASE_HOST = localhost  
+S3_DATABASE_NAME = exampleName  
+S3_DATABASE_PASSWORD = examplePassword  
+S3_DATABASE_USER = exampleUserName
+S3_SECRETKEY = ExAmP1EKeY
+S3_USER_PERMISSIONS = Uczeń
+S3_TEACHER_PERMISSIONS = Nauczyciel
+S3_ADMIN_PERMISSIONS = Administrator
+```
+* If you want to run the API you should use the command like:
 ```
 npm run start
 ```
