@@ -47,7 +47,7 @@ const createSchoolSubject = async (req, res, dataFromAuth) => {
       }
     } else {
       return res
-        .status(400)
+        .status(403)
         .json(
           Response.returnError(
             "Nie posiadasz uprawnień, by móc dodać nowy rodział!"
