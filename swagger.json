@@ -616,7 +616,7 @@
                             "schema": {
                                 "type": "object",
                                 "properties": {
-                                    "nameOfSchoolSubject": {
+                                    "nameOfSubject": {
                                         "type": "string"
                                     }
                                 }
@@ -998,7 +998,7 @@
             "SchoolSubject": {
                 "type": "object",
                 "properties": {
-                    "nameOfSchoolSubject": {
+                    "nameOfSubject": {
                         "type": "string"
                     }
                 }
@@ -1006,7 +1006,7 @@
             "Chapter": {
                 "type": "object",
                 "properties": {
-                    "nameOfSchoolSubject": {
+                    "nameOfSubject": {
                         "type": "string"
                     },
                     "nameOfChapter": {
